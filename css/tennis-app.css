@@ -154,8 +154,10 @@ body {
   border-bottom: 1px solid #666;
 }
 
-.match td,
 .match th {
+  padding: 0;
+}
+.match td {
   padding: 5px 10px;
 }
 
@@ -176,7 +178,21 @@ body {
   display: inline-block;
   border: none;
   width: 100%;
+  margin: 5px 0;
   padding: 5px;
+  border: 1px dotted #9999FF;
+}
+
+.match input[readonly] {
+  border: 1px solid transparent;
+}
+
+.match thead input[readonly] {
+  padding-bottom: 0;
+}
+
+.match tfoot input[readonly] {
+  padding-top: 0;
 }
 
 .match th.date-time {
@@ -185,17 +201,13 @@ body {
 
 .match input[name=location] {
   width: 160px;
-  padding: 5px 0;
 }
 .match input[name=date] {
-  width: 80px;
-  padding: 5px 0;
-  text-align: right;
+  width: 85px;
 }
 
 .match input[name=time] {
-  width: 40px;
-  padding: 5px 0;
+  width: 50px;
   text-align: right;
 }
 
@@ -206,7 +218,6 @@ body {
 
 .match td.points input {
   width: 30px;
-  padding: 5px 0;
   text-align: right;
 }
 

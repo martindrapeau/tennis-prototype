@@ -91,8 +91,17 @@
   Backbone.MatchView = Backbone.View.extend({
     template: undefined,
     className: 'match',
-    render: function() {
-      this.$el.html(this.template(this.model.toRender()));
+    tagName: 'table',
+    render: function(options) {
+      var data = this.model.toRender();
+      data.editable = true;
+      data.tabindex = options && options.tabindex ? options.tabindex : 100;
+
+      this.$el
+        .html(this.template(data))
+        .data('id', data.id)
+        .find('input').attr('readonly', !data.editable);
+
       return this;
     }
   });
@@ -119,13 +128,15 @@
       this.views = [];
       this.$el.empty();
 
-      var self = this;
+      var self = this,
+          tabindex = 100;
       this.collection.each(function(model) {
         var view = new Backbone.MatchView({
           model: model
         });
-        self.$el.append(view.render().$el);
+        self.$el.append(view.render({tabindex: tabindex}).$el);
         self.views.push(view);
+        tabindex += 100;
       });
       return this;
     }

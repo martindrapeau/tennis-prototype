@@ -75,49 +75,48 @@
 </script>
 
 <script id="match-template" type="text/template">
-  <table class="match">
-    <thead>
-      <tr>
-        <th colspan="2">
-          <input type="text" name="location" match_id="<%=id%>" value="<%=location%>" readonly="readonly" tabindex="100" />
-        </th>
-        <th class="data-time" colspan="4">
-          <input type="text" name="date" match_id="<%=id%>" value="<%=date%>" readonly="readonly" tabindex="102" />
-          <input type="text" name="time" match_id="<%=id%>" value="<%=time%>" readonly="readonly" tabindex="104" />
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr class="user">
-        <td class="player" title="<%=user_tooltip%>"><%=user_title%></td>
-        <td class="marker">✓</td>
-        <td class="set"><input type="text" name="user_set1" match_id="5406" value="<%=user_set1%>" readonly="readonly" tabindex="110" /></td>
-        <td class="set"><input type="text" name="user_set2" match_id="5406" value="<%=user_set2%>" readonly="readonly" tabindex="112" /></td>
-        <td class="set"><input type="text" name="user_set3" match_id="5406" value="<%=user_set3%>" readonly="readonly" tabindex="114" /></td>
-        <td class="points">
-          <input type="text" name="user_points" match_id="5406" value="<%=user_points%>" readonly="readonly" tabindex="114" />
-          <% if (user_points || other_points) { %><span class="pts">pts</span><% } %>
-        </td>
-      </tr>
-      <tr class="other">
-        <td class="player" title="<%=other_tooltip%>"><%=other_title%></td>
-        <td class="marker"></td>
-        <td class="set"><input type="text" name="other_set1" match_id="5406" value="<%=other_set1%>" readonly="readonly" tabindex="111" /></td>
-        <td class="set"><input type="text" name="other_set2" match_id="5406" value="<%=other_set2%>" readonly="readonly" tabindex="113" /></td>
-        <td class="set"><input type="text" name="other_set3" match_id="5406" value="<%=other_set3%>" readonly="readonly" tabindex="115" /></td>
-        <td class="points">
-          <input type="text" name="other_points" match_id="5406" value="<%=other_points%>" tabindex="114" />
-          <% if (user_points || other_points) { %><span class="pts">pts</span><% } %>
-        </td>
-        </td>
-      </tr>
-    </tbody>
-    <tfoot>
-      <tr>
-        <th colspan="6"><%=comment%></th>
-      </tr>
-    </tfoot>
-  </table>
+  <thead>
+    <tr>
+      <th colspan="2">
+        <input type="text" name="location" value="<%=location%>" tabindex="<%=tabindex%>" />
+      </th>
+      <th class="date-time" colspan="4">
+        <input type="text" name="date" value="<%=date%>" tabindex="<%=tabindex+1%>" />
+        <input type="text" name="time" value="<%=time%>" tabindex="<%=tabindex+2%>" />
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="user">
+      <td class="player" title="<%=user_tooltip%>"><%=user_title%></td>
+      <td class="marker">✓</td>
+      <td class="set"><input type="text" name="user_set1" value="<%=user_set1%>" tabindex="<%=tabindex+10%>" /></td>
+      <td class="set"><input type="text" name="user_set2" value="<%=user_set2%>" tabindex="<%=tabindex+12%>" /></td>
+      <td class="set"><input type="text" name="user_set3" value="<%=user_set3%>" tabindex="<%=tabindex+14%>" /></td>
+      <td class="points">
+        <input type="text" name="user_points" value="<%=user_points%>" tabindex="<%=tabindex+16%>" />
+        <% if (user_points || other_points || editable) { %><span class="pts">pts</span><% } %>
+      </td>
+    </tr>
+    <tr class="other">
+      <td class="player" title="<%=other_tooltip%>"><%=other_title%></td>
+      <td class="marker"></td>
+      <td class="set"><input type="text" name="other_set1" value="<%=other_set1%>" tabindex="<%=tabindex+11%>" /></td>
+      <td class="set"><input type="text" name="other_set2" value="<%=other_set2%>" tabindex="<%=tabindex+13%>" /></td>
+      <td class="set"><input type="text" name="other_set3" value="<%=other_set3%>" tabindex="<%=tabindex+15%>" /></td>
+      <td class="points">
+        <input type="text" name="other_points" value="<%=other_points%>" tabindex="<%=tabindex+17%>" />
+        <% if (user_points || other_points || editable) { %><span class="pts">pts</span><% } %>
+      </td>
+      </td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <th colspan="6">
+        <input type="text" name="comment" value="<%=comment%>" tabindex="<%=tabindex+20%>" /></th>
+    </tr>
+  </tfoot>
 </script>
 
 <script id="event-template" type="text/template">
