@@ -1,0 +1,220 @@
+html, body {
+  height: 100%;
+}
+
+body {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.navbar-toggle {
+  float: left;
+  margin-left: 15px;
+}
+
+.navmenu {
+  z-index: 1;
+}
+
+.canvas {
+  position: relative;
+  left: 0;
+  z-index: 2;
+  min-height: 100%;
+  padding: 50px 0 0 0;
+  background: #fff;
+}
+
+@media (min-width: 0) {
+  .navbar-toggle {
+    display: block; /* force showing the toggle */
+  }
+}
+
+@media (min-width: 992px) {
+  body {
+    padding: 0;
+  }
+  .navbar {
+    right: auto;
+    background: none;
+    border: none;
+  }
+  .canvas {
+    padding: 0;
+  }
+}
+
+.contents {
+  position: absolute;
+  top: 0;
+  padding-top: 50px;
+  width: 100%;
+  height: 100%;
+}
+
+.content {
+  width: 100%;
+  height: 100%;
+  -webkit-overflow-scrolling: touch;
+}
+
+#home {
+  text-align: center;
+  color: white;
+  position: relative;
+  padding-right: 15px;
+  background-color: #46aaf8;
+}
+
+#home .wrapper {
+  display: table;
+  width: 100%;
+  height: 100%;
+}
+
+#home .wrapper .center {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+#home .wrapper .center h1 {
+  font-size: 60px;
+}
+
+.events {
+  padding-bottom: 15px;
+}
+
+.event {
+  display: table;
+  table-layout: fixed;
+  background-color: #fff;
+  margin-top: 2px;
+  padding: 5px;
+}
+
+.event-date {
+  margin-top: 10px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.event .col {
+  display: table-cell;
+  padding: 5px;
+}
+
+.event .col.when {
+  vertical-align: top;
+  width: 20%;
+  border-right: 2px solid #009900;
+  text-align: right;
+  padding-right: 15px;
+}
+
+.event .col.when.past {
+  border-right: 2px solid #666;
+}
+
+.event .col.when .end {
+  color: #999;
+}
+
+.event .col.title {
+  vertical-align: top;
+  width: 60%;
+  padding-left: 15px;
+}
+
+.event .col.invoice {
+  vertical-align: middle;
+  text-align: right;
+}
+
+
+#matches {
+  padding: 15px;
+}
+
+.match {
+  margin-bottom: 15px;
+}
+
+.match tbody {
+  border: 1px solid #666;
+  font-size: 16px;
+}
+
+.match tbody tr {
+  border-bottom: 1px solid #666;
+}
+
+.match td,
+.match th {
+  padding: 5px 10px;
+}
+
+.match td.player {
+  width: 150px;
+}
+
+.match td.marker {
+  width: 36px;
+}
+
+.match td.set {
+  width: 30px;
+  padding: 0;
+}
+
+.match input {
+  display: inline-block;
+  border: none;
+  width: 100%;
+  padding: 5px;
+}
+
+.match th.date-time {
+  text-align: right;
+}
+
+.match input[name=location] {
+  width: 160px;
+  padding: 5px 0;
+}
+.match input[name=date] {
+  width: 80px;
+  padding: 5px 0;
+  text-align: right;
+}
+
+.match input[name=time] {
+  width: 40px;
+  padding: 5px 0;
+  text-align: right;
+}
+
+.match td.points {
+  width: 60px;
+  padding: 0;
+}
+
+.match td.points input {
+  width: 30px;
+  padding: 5px 0;
+  text-align: right;
+}
+
+.match td.points .pts {
+  font-size: 12px;
+}
+
+.match tfoot th {
+  font-weight: normal;
+  color: #666;
+}
