@@ -92,9 +92,16 @@
     template: undefined,
     className: 'match',
     tagName: 'table',
+    events: {
+      'keydown input': 'onInputKeydown',
+      'blur input': 'saveInputToModel'
+    },
+    initialize: function(options) {
+      this.listenTo(this.model, 'change:winner_id', this.renderMarker);
+    },
     render: function(options) {
       var data = this.model.toRender();
-      data.editable = true;
+      data.editable = options && options.editMatches;
       data.tabindex = options && options.tabindex ? options.tabindex : 100;
 
       this.$el
@@ -102,7 +109,21 @@
         .data('id', data.id)
         .find('input').attr('readonly', !data.editable);
 
+      this.renderMarker();
       return this;
+    },
+    renderMarker: function() {
+
+    },
+    onInputKeydown: function(e) {
+      if (e.keyCode == 13) this.saveInputToModel.apply(this, arguments);
+    },
+    saveInputToModel: function(e) {
+      var $input = $(e.currentTarget),
+          attr = $input.attr('name'),
+          isNumber = $input.hasClass('set') || $input.hasClass('points'),
+          value = isNumber ? parseInt($input.val(), 10) : $input.val();
+      this.model.set(attr, value);
     }
   });
   $('document').ready(function() {
@@ -113,6 +134,7 @@
     className: 'match',
     initialize: function(options) {
       this.onResize = _.bind(_.debounce(this.onResize, 100), this);
+      this.listenTo(this.model, 'change:editMatches', this.render);
       $(window).on('resize', this.onResize);
     },
     remove: function() {
@@ -129,14 +151,14 @@
       this.$el.empty();
 
       var self = this,
-          tabindex = 100;
+          options = _.extend(this.model.toJSON(), {tabindex: 100});
       this.collection.each(function(model) {
         var view = new Backbone.MatchView({
           model: model
         });
-        self.$el.append(view.render({tabindex: tabindex}).$el);
+        self.$el.append(view.render(options).$el);
         self.views.push(view);
-        tabindex += 100;
+        options.tabindex += 100;
       });
       return this;
     }

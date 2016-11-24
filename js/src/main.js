@@ -1,18 +1,32 @@
 $(document).ready(function() {
 
+  Backbone.TennisAppState = Backbone.Model.extend({
+    defaults: {
+      editMatches: false
+    }
+  });
+
   Backbone.TennisApp = Backbone.View.extend({
     initialize: function(options) {
 
+      this.topMenu = new Backbone.TopMenuView({
+        el: $('#top-menu'),
+        model: this.model
+      });
+
       this.views = {
         home: new Backbone.HomeView({
-          el: $('#home')
+          el: $('#home'),
+          model: this.model
         }),
         matches: new Backbone.MatchesView({
           el: $('#matches'),
+          model: this.model,
           collection: new Backbone.MatchCollection(window._matches)
         }),
         events: new Backbone.EventsView({
           el: $('#events'),
+          model: this.model,
           collection: new Backbone.EventCollection(window._events)
         })
       };
@@ -44,7 +58,12 @@ $(document).ready(function() {
       name = name == undefined ? hash : name;
 
       this.hideAll();
-      this.views[name || 'home'].$el.show();
+      var viewName = name || 'home',
+          view = this.views[viewName];
+      this.model.set({view: viewName});
+
+      view.$el.show();
+      this.topMenu.render();
 
       var route = !name || name == 'home' ? '' : name;
       history.pushState({name:name}, '', url + (route ? '#' : '') + route);
@@ -52,7 +71,9 @@ $(document).ready(function() {
       this.updateLinks();
     },
     hide: function(name) {
-      this.views[name || 'home'].$el.show();
+      var view = this.views[name || 'home'];
+      view.$el.show();
+      this.topMenu.render();
     },
     hideAll: function() {
       _.each(this.views, function(view) {
@@ -71,6 +92,7 @@ $(document).ready(function() {
   });
 
   window.app = new Backbone.TennisApp({
+    model: new Backbone.TennisAppState(),
     el: $('#side-menu')
   }).render();
 
