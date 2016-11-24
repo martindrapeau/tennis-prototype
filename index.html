@@ -98,22 +98,22 @@
     <tr class="user">
       <td class="player" title="<%=user_tooltip%>"><%=user_title%></td>
       <td class="marker">✓</td>
-      <td class="set"><input type="text" name="user_set1" value="<%=user_set1%>" tabindex="<%=tabindex+10%>" /></td>
-      <td class="set"><input type="text" name="user_set2" value="<%=user_set2%>" tabindex="<%=tabindex+12%>" /></td>
-      <td class="set"><input type="text" name="user_set3" value="<%=user_set3%>" tabindex="<%=tabindex+14%>" /></td>
+      <td class="set"><input type="number" pattern="[0-9]*" inputmode="numeric" name="user_set1" value="<%=user_set1%>" tabindex="<%=tabindex+10%>" /></td>
+      <td class="set"><input type="number" pattern="[0-9]*" inputmode="numeric" name="user_set2" value="<%=user_set2%>" tabindex="<%=tabindex+12%>" /></td>
+      <td class="set"><input type="number" pattern="[0-9]*" inputmode="numeric" name="user_set3" value="<%=user_set3%>" tabindex="<%=tabindex+14%>" /></td>
       <td class="points">
-        <input type="text" name="user_points" value="<%=user_points%>" tabindex="<%=tabindex+16%>" />
+        <input type="number" pattern="[0-9]*" inputmode="numeric" name="user_points" value="<%=user_points%>" tabindex="<%=tabindex+16%>" />
         <% if (user_points || other_points || editable) { %><span class="pts">pts</span><% } %>
       </td>
     </tr>
     <tr class="other">
       <td class="player" title="<%=other_tooltip%>"><%=other_title%></td>
       <td class="marker"></td>
-      <td class="set"><input type="text" name="other_set1" value="<%=other_set1%>" tabindex="<%=tabindex+11%>" /></td>
-      <td class="set"><input type="text" name="other_set2" value="<%=other_set2%>" tabindex="<%=tabindex+13%>" /></td>
-      <td class="set"><input type="text" name="other_set3" value="<%=other_set3%>" tabindex="<%=tabindex+15%>" /></td>
+      <td class="set"><input type="number" pattern="[0-9]*" inputmode="numeric" name="other_set1" value="<%=other_set1%>" tabindex="<%=tabindex+11%>" /></td>
+      <td class="set"><input type="number" pattern="[0-9]*" inputmode="numeric" name="other_set2" value="<%=other_set2%>" tabindex="<%=tabindex+13%>" /></td>
+      <td class="set"><input type="number" pattern="[0-9]*" inputmode="numeric" name="other_set3" value="<%=other_set3%>" tabindex="<%=tabindex+15%>" /></td>
       <td class="points">
-        <input type="text" name="other_points" value="<%=other_points%>" tabindex="<%=tabindex+17%>" />
+        <input type="number" pattern="[0-9]*" inputmode="numeric" name="other_points" value="<%=other_points%>" tabindex="<%=tabindex+17%>" />
         <% if (user_points || other_points || editable) { %><span class="pts">pts</span><% } %>
       </td>
       </td>
