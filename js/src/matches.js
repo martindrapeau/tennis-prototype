@@ -35,17 +35,20 @@
 
       data.score = this.getScore();
 
-      var winners = this.getWinners();
+      data.winner = this.getWinner();
+      data.winner_id = data.winner ? data[data.winner + '_id'] : null;
+      data.winner_partner_id = data.winner ? data[data.winner + '_partner_id'] : null;
 
       return data;
     },
     getScore: function() {
       var score = '',
-          match = this.toJSON();
+          match = this.toJSON(),
+          winner = this.getWinner();
 
-      if (!match.winner_id) return score;
+      if (!winner) return score;
 
-      if (match['winner_id'] == match['user_id']) {
+      if (winner == 'user') {
         if (match['user_set1'] || match['other_set1'])
           score = (match['user_set1']!==null?match['user_set1']:'?')+'-'+(match['other_set1']!==null?match['other_set1']:'?');
         if (score.length && (match['user_set2'] || match['other_set2'])) 
@@ -61,7 +64,7 @@
           score += (match['user_points']?match['user_points']:'?')+'-'+(match['other_points']?match['other_points']:'?').'pts';
         }*/
         if (match['exception'] == USER_WON_BECAUSE_FORFEIT)
-          score += (score.length ? ' ' : '') + 'default';
+          score += (score.length ? ' ' : '') + 'forfeit';
       } else {
         if (match['user_set1'] || match['other_set1'])
           score = (match['other_set1']!==null?match['other_set1']:'?')+'-'+(match['user_set1']!==null?match['user_set1']:'?');
@@ -78,59 +81,54 @@
           score += (match['other_points']?match['other_points']:'?')+'-'+(match['user_points']?match['user_points']:'?').'pts';
         }*/
         if (match['exception'] == OTHER_WON_BECAUSE_FORFEIT)
-          score += (score.length ? ' ' : '') + 'default';
+          score += (score.length ? ' ' : '') + 'forfeit';
       }
 
       return score;
     },
-    // Returns the user ids of the winner(s) of a match. Returns an
-    // empty array if the match was not played.
-    // Argument match can be a match record, or a match id.
-    getWinners: function() {
-      var match = this.toJSON(),
-          user_ids = _.pick(match, 'user_id', 'user_partner_id'),
-          other_ids = _.pick(match, 'other_id', 'other_partner_id');
+    // Returns the winner of the match. Either user, other or null.
+    getWinner: function() {
+      var match = this.toJSON();
       
       // Look at the exceptional cases
-      if (match['exception'] == INCOMPLETE) return {};
+      if (match['exception'] == INCOMPLETE) return null;
       if (match['exception'] !== null) {
         if (match['exception'] == USER_WON_BECAUSE_BYE ||
           match['exception'] == USER_WON_BECAUSE_FORFEIT)
-          return user_ids;
+          return 'user';
         if (match['exception'] == OTHER_WON_BECAUSE_BYE ||
           match['exception'] == OTHER_WON_BECAUSE_FORFEIT)
-          return other_ids;
+          return 'other';
       }
       
       // Look at sets
       var user_sets_won = 0,
           other_sets_won = 0;
       for (var set = 1; set <= 5; set++) {
-        winner_keys = _.keys(this.getWinnersOfSet(set));
-        if (_.indexOf(winner_keys, match.user_id)) user_sets_won += 1;
-        if (_.indexOf(winner_keys, match.other_id)) other_sets_won += 1;
+        var winner = this.getWinnerOfSet(set);
+        if (winner == 'user') user_sets_won += 1;
+        else if (winner == 'other') other_sets_won += 1;
       }
-      if (user_sets_won > other_sets_won) return user_ids;
-      if (other_sets_won > user_sets_won) return other_ids;
+      if (user_sets_won > other_sets_won) return 'user';
+      if (other_sets_won > user_sets_won) return 'other';
       
       // Look at points
-      if (!match['user_points'] && !match['other_points']) return [];
-      if (!match['user_points'] || match['other_points'] > match['user_points']) return other_ids;
-      if (!match['other_points'] || match['user_points'] > match['other_points']) return user_ids;
+      if (!match['user_points'] && !match['other_points']) return null;
+      if (!match['user_points'] || match['other_points'] > match['user_points']) return 'other';
+      if (!match['other_points'] || match['user_points'] > match['other_points']) return 'user';
       
-      return {};
+      return null;
     },
     // Returns the stats on sets played and won.
-    // Argument match can be a match record, or a match id.
     getSetStats: function() {
       var match = this.toJSON(),
           sets_played = 0,
           user_sets_won = 0,
           other_sets_won = 0;
       for (var set = 1; set <= 5; set++) {
-        winner_keys = _.keys(this.getWinnersOfSet(set));
-        if (_.indexOf(winner_keys, match.user_id)) user_sets_won += 1;
-        if (_.indexOf(winner_keys, match.other_id)) other_sets_won += 1;
+        var winner = this.getWinnerOfSet(set);
+        if (winner == 'user') user_sets_won += 1;
+        else if (winner == 'other') other_sets_won += 1;
       }
       return {
         sets_played: sets_played,
@@ -138,19 +136,17 @@
         other_sets_won: other_sets_won
       };
     },
-    // Returns a hash of the winners of a set. Returns an empty object if there is no winner.
-    getWinnersOfSet: function(set) {
-      if (set != 1 && set != 2 && set != 3 && set != 4 && set != 5) return {};
-      var match = this.toJSON(),
-          user_ids = _.pick(match, 'user_id', 'user_partner_id'),
-          other_ids = _.pick(match, 'other_id', 'other_partner_id');
+    // Returns the winner of the set. Either user, other or null.
+    getWinnerOfSet: function(set) {
+      if (set != 1 && set != 2 && set != 3 && set != 4 && set != 5) return null;
+      var match = this.toJSON();
       
-      if (!match['user_set'+set] && !match['other_set'+set]) return {};
-      if (!match['user_set'+set]) return other_ids;
-      if (!match['other_set'+set]) return user_ids;
-      if (match['user_set'+set] > match['other_set'+set]) return user_ids;
-      if (match['user_set'+set] < match['other_set'+set]) return other_ids;
-      return {};
+      if (!match['user_set'+set] && !match['other_set'+set]) return null;
+      if (!match['user_set'+set]) return 'other';
+      if (!match['other_set'+set]) return 'user';
+      if (match['user_set'+set] > match['other_set'+set]) return 'user';
+      if (match['user_set'+set] < match['other_set'+set]) return 'other';
+      return null;
     }
   });
 
@@ -169,7 +165,10 @@
       'focus input[readonly]': 'onReadonlyInputFocus'
     },
     initialize: function(options) {
-      this.listenTo(this.model, 'change:winner_id', this.renderMarker);
+      this.listenTo(this.model, 'change', this.onMatchChange);
+    },
+    onMatchChange: function() {
+      this.renderMarker(this.model.toRender());
     },
     render: function(options) {
       var data = this.model.toRender();
@@ -181,11 +180,18 @@
         .data('id', data.id)
         .find('input').attr('readonly', !data.editable);
 
-      this.renderMarker();
+      if (data.editable) {
+        this.$('input[name=date]')
+          .datepicker({format: 'yyyy-mm-dd'})
+          .on('changeDate', _.bind(this.saveInputToModel, this));
+      }
+
+      this.renderMarker(data);
       return this;
     },
-    renderMarker: function() {
-
+    renderMarker: function(data) {
+      this.$('.marker').empty();
+      if (data.winner != null) this.$('.'+data.winner+' .marker').text('✓');
     },
     onInputKeydown: function(e) {
       if (e.keyCode == 13) this.saveInputToModel.apply(this, arguments);
@@ -196,8 +202,16 @@
     saveInputToModel: function(e) {
       var $input = $(e.currentTarget),
           attr = $input.attr('name'),
-          isNumber = $input.hasClass('set') || $input.hasClass('points'),
-          value = isNumber ? parseInt($input.val(), 10) : $input.val();
+          type = $input.attr('type'),
+          value = $input.val();
+      if (type == 'number') {
+        value = parseFloat(value, 10);
+        if (isNaN(value)) value = null;
+      }
+      if (attr == 'date') {
+        attr = 'played_on';
+        value = moment(value + ' ' + this.$('input[name=time]').val()).format('YYYY-MM-DD HH:mm:ss');
+      }
       this.model.set(attr, value);
     }
   });

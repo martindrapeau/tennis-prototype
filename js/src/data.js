@@ -31,7 +31,7 @@
     other_set5: null,
     user_tie5: null,
     other_tie5: null,
-    exception: "user_won_because_forfeit",
+    exception: null,
     user: {
       id: 2314,
       name: "Abdelkader Merabet",
@@ -75,7 +75,7 @@
     other_set5: null,
     user_tie5: null,
     other_tie5: null,
-    exception: "user_won_because_forfeit",
+    exception: null,
     user: {
       id: 2414,
       name: "Martin Gilbert Drapeau",

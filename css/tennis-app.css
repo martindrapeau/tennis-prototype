@@ -165,6 +165,9 @@ body {
 
 .match td.marker {
   width: 36px;
+  font-weight: bold;
+  padding: 5px;
+  text-align: center;
 }
 
 .match td.set {
@@ -220,6 +223,11 @@ body {
 .match td.points {
   width: 60px;
   padding: 0;
+}
+
+.match td.set input {
+  text-align: center;
+  padding: 5px 0;
 }
 
 .match td.points input {
