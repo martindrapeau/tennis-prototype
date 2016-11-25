@@ -200,6 +200,11 @@ body {
   padding-bottom: 0;
 }
 
+.match input[readonly][name=date].editing {
+  border: 1px dotted #9999FF;
+  padding-bottom: 5px;
+}
+
 .match tfoot input[readonly] {
   padding-top: 0;
 }

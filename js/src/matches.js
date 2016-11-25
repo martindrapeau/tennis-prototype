@@ -189,7 +189,13 @@
               vertical: 'auto'
             }
           })
-          .on('change', _.bind(this.saveInputToModel, this));
+          .on('dp.show', function(e) {
+            $(e.currentTarget).prop('readonly', 'readonly').addClass('editing');
+          })
+          .on('dp.hide', function(e) {
+            $(e.currentTarget).prop('readonly', false).removeClass('editing');
+          })
+          .on('dp.change', _.bind(this.saveInputToModel, this));
       }
 
       this.renderMarker(data);
