@@ -161,8 +161,8 @@
     tagName: 'table',
     events: {
       'keydown input': 'onInputKeydown',
-      'blur input': 'saveInputToModel',
-      'focus input[readonly]': 'onReadonlyInputFocus'
+      'blur input:not([name=date])': 'saveInputToModel',
+      'focus input[readonly]:not(.editing)': 'onReadonlyInputFocus'
     },
     initialize: function(options) {
       this.listenTo(this.model, 'change', this.onMatchChange);
@@ -178,22 +178,19 @@
       this.$el
         .html(this.template(data))
         .data('id', data.id)
-        .find('input').attr('readonly', !data.editable);
+        .find('input').prop('readonly', !data.editable);
 
       if (data.editable) {
         this.$('input[name=date]')
+          .prop('readonly', true)
+          .addClass('editing')
           .datetimepicker({
             format: 'YYYY-MM-DD',
             widgetPositioning: {
               horizontal: 'right',
               vertical: 'auto'
-            }
-          })
-          .on('dp.show', function(e) {
-            $(e.currentTarget).prop('readonly', 'readonly').addClass('editing');
-          })
-          .on('dp.hide', function(e) {
-            $(e.currentTarget).prop('readonly', false).removeClass('editing');
+            },
+            ignoreReadonly: true
           })
           .on('dp.change', _.bind(this.saveInputToModel, this));
       }
