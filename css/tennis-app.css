@@ -25,6 +25,13 @@ body {
   margin-right: 10px;
 }
 
+#side-menu {
+  display: none;
+}
+#side-menu.in {
+  display: block;
+}
+
 .canvas {
   position: relative;
   left: 0;
