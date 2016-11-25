@@ -165,7 +165,8 @@
     tagName: 'table',
     events: {
       'keydown input': 'onInputKeydown',
-      'blur input': 'saveInputToModel'
+      'blur input': 'saveInputToModel',
+      'focus input[readonly]': 'onReadonlyInputFocus'
     },
     initialize: function(options) {
       this.listenTo(this.model, 'change:winner_id', this.renderMarker);
@@ -188,6 +189,9 @@
     },
     onInputKeydown: function(e) {
       if (e.keyCode == 13) this.saveInputToModel.apply(this, arguments);
+    },
+    onReadonlyInputFocus: function(e) {
+      $(e.currentTarget).blur();
     },
     saveInputToModel: function(e) {
       var $input = $(e.currentTarget),
