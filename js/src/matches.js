@@ -182,8 +182,14 @@
 
       if (data.editable) {
         this.$('input[name=date]')
-          .datepicker({format: 'yyyy-mm-dd'})
-          .on('changeDate', _.bind(this.saveInputToModel, this));
+          .datetimepicker({
+            format: 'YYYY-MM-DD',
+            widgetPositioning: {
+              horizontal: 'right',
+              vertical: 'auto'
+            }
+          })
+          .on('change', _.bind(this.saveInputToModel, this));
       }
 
       this.renderMarker(data);
