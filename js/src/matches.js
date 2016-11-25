@@ -183,7 +183,7 @@
       if (data.editable) {
         this.$('input[name=date]')
           .prop('readonly', true)
-          .addClass('editing')
+          .addClass('editing needsclick')
           .datetimepicker({
             format: 'YYYY-MM-DD',
             widgetPositioning: {
