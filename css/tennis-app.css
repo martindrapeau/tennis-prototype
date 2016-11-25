@@ -20,6 +20,11 @@ body {
   z-index: 1;
 }
 
+.navbar-fixed-top .nav-buttons {
+  margin-top: 7.5px;
+  margin-right: 10px;
+}
+
 .canvas {
   position: relative;
   left: 0;
@@ -181,8 +186,14 @@ body {
   margin: 5px 0;
   padding: 5px;
   border: 1px dotted #9999FF;
-  -webkit-appearance: none;
   border-radius: 0;
+}
+.match input[type=number]::-webkit-inner-spin-button, 
+.match input[type=number]::-webkit-outer-spin-button { 
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0; 
 }
 
 .match input[readonly] {

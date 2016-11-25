@@ -60,11 +60,13 @@
     <span class="icon-bar"></span>
     <span class="icon-bar"></span>
   </button>
-  <% if (view == 'matches') { %>
-    <div class="btn-group pull-right">
-      <button type="button" class="btn btn-default edit-matches"><i class="fa fa-fw fa-pencil"></i></button>
-    </div>
-  <% } %>
+  <div class="nav-buttons">
+    <% if (view == 'matches') { %>
+      <div class="btn-group pull-right">
+        <button type="button" class="btn btn-default edit-matches"><i class="fa fa-fw <%=editMatches ? 'fa-save' : 'fa-pencil'%>"></i></button>
+      </div>
+    <% } %>
+  </div>
 </script>
 
 <script id="home-template" type="text/template">

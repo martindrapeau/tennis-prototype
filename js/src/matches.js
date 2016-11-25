@@ -16,7 +16,30 @@
 
   Backbone.MatchModel = Backbone.Model.extend({
     idAttribute: 'Id',
-    buildScore: function() {
+    toRender: function() {
+      var data = this.toJSON();
+
+      var when = moment(data.played_on);
+      data.date = when ? when.format('YYYY-MM-DD') : '';
+      data.time = when ? when.format('HH:mm') : '';
+
+      !data.user || (data.user.title = _.shortName(data.user.name));
+      !data.user_partner || (data.user_partner.title = _.shortName(data.user_partner.name));
+      data.user_title = _.compact([data.user ? data.user.title : null, data.user_partner ? data.user_partner.title : null]).join('<br/>');
+      data.user_tooltip = _.compact([data.user ? data.user.name : null, data.user_partner ? data.user_partner.name : null]).join(' &amp; ');
+
+      !data.other || (data.other.title = _.shortName(data.other.name));
+      !data.other_partner || (data.other_partner.title = _.shortName(data.other_partner.name));
+      data.other_title = _.compact([data.other ? data.other.title : null, data.other_partner ? data.other_partner.title : null]).join('<br/>');
+      data.other_tooltip = _.compact([data.other ? data.other.name : null, data.other_partner ? data.other_partner.name : null]).join(' &amp; ');
+
+      data.score = this.getScore();
+
+      var winners = this.getWinners();
+
+      return data;
+    },
+    getScore: function() {
       var score = '',
           match = this.toJSON();
 
@@ -60,26 +83,74 @@
 
       return score;
     },
-    toRender: function() {
-      var data = this.toJSON();
-
-      var when = moment(data.played_on);
-      data.date = when ? when.format('YYYY-MM-DD') : '';
-      data.time = when ? when.format('HH:mm') : '';
-
-      !data.user || (data.user.title = _.shortName(data.user.name));
-      !data.user_partner || (data.user_partner.title = _.shortName(data.user_partner.name));
-      data.user_title = _.compact([data.user ? data.user.title : null, data.user_partner ? data.user_partner.title : null]).join('<br/>');
-      data.user_tooltip = _.compact([data.user ? data.user.name : null, data.user_partner ? data.user_partner.name : null]).join(' &amp; ');
-
-      !data.other || (data.other.title = _.shortName(data.other.name));
-      !data.other_partner || (data.other_partner.title = _.shortName(data.other_partner.name));
-      data.other_title = _.compact([data.other ? data.other.title : null, data.other_partner ? data.other_partner.title : null]).join('<br/>');
-      data.other_tooltip = _.compact([data.other ? data.other.name : null, data.other_partner ? data.other_partner.name : null]).join(' &amp; ');
-
-      data.score = this.buildScore();
-
-      return data;
+    // Returns the user ids of the winner(s) of a match. Returns an
+    // empty array if the match was not played.
+    // Argument match can be a match record, or a match id.
+    getWinners: function() {
+      var match = this.toJSON(),
+          user_ids = _.pick(match, 'user_id', 'user_partner_id'),
+          other_ids = _.pick(match, 'other_id', 'other_partner_id');
+      
+      // Look at the exceptional cases
+      if (match['exception'] == INCOMPLETE) return {};
+      if (match['exception'] !== null) {
+        if (match['exception'] == USER_WON_BECAUSE_BYE ||
+          match['exception'] == USER_WON_BECAUSE_FORFEIT)
+          return user_ids;
+        if (match['exception'] == OTHER_WON_BECAUSE_BYE ||
+          match['exception'] == OTHER_WON_BECAUSE_FORFEIT)
+          return other_ids;
+      }
+      
+      // Look at sets
+      var user_sets_won = 0,
+          other_sets_won = 0;
+      for (var set = 1; set <= 5; set++) {
+        winner_keys = _.keys(this.getWinnersOfSet(set));
+        if (_.indexOf(winner_keys, match.user_id)) user_sets_won += 1;
+        if (_.indexOf(winner_keys, match.other_id)) other_sets_won += 1;
+      }
+      if (user_sets_won > other_sets_won) return user_ids;
+      if (other_sets_won > user_sets_won) return other_ids;
+      
+      // Look at points
+      if (!match['user_points'] && !match['other_points']) return [];
+      if (!match['user_points'] || match['other_points'] > match['user_points']) return other_ids;
+      if (!match['other_points'] || match['user_points'] > match['other_points']) return user_ids;
+      
+      return {};
+    },
+    // Returns the stats on sets played and won.
+    // Argument match can be a match record, or a match id.
+    getSetStats: function() {
+      var match = this.toJSON(),
+          sets_played = 0,
+          user_sets_won = 0,
+          other_sets_won = 0;
+      for (var set = 1; set <= 5; set++) {
+        winner_keys = _.keys(this.getWinnersOfSet(set));
+        if (_.indexOf(winner_keys, match.user_id)) user_sets_won += 1;
+        if (_.indexOf(winner_keys, match.other_id)) other_sets_won += 1;
+      }
+      return {
+        sets_played: sets_played,
+        user_sets_won: user_sets_won,
+        other_sets_won: other_sets_won
+      };
+    },
+    // Returns a hash of the winners of a set. Returns an empty object if there is no winner.
+    getWinnersOfSet: function(set) {
+      if (set != 1 && set != 2 && set != 3 && set != 4 && set != 5) return {};
+      var match = this.toJSON(),
+          user_ids = _.pick(match, 'user_id', 'user_partner_id'),
+          other_ids = _.pick(match, 'other_id', 'other_partner_id');
+      
+      if (!match['user_set'+set] && !match['other_set'+set]) return {};
+      if (!match['user_set'+set]) return other_ids;
+      if (!match['other_set'+set]) return user_ids;
+      if (match['user_set'+set] > match['other_set'+set]) return user_ids;
+      if (match['user_set'+set] < match['other_set'+set]) return other_ids;
+      return {};
     }
   });
 

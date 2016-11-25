@@ -42,8 +42,6 @@
       name: "Samuel Gendron",
     },
     other_partner: null,
-    winner_id: 2314,
-    winner_partner_id: null,
     location: "Calixa Lavallée",
     comment: "Bon match!"
   }, {
@@ -94,8 +92,6 @@
       id: 2418,
       name: "Eva Mussely",
     },
-    winner_id: 2414,
-    winner_partner_id: 2415,
     location: "Calixa Lavallée",
     comment: "Bon match!"
   }];
