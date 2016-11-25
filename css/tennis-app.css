@@ -1,3 +1,7 @@
+html {
+  touch-action: manipulation;
+}
+
 html, body {
   height: 100%;
 }
