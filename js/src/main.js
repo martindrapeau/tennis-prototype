@@ -96,6 +96,4 @@ $(document).ready(function() {
     el: $('#side-menu')
   }).render();
 
-  FastClick.attach(document.body);
-
 });
