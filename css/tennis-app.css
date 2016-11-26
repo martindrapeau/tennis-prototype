@@ -253,3 +253,7 @@ body {
   font-weight: normal;
   color: #666;
 }
+
+.match>tfoot>tr>th.dropup {
+  text-align: right;
+}

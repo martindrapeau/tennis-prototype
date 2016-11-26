@@ -125,8 +125,22 @@
   </tbody>
   <tfoot>
     <tr>
-      <th colspan="6">
-        <input type="text" name="comment" value="<%=comment%>" tabindex="<%=tabindex+20%>" /></th>
+      <th colspan="<%=editable ? 5 : 6 %>">
+        <input type="text" name="comment" value="<%=comment%>" tabindex="<%=tabindex+20%>" />
+      </th>
+      <% if (editable) { %>
+        <th colspan="1" class="dropdown">
+          <button class="btn btn-default btn-sm more dropdown-toggle" type="button" id="match-more-<%=id%>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">More <span class="caret"></span></button>
+          <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="match-more-<%=id%>">
+            <li><a href="#" class="incomplete">Incomplete</a></li>
+            <li><a href="#" class="user-forfeited"><%=user_title%> forfeited</a></li>
+            <li><a href="#" class="other-forfeited"><%=other_title%> forfeited</a></li>
+            <li><a href="#" class="clear-exception">Clear exception</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="#" class="delete">Delete</a></li>
+          </ul>
+        </th>
+      <% } %>
     </tr>
   </tfoot>
 </script>
