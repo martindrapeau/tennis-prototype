@@ -1,6 +1,7 @@
 (function() {
 
   var USER_WON_BECAUSE_BYE = 'user_won_because_bye',
+      OTHER_WON_BECAUSE_BYE = 'other_won_because_bye',
       USER_WON_BECAUSE_FORFEIT = 'user_won_because_forfeit',
       OTHER_WON_BECAUSE_FORFEIT = 'other_won_because_forfeit',
       INCOMPLETE = 'incomplete',
@@ -164,13 +165,24 @@
     events: {
       'keydown input': 'onInputKeydown',
       'blur input:not([name=date])': 'saveInputToModel',
-      'focus input[readonly]:not(.editing)': 'onReadonlyInputFocus'
+      'focus input[readonly]:not(.editing)': 'onReadonlyInputFocus',
+      'click .exception': 'onClickException',
+      'click .delete': 'onClickDelete'
     },
     initialize: function(options) {
       this.listenTo(this.model, 'change', this.onMatchChange);
     },
     onMatchChange: function() {
       this.renderMarker(this.model.toRender());
+    },
+    onClickException: function(e) {
+      e.preventDefault();
+      var exception = $(e.currentTarget).data('exception');
+      this.model.set('exception', exception);
+    },
+    onClickDelete: function(e) {
+      e.preventDefault();
+      alert('not yet implemented');
     },
     render: function(options) {
       var data = this.model.toRender();
@@ -201,15 +213,21 @@
       return this;
     },
     renderMarker: function(data) {
-      this.$('.marker').empty();
+      this.$('.marker').removeClass('exception').prop('title', undefined).empty();
+      this.$('.dropdown-menu .exception').removeClass('strong');
+
       if (data.winner != null) this.$('.'+data.winner+' .marker').text('✓');
+
       if (data.exception == INCOMPLETE) {
+        this.$('.marker').addClass('exception').text('?').attr('title', 'Match incomplete');
         this.$('.dropdown-menu .incomplete').addClass('strong');
       }
+
       if (data.exception == USER_WON_BECAUSE_FORFEIT) {
         this.$('.other .marker').addClass('exception').text('forfeit');
         this.$('.dropdown-menu .user-forfeited').addClass('strong');
       }
+
       if (data.exception == OTHER_WON_BECAUSE_FORFEIT) {
         this.$('.user .marker').addClass('exception').text('forfeit');
         this.$('.dropdown-menu .other-forfeited').addClass('strong');
