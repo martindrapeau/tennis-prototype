@@ -212,6 +212,10 @@
           var menuEl = $(this).find(".dropdown-menu")[0];
           if (menuEl.scrollIntoView) menuEl.scrollIntoView();
         });
+
+        this.$('input[name=time]').on('focus', function(e) {
+          $(this).dropdown().show();
+        });
       }
 
       this.renderMarker(data);

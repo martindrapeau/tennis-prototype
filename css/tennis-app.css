@@ -269,7 +269,11 @@ body {
 .match>tfoot>tr>th.dropdown>.dropdown-menu a.strong {
   font-weight: bold;
 }
-.match>tfoot>tr>th.dropdown>.dropdown-menu a.inline {
+.match .dropdown-menu a.inline {
   display: inline-block;
   clear: none;
+}
+
+.match .dropdown.date-time>ul.dropdown-menu {
+  width: 320px;
 }

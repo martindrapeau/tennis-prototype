@@ -92,9 +92,49 @@
       <th colspan="2">
         <input type="text" name="location" value="<%=location%>" tabindex="<%=tabindex%>" />
       </th>
-      <th class="date-time" colspan="4">
+      <th class="date-time dropdown" colspan="4">
         <input type="text" name="date" value="<%=date%>" tabindex="<%=tabindex+1%>" />
-        <input type="text" name="time" value="<%=time%>" tabindex="<%=tabindex+2%>" />
+        <input type="text" name="time" value="<%=time%>" tabindex="<%=tabindex+2%>" <% if (editable) { %>data-toggle="dropdown"<% } %> />
+        <% if (editable) { %>
+          <ul class="dropdown-menu dropdown-menu-right">
+            <li>
+              <a href="#" class="inline">00:00</a>
+              <a href="#" class="inline">06:00</a>
+              <a href="#" class="inline">12:00</a>
+              <a href="#" class="inline">18:00</a>
+            </li>
+            <li>
+              <a href="#" class="inline">01:00</a>
+              <a href="#" class="inline">07:00</a>
+              <a href="#" class="inline">13:00</a>
+              <a href="#" class="inline">19:00</a>
+            </li>
+            <li>
+              <a href="#" class="inline">02:00</a>
+              <a href="#" class="inline">08:00</a>
+              <a href="#" class="inline">14:00</a>
+              <a href="#" class="inline">20:00</a>
+            </li>
+            <li>
+              <a href="#" class="inline">03:00</a>
+              <a href="#" class="inline">09:00</a>
+              <a href="#" class="inline">15:00</a>
+              <a href="#" class="inline">21:00</a>
+            </li>
+            <li>
+              <a href="#" class="inline">04:00</a>
+              <a href="#" class="inline">10:00</a>
+              <a href="#" class="inline">16:00</a>
+              <a href="#" class="inline">22:00</a>
+            </li>
+            <li>
+              <a href="#" class="inline">05:00</a>
+              <a href="#" class="inline">11:00</a>
+              <a href="#" class="inline">17:00</a>
+              <a href="#" class="inline">23:00</a>
+            </li>
+          </ul>
+        <% } %>
       </th>
     </tr>
   </thead>
