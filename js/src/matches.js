@@ -207,6 +207,11 @@
             ignoreReadonly: true
           })
           .on('dp.change', _.bind(this.saveInputToModel, this));
+
+        this.$(".dropdown").on("shown.bs.dropdown", function() {
+          var menuEl = $(this).find(".dropdown-menu")[0];
+          if (menuEl.scrollIntoView) menuEl.scrollIntoView();
+        });
       }
 
       this.renderMarker(data);
