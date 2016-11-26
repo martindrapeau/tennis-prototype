@@ -26,11 +26,13 @@
       !data.user || (data.user.title = _.shortName(data.user.name));
       !data.user_partner || (data.user_partner.title = _.shortName(data.user_partner.name));
       data.user_title = _.compact([data.user ? data.user.title : null, data.user_partner ? data.user_partner.title : null]).join('<br/>');
+      data.user_title_inline = _.compact([data.user ? data.user.title : null, data.user_partner ? data.user_partner.title : null]).join(' &amp; ');
       data.user_tooltip = _.compact([data.user ? data.user.name : null, data.user_partner ? data.user_partner.name : null]).join(' &amp; ');
 
       !data.other || (data.other.title = _.shortName(data.other.name));
       !data.other_partner || (data.other_partner.title = _.shortName(data.other_partner.name));
       data.other_title = _.compact([data.other ? data.other.title : null, data.other_partner ? data.other_partner.title : null]).join('<br/>');
+      data.other_title_inline = _.compact([data.other ? data.other.title : null, data.other_partner ? data.other_partner.title : null]).join(' &amp; ');
       data.other_tooltip = _.compact([data.other ? data.other.name : null, data.other_partner ? data.other_partner.name : null]).join(' &amp; ');
 
       data.score = this.getScore();

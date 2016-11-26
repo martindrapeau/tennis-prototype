@@ -129,15 +129,17 @@
         <input type="text" name="comment" value="<%=comment%>" tabindex="<%=tabindex+20%>" />
       </th>
       <% if (editable) { %>
-        <th colspan="1" class="dropdown">
+        <th colspan="1" class="dropup">
           <button class="btn btn-default btn-sm more dropdown-toggle" type="button" id="match-more-<%=id%>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">More <span class="caret"></span></button>
           <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="match-more-<%=id%>">
             <li><a href="#" class="incomplete">Incomplete</a></li>
-            <li><a href="#" class="user-forfeited"><%=user_title%> forfeited</a></li>
-            <li><a href="#" class="other-forfeited"><%=other_title%> forfeited</a></li>
-            <li><a href="#" class="clear-exception">Clear exception</a></li>
+            <li><a href="#" class="user-forfeited"><%=user_title_inline%> forfeited</a></li>
+            <li><a href="#" class="other-forfeited"><%=other_title_inline%> forfeited</a></li>
             <li role="separator" class="divider"></li>
-            <li><a href="#" class="delete">Delete</a></li>
+            <li>
+              <a href="#" class="inline pull-left clear-exception">Clear exception</a>
+              <a href="#" class="inline pull-right delete"><i class="fa fa-fw fa-trash"></i></a>
+            </li>
           </ul>
         </th>
       <% } %>

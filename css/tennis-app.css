@@ -257,3 +257,11 @@ body {
 .match>tfoot>tr>th.dropup {
   text-align: right;
 }
+.match>tfoot>tr>th.dropup>.dropdown-menu {
+  max-width: 300px;
+  min-width: 250px;
+}
+.match>tfoot>tr>th.dropup>.dropdown-menu a.inline {
+  display: inline-block;
+  clear: none;
+}
