@@ -31,7 +31,7 @@
     other_set5: null,
     user_tie5: null,
     other_tie5: null,
-    exception: null,
+    exception: 'user_won_because_forfeit',
     user: {
       id: 2314,
       name: "Abdelkader Merabet",

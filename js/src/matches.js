@@ -203,6 +203,17 @@
     renderMarker: function(data) {
       this.$('.marker').empty();
       if (data.winner != null) this.$('.'+data.winner+' .marker').text('✓');
+      if (data.exception == INCOMPLETE) {
+        this.$('.dropdown-menu .incomplete').addClass('strong');
+      }
+      if (data.exception == USER_WON_BECAUSE_FORFEIT) {
+        this.$('.other .marker').addClass('exception').text('forfeit');
+        this.$('.dropdown-menu .user-forfeited').addClass('strong');
+      }
+      if (data.exception == OTHER_WON_BECAUSE_FORFEIT) {
+        this.$('.user .marker').addClass('exception').text('forfeit');
+        this.$('.dropdown-menu .other-forfeited').addClass('strong');
+      }
     },
     onInputKeydown: function(e) {
       if (e.keyCode == 13) this.saveInputToModel.apply(this, arguments);

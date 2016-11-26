@@ -168,10 +168,15 @@ body {
 }
 
 .match td.marker {
-  width: 36px;
+  width: 40px;
   font-weight: bold;
   padding: 5px;
   text-align: center;
+}
+
+.match td.marker.exception {
+  font-weight: normal;
+  font-size: 12px;
 }
 
 .match td.set {
@@ -260,6 +265,9 @@ body {
 .match>tfoot>tr>th.dropup>.dropdown-menu {
   max-width: 300px;
   min-width: 250px;
+}
+.match>tfoot>tr>th.dropup>.dropdown-menu a.strong {
+  font-weight: bold;
 }
 .match>tfoot>tr>th.dropup>.dropdown-menu a.inline {
   display: inline-block;
