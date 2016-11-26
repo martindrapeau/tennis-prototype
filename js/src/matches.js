@@ -166,8 +166,8 @@
       'keydown input': 'onInputKeydown',
       'blur input:not([name=date])': 'saveInputToModel',
       'focus input[readonly]:not(.editing)': 'onReadonlyInputFocus',
-      'click .dropdown a.exception': 'onClickException',
-      'click .dropdown a.delete': 'onClickDelete'
+      'click .dropdown-menu a.exception': 'onClickException',
+      'click .dropdown-menu a.delete': 'onClickDelete'
     },
     initialize: function(options) {
       this.listenTo(this.model, 'change', this.onMatchChange);
