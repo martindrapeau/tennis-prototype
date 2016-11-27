@@ -221,7 +221,7 @@
     },
     onClickDelete: function(e) {
       e.preventDefault();
-      alert('not yet implemented');
+      this.model.collection.remove(this.model);
     },
     onClickTime: function(e) {
       e.preventDefault();
@@ -326,13 +326,13 @@
     initialize: function(options) {
       this.onResize = _.bind(_.debounce(this.onResize, 100), this);
       this.listenTo(this.model, 'change:editMatches', this.render);
+      this.listenTo(this.collection, 'add remove', this.render);
       $(window).on('resize', this.onResize);
     },
     onAddMatch: function(e) {
       var lastMatch = this.collection.last(),
           newMatch = new Backbone.MatchModel(lastMatch ? lastMatch.pick(['location', 'played_on']) : undefined);
       this.collection.add(newMatch);
-      this.render();
       this.views[this.views.length-1].$el[0].scrollIntoView();
     },
     remove: function() {
@@ -343,6 +343,7 @@
       this.render();
     },
     render: function() {
+      console.log('MatchesView.render');
       this.views || (this.views = []);
       for (var i = 0; i < this.views.length; i++) this.views[i].remove();
       this.views = [];
