@@ -16,7 +16,45 @@
   };
 
   Backbone.MatchModel = Backbone.Model.extend({
-    idAttribute: 'Id',
+    defaults: {
+      id: undefined,
+      type: "singles",
+      created_on: null,
+      played_on: null,
+      user_id: null,
+      user_partner_id: null,
+      other_id: null,
+      other_partner_id: null,
+      user_points: null,
+      other_points: null,
+      user_set1: null,
+      other_set1: null,
+      user_tie1: null,
+      other_tie1: null,
+      user_set2: null,
+      other_set2: null,
+      user_tie2: null,
+      other_tie2: null,
+      user_set3: null,
+      other_set3: null,
+      user_tie3: null,
+      other_tie3: null,
+      user_set4: null,
+      other_set4: null,
+      user_tie4: null,
+      other_tie4: null,
+      user_set5: null,
+      other_set5: null,
+      user_tie5: null,
+      other_tie5: null,
+      exception: null,
+      user: null,
+      user_partner: null,
+      other: null,
+      other_partner: null,
+      location: null,
+      comment: null
+    },
     toRender: function() {
       var data = this.toJSON();
 
@@ -282,10 +320,17 @@
 
   Backbone.MatchesView = Backbone.View.extend({
     className: 'match',
+    events: {
+      'click .add-match': 'onAddMatch'
+    },
     initialize: function(options) {
       this.onResize = _.bind(_.debounce(this.onResize, 100), this);
       this.listenTo(this.model, 'change:editMatches', this.render);
       $(window).on('resize', this.onResize);
+    },
+    onAddMatch: function(e) {
+      this.collection.add(new Backbone.MatchModel());
+      this.render();
     },
     remove: function() {
       $(window).off('resize', this.onResize);
@@ -310,6 +355,11 @@
         self.views.push(view);
         options.tabindex += 100;
       });
+
+      //if (options.editable) {
+        this.$el.append('<button class="btn btn-default add-match">Add a match...</button>');
+      //}
+      
       return this;
     }
   });
