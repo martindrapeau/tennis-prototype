@@ -280,3 +280,7 @@ body {
 .match .dropdown.date-time>ul.dropdown-menu {
   width: 320px;
 }
+
+.add-match {
+  width: 340px;
+}
