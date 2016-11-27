@@ -20,7 +20,7 @@
     <script src="js/3rd/underscore.js" type="text/javascript"></script>
     <script src="js/3rd/backbone.js" type="text/javascript"></script>
     <script src="js/3rd/moment.js" type="text/javascript"></script>
-    <script src="js/3rd/moment.fr-ca.js" type="text/javascript"></script>
+    <!--<script src="js/3rd/moment.fr-ca.js" type="text/javascript"></script>-->
     <script src="js/3rd/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
 
     <script src="js/src/home.js" type="text/javascript"></script>
@@ -96,7 +96,8 @@
         <input type="text" name="date" value="<%=date%>" tabindex="<%=tabindex+1%>" />
         <input type="text" name="time" value="<%=time%>" tabindex="<%=tabindex+2%>" <% if (editable) { %>data-toggle="dropdown"<% } %> />
         <% if (editable) { %>
-          <ul class="dropdown-menu dropdown-menu-right">
+          <ul class="dropdown-menu dropdown-menu-right time">
+            <li class="dropdown-header text-center">Match time</li>
             <li>
               <a href="#" class="inline">00:00</a>
               <a href="#" class="inline">06:00</a>
@@ -169,7 +170,7 @@
         <input type="text" name="comment" value="<%=comment%>" tabindex="<%=tabindex+20%>" />
       </th>
       <% if (editable) { %>
-        <th colspan="1" class="dropdown">
+        <th colspan="1" class="dropdown more">
           <button class="btn btn-default btn-sm more dropdown-toggle" type="button" id="match-more-<%=id%>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">More <span class="caret"></span></button>
           <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="match-more-<%=id%>">
             <li class="dropdown-header">Exceptions</li>

@@ -273,6 +273,9 @@ body {
   display: inline-block;
   clear: none;
 }
+.match .dropdown-menu .dropdown-header {
+  font-weight: bold;
+}
 
 .match .dropdown.date-time>ul.dropdown-menu {
   width: 320px;

@@ -167,7 +167,8 @@
       'blur input:not([name=date])': 'saveInputToModel',
       'focus input[readonly]:not(.editing)': 'onReadonlyInputFocus',
       'click .dropdown-menu a.exception': 'onClickException',
-      'click .dropdown-menu a.delete': 'onClickDelete'
+      'click .dropdown-menu a.delete': 'onClickDelete',
+      'click .dropdown-menu.time a': 'onClickTime'
     },
     initialize: function(options) {
       this.listenTo(this.model, 'change', this.onMatchChange);
@@ -183,6 +184,38 @@
     onClickDelete: function(e) {
       e.preventDefault();
       alert('not yet implemented');
+    },
+    onClickTime: function(e) {
+      e.preventDefault();
+      var time = $(e.currentTarget).text();
+      this.$('input[name=time]').val(time);
+      var value = moment(this.$('input[name=date]').val() + ' ' + time).format('YYYY-MM-DD HH:mm:ss');
+      this.model.set('played_on', value);
+    },
+    onInputKeydown: function(e) {
+      if (e.keyCode == 13) this.saveInputToModel.apply(this, arguments);
+    },
+    onReadonlyInputFocus: function(e) {
+      $(e.currentTarget).blur();
+    },
+    saveInputToModel: function(e) {
+      var $input = $(e.currentTarget),
+          attr = $input.attr('name'),
+          type = $input.attr('type'),
+          value = $input.val();
+      if (type == 'number') {
+        value = parseFloat(value, 10);
+        if (isNaN(value)) value = null;
+      }
+      if (attr == 'date') {
+        attr = 'played_on';
+        value = moment(value + ' ' + this.$('input[name=time]').val()).format('YYYY-MM-DD HH:mm:ss');
+      }
+      if (attr == 'time') {
+        attr = 'played_on';
+        value = moment(this.$('input[name=date]').val() + ' ' + value).format('YYYY-MM-DD HH:mm:ss');
+      }
+      this.model.set(attr, value);
     },
     render: function(options) {
       var data = this.model.toRender();
@@ -208,7 +241,7 @@
           })
           .on('dp.change', _.bind(this.saveInputToModel, this));
 
-        this.$(".dropdown").on("shown.bs.dropdown", function() {
+        this.$(".dropdown.more").on("shown.bs.dropdown", function() {
           var menuEl = $(this).find(".dropdown-menu")[0];
           if (menuEl.scrollIntoView) menuEl.scrollIntoView();
         });
@@ -241,27 +274,6 @@
         this.$('.user .marker').addClass('exception').text('forfeit');
         this.$('.dropdown-menu .other-forfeited').addClass('strong');
       }
-    },
-    onInputKeydown: function(e) {
-      if (e.keyCode == 13) this.saveInputToModel.apply(this, arguments);
-    },
-    onReadonlyInputFocus: function(e) {
-      $(e.currentTarget).blur();
-    },
-    saveInputToModel: function(e) {
-      var $input = $(e.currentTarget),
-          attr = $input.attr('name'),
-          type = $input.attr('type'),
-          value = $input.val();
-      if (type == 'number') {
-        value = parseFloat(value, 10);
-        if (isNaN(value)) value = null;
-      }
-      if (attr == 'date') {
-        attr = 'played_on';
-        value = moment(value + ' ' + this.$('input[name=time]').val()).format('YYYY-MM-DD HH:mm:ss');
-      }
-      this.model.set(attr, value);
     }
   });
   $('document').ready(function() {
