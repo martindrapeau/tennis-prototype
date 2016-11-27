@@ -59,8 +59,8 @@
       var data = this.toJSON();
 
       var when = moment(data.played_on);
-      data.date = when ? when.format('YYYY-MM-DD') : '';
-      data.time = when ? when.format('HH:mm') : '';
+      data.date = when.isValid() ? when.format('YYYY-MM-DD') : '';
+      data.time = when.isValid() ? when.format('HH:mm') : '';
 
       !data.user || (data.user.title = _.shortName(data.user.name));
       !data.user_partner || (data.user_partner.title = _.shortName(data.user_partner.name));
@@ -329,8 +329,11 @@
       $(window).on('resize', this.onResize);
     },
     onAddMatch: function(e) {
-      this.collection.add(new Backbone.MatchModel());
+      var lastMatch = this.collection.last(),
+          newMatch = new Backbone.MatchModel(lastMatch ? lastMatch.pick(['location', 'played_on']) : undefined);
+      this.collection.add(newMatch);
       this.render();
+      this.views[this.views.length-1].$el[0].scrollIntoView();
     },
     remove: function() {
       $(window).off('resize', this.onResize);
@@ -356,9 +359,9 @@
         options.tabindex += 100;
       });
 
-      //if (options.editable) {
+      if (options.editMatches) {
         this.$el.append('<button class="btn btn-default add-match">Add a match...</button>');
-      //}
+      }
       
       return this;
     }
