@@ -320,10 +320,17 @@
 
   Backbone.MatchesView = Backbone.View.extend({
     className: 'match',
+    events: {
+      'click .add-match': 'onAddMatch'
+    },
     initialize: function(options) {
       this.onResize = _.bind(_.debounce(this.onResize, 100), this);
       this.listenTo(this.model, 'change:editMatches', this.render);
       $(window).on('resize', this.onResize);
+    },
+    onAddMatch: function(e) {
+      this.collection.add(new Backbone.MatchModel());
+      this.render();
     },
     remove: function() {
       $(window).off('resize', this.onResize);
@@ -348,6 +355,11 @@
         self.views.push(view);
         options.tabindex += 100;
       });
+
+      if (options.editable) {
+        this.$el.append('<button class="btn btn-default add-match">Add a match...</button>');
+      }
+      
       return this;
     }
   });
