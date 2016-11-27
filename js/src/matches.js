@@ -16,7 +16,45 @@
   };
 
   Backbone.MatchModel = Backbone.Model.extend({
-    idAttribute: 'Id',
+    defaults: {
+      id: undefined,
+      type: "singles",
+      created_on: null,
+      played_on: null,
+      user_id: null,
+      user_partner_id: null,
+      other_id: null,
+      other_partner_id: null,
+      user_points: null,
+      other_points: null,
+      user_set1: null,
+      other_set1: null,
+      user_tie1: null,
+      other_tie1: null,
+      user_set2: null,
+      other_set2: null,
+      user_tie2: null,
+      other_tie2: null,
+      user_set3: null,
+      other_set3: null,
+      user_tie3: null,
+      other_tie3: null,
+      user_set4: null,
+      other_set4: null,
+      user_tie4: null,
+      other_tie4: null,
+      user_set5: null,
+      other_set5: null,
+      user_tie5: null,
+      other_tie5: null,
+      exception: null,
+      user: null,
+      user_partner: null,
+      other: null
+      other_partner: null,
+      location: null,
+      comment: null
+    },
     toRender: function() {
       var data = this.toJSON();
 
