@@ -50,7 +50,7 @@
       exception: null,
       user: null,
       user_partner: null,
-      other: null
+      other: null,
       other_partner: null,
       location: null,
       comment: null
