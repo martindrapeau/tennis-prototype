@@ -356,9 +356,9 @@
         options.tabindex += 100;
       });
 
-      if (options.editable) {
+      //if (options.editable) {
         this.$el.append('<button class="btn btn-default add-match">Add a match...</button>');
-      }
+      //}
       
       return this;
     }
