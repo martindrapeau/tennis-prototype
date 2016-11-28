@@ -336,7 +336,10 @@
       this.collection.add(newMatch);
       var view = this.views[this.views.length-1];
       view.$el.hide().fadeIn();
-      view.$el.scrollIntoView();
+      _.defer(function() {
+        view.$el[0].scrollIntoView({behavior: 'smooth'});
+      });
+      
     },
     remove: function() {
       $(window).off('resize', this.onResize);
