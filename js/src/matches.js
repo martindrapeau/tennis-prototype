@@ -221,11 +221,19 @@
     },
     onClickDelete: function(e) {
       e.preventDefault();
-      if (!confirm('Are you sure?')) return;
       var view = this;
-      this.$el.fadeOut(function() {
-        view.model.collection.remove(view.model);
-      });
+      this.$el.animate({backgroundColor: '#ffdddd'}, 100);
+      setTimeout(function() {
+        if (!confirm('Are you sure?')) {
+          view.$el.animate({backgroundColor: 'transparent'}, 100);
+          return;
+        }
+        view.$el.animate({
+          opacity: 0,
+        }, 750, function() {
+          view.model.collection.remove(view.model);
+        });
+      }, 100);
     },
     onClickTime: function(e) {
       e.preventDefault();
@@ -335,11 +343,15 @@
           newMatch = new Backbone.MatchModel(lastMatch ? lastMatch.pick(['location', 'played_on']) : undefined);
       this.collection.add(newMatch);
       var view = this.views[this.views.length-1];
-      view.$el.hide().fadeIn();
-      _.defer(function() {
-        view.$el[0].scrollIntoView({behavior: 'smooth'});
+      view.$el.css({
+        backgroundColor: '#ddffdd'
       });
-      
+      $('html, body').animate({
+          scrollTop: view.$el.offset().top
+      }, 500);
+      view.$el.animate({
+        backgroundColor: 'transparent'
+      }, 750);
     },
     remove: function() {
       $(window).off('resize', this.onResize);
@@ -367,7 +379,9 @@
       });
 
       if (options.editMatches) {
-        this.$el.append('<button class="btn btn-default add-match">Add a match...</button>');
+        var $add = $('<button class="btn btn-default add-match">Add a match...</button>');
+        this.$el.append($add);
+        if (self.views.length) $add.css('width', self.views[0].$el.css('width'));
       }
       
       return this;

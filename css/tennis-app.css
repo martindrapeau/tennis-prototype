@@ -191,6 +191,9 @@ body {
   padding: 5px;
   border: 1px dotted #9999FF;
   border-radius: 0;
+  background-color: transparent;
+  text-shadow: none;
+  box-shadow: none;
 }
 .match input[type=number]::-webkit-inner-spin-button, 
 .match input[type=number]::-webkit-outer-spin-button { 
@@ -278,5 +281,5 @@ body {
 }
 
 .add-match {
-  width: 340px;
+  width: 320px;
 }
