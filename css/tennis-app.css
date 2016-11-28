@@ -164,7 +164,6 @@ body {
 }
 
 .match td.player {
-  width: 150px;
 }
 
 .match td.marker {
@@ -222,9 +221,6 @@ body {
   text-align: right;
 }
 
-.match input[name=location] {
-  width: 160px;
-}
 .match input[name=date] {
   width: 85px;
 }

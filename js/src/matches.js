@@ -221,7 +221,11 @@
     },
     onClickDelete: function(e) {
       e.preventDefault();
-      this.model.collection.remove(this.model);
+      if (!confirm('Are you sure?')) return;
+      var view = this;
+      this.$el.fadeOut(function() {
+        view.model.collection.remove(view.model);
+      });
     },
     onClickTime: function(e) {
       e.preventDefault();
@@ -267,15 +271,12 @@
 
       if (data.editable) {
         this.$('input[name=date]')
-          .prop('readonly', true)
-          .addClass('editing')
           .datetimepicker({
             format: 'YYYY-MM-DD',
             widgetPositioning: {
               horizontal: 'right',
               vertical: 'auto'
-            },
-            ignoreReadonly: true
+            }
           })
           .on('dp.change', _.bind(this.saveInputToModel, this));
 
@@ -333,7 +334,9 @@
       var lastMatch = this.collection.last(),
           newMatch = new Backbone.MatchModel(lastMatch ? lastMatch.pick(['location', 'played_on']) : undefined);
       this.collection.add(newMatch);
-      this.views[this.views.length-1].$el[0].scrollIntoView();
+      var view = this.views[this.views.length-1];
+      view.$el.hide().fadeIn();
+      view.$el.scrollIntoView();
     },
     remove: function() {
       $(window).off('resize', this.onResize);
