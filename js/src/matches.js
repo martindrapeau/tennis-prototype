@@ -284,10 +284,11 @@
 
         this.$('input[name=date], input[name=time]').bind('focusin focus', function(e) {
           e.preventDefault();
-          window.scrollTo(window.scrollX, window.scrollY);
+          window.scrollTo(window.scrollX, $dateInput.offset().top - 50);
         });
 
         function scrollToSee() {
+          return;
           $('html, body').animate({
             scrollTop: $dateInput.offset().top - 50
           }, 200);
