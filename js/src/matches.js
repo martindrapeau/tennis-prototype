@@ -284,6 +284,7 @@
 
         this.$('input[name=date], input[name=time]').bind('focusin focus', function(e) {
           e.preventDefault();
+          return;
           window.scrollTo(window.scrollX, $dateInput.offset().top - 50);
         });
 
