@@ -282,6 +282,10 @@
             $timeInput = this.$('input[name=time]'),
             $timeDropdown = this.$('.dropdown-menu.time');
 
+        $($dateInput, $timeInput).bind('focusin focus', function(e){
+          e.preventDefault();
+        });
+
         function scrollToSee() {
           $('html, body').animate({
             scrollTop: $dateInput.offset().top - 50
@@ -292,12 +296,11 @@
             format: 'YYYY-MM-DD',
             widgetPositioning: {
               horizontal: 'right',
-              vertical: 'auto'
+              vertical: 'bottom'
             }
           })
           .on('dp.change', _.bind(this.saveInputToModel, this))
           .on('focus', function(e) {
-            e.preventDefault();
             setTimeout(function() {
               if ($dateInput.is(':focus') && !$dateInput.siblings('.dropdown-menu').is(':visible'))
                 $dateInput.data('DateTimePicker').hide().show();
@@ -312,7 +315,6 @@
 
         $timeInput
           .on('focus', function(e) {
-            e.preventDefault();
             setTimeout(function() {
               if ($timeInput.is(':focus') && !$timeInput.siblings('.dropdown-menu').is(':visible'))
                 $timeInput.dropdown('toggle');
