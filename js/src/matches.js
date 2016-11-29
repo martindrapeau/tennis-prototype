@@ -282,19 +282,6 @@
             $timeInput = this.$('input[name=time]'),
             $timeDropdown = this.$('.dropdown-menu.time');
 
-        this.$('input[name=date], input[name=time]').bind('focusin focus', function(e) {
-          e.preventDefault();
-          return;
-          window.scrollTo(window.scrollX, $dateInput.offset().top - 50);
-        });
-
-        function scrollToSee() {
-          return;
-          $('html, body').animate({
-            scrollTop: $dateInput.offset().top - 50
-          }, 200);
-        }
-
         $dateInput.datetimepicker({
             format: 'YYYY-MM-DD',
             widgetPositioning: {
@@ -308,8 +295,7 @@
               if ($dateInput.is(':focus') && !$dateInput.siblings('.dropdown-menu').is(':visible'))
                 $dateInput.data('DateTimePicker').hide().show();
             }, 100);
-          })
-          .on("dp.show", scrollToSee);
+          });
 
         this.$(".dropdown.more").on("shown.bs.dropdown", function() {
           var el = $(this).find(".dropdown-menu")[0];
@@ -323,7 +309,6 @@
                 $timeInput.dropdown('toggle');
             }, 100);
             $timeInput.dropdown().show();
-            scrollToSee();
           });
 
         this.$('input:not([name=time])').on('focus', function(e) {
