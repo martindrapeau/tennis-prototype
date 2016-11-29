@@ -289,24 +289,36 @@
           .on('dp.change', _.bind(this.saveInputToModel, this))
           .on('focus', function(e) {
             setTimeout(function() {
-              if ($dateInput.is(':focus') && !$dateInput.siblings('.bootstrap-datetimepicker-widget').is(':visible'))
+              if ($dateInput.is(':focus') && !$dateInput.siblings('.dropdown-menu').is(':visible'))
                 $dateInput.data('DateTimePicker').hide().show();
             }, 100);
+          })
+          .on("dp.show", function() {
+            var el = $dateInput.siblings(".dropdown-menu")[0];
+            if (el.scrollIntoView) el.scrollIntoView({smooth: true});
           });
 
         this.$(".dropdown.more").on("shown.bs.dropdown", function() {
-          var menuEl = $(this).find(".dropdown-menu")[0];
-          if (menuEl.scrollIntoView) menuEl.scrollIntoView();
+          var el = $(this).find(".dropdown-menu")[0];
+          if (el.scrollIntoView) el.scrollIntoView({smooth: true});
         });
 
         var $timeInput = this.$('input[name=time]')
-        $timeInput.on('focus', function(e) {
-          setTimeout(function() {
-            if ($timeInput.is(':focus') && !$timeInput.siblings('.dropdown-menu').is(':visible'))
-              $timeInput.dropdown('toggle');
-          }, 100);
-          $timeInput.dropdown().show();
-        });
+        $timeInput
+          .on('focus', function(e) {
+            setTimeout(function() {
+              if ($timeInput.is(':focus') && !$timeInput.siblings('.dropdown-menu').is(':visible'))
+                $timeInput.dropdown('toggle');
+            }, 100);
+            $timeInput.dropdown().show();
+          })
+          .on('blur', function(e) {
+            $timeInput.dropdown('toggle');
+          })
+          .on("shown.bs.dropdown", function() {
+            var el = $dateInput.siblings(".dropdown-menu")[0];
+            if (el.scrollIntoView) el.scrollIntoView({smooth: true});
+          });
       }
 
       this.renderMarker(data);
