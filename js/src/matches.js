@@ -278,7 +278,16 @@
         .find('input').prop('readonly', !data.editable);
 
       if (data.editable) {
-        var $dateInput = this.$('input[name=date]')
+        var $dateInput = this.$('input[name=date]'),
+            $timeInput = this.$('input[name=time]'),
+            $timeDropdown = this.$('.dropdown-menu.time');
+
+        function scrollToSee() {
+          $('html, body').animate({
+            scrollTop: $dateInput.offset().top - 100
+          }, 200);
+        }
+
         $dateInput.datetimepicker({
             format: 'YYYY-MM-DD',
             widgetPositioning: {
@@ -293,17 +302,13 @@
                 $dateInput.data('DateTimePicker').hide().show();
             }, 100);
           })
-          .on("dp.show", function() {
-            var el = $dateInput.siblings(".dropdown-menu")[0];
-            if (el.scrollIntoView) el.scrollIntoView({smooth: true});
-          });
+          .on("dp.show", scrollToSee);
 
         this.$(".dropdown.more").on("shown.bs.dropdown", function() {
           var el = $(this).find(".dropdown-menu")[0];
           if (el.scrollIntoView) el.scrollIntoView({smooth: true});
         });
 
-        var $timeInput = this.$('input[name=time]')
         $timeInput
           .on('focus', function(e) {
             setTimeout(function() {
@@ -311,14 +316,12 @@
                 $timeInput.dropdown('toggle');
             }, 100);
             $timeInput.dropdown().show();
-          })
-          .on('blur', function(e) {
-            $timeInput.dropdown('toggle');
-          })
-          .on("shown.bs.dropdown", function() {
-            var el = $dateInput.siblings(".dropdown-menu")[0];
-            if (el.scrollIntoView) el.scrollIntoView({smooth: true});
+            scrollToSee();
           });
+
+        this.$('input:not([name=time])').on('focus', function(e) {
+          if ($timeDropdown.is(':visible')) $timeInput.dropdown('toggle');
+        });
       }
 
       this.renderMarker(data);
