@@ -284,7 +284,7 @@
 
         function scrollToSee() {
           $('html, body').animate({
-            scrollTop: $dateInput.offset().top - 100
+            scrollTop: $dateInput.offset().top - 50
           }, 200);
         }
 
