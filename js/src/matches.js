@@ -229,7 +229,7 @@
           return;
         }
         view.$el.animate({
-          opacity: 0,
+          opacity: 0
         }, 750, function() {
           view.model.collection.remove(view.model);
         });
@@ -278,23 +278,34 @@
         .find('input').prop('readonly', !data.editable);
 
       if (data.editable) {
-        this.$('input[name=date]')
-          .datetimepicker({
+        var $dateInput = this.$('input[name=date]')
+        $dateInput.datetimepicker({
             format: 'YYYY-MM-DD',
             widgetPositioning: {
               horizontal: 'right',
               vertical: 'auto'
             }
           })
-          .on('dp.change', _.bind(this.saveInputToModel, this));
+          .on('dp.change', _.bind(this.saveInputToModel, this))
+          .on('focus', function(e) {
+            setTimeout(function() {
+              if ($dateInput.is(':focus') && !$dateInput.siblings('.bootstrap-datetimepicker-widget').is(':visible'))
+                $dateInput.data('DateTimePicker').hide().show();
+            }, 100);
+          });
 
         this.$(".dropdown.more").on("shown.bs.dropdown", function() {
           var menuEl = $(this).find(".dropdown-menu")[0];
           if (menuEl.scrollIntoView) menuEl.scrollIntoView();
         });
 
-        this.$('input[name=time]').on('focus', function(e) {
-          $(this).dropdown().show();
+        var $timeInput = this.$('input[name=time]')
+        $timeInput.on('focus', function(e) {
+          setTimeout(function() {
+            if ($timeInput.is(':focus') && !$timeInput.siblings('.dropdown-menu').is(':visible'))
+              $timeInput.dropdown('toggle');
+          }, 100);
+          $timeInput.dropdown().show();
         });
       }
 
@@ -347,7 +358,7 @@
         backgroundColor: '#ddffdd'
       });
       $('html, body').animate({
-          scrollTop: view.$el.offset().top
+        scrollTop: view.$el.offset().top
       }, 500);
       view.$el.animate({
         backgroundColor: 'transparent'
