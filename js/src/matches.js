@@ -282,7 +282,7 @@
             $timeInput = this.$('input[name=time]'),
             $timeDropdown = this.$('.dropdown-menu.time');
 
-        $('input[name=date]m input[name=time]').bind('focusin focus', function(e) {
+        this.$('input[name=date], input[name=time]').bind('focusin focus', function(e) {
           e.preventDefault();
         });
 
