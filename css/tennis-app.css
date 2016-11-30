@@ -139,9 +139,53 @@ body {
 }
 
 
+#players {
+  padding: 15px;
+}
+
+#players .player {
+  display: table;
+  margin-bottom: 15px;
+  border: 1px solid #999;
+  font-size: 16px;
+}
+
+#players .player .picture {
+  display: table-cell;
+  width: 68px;
+  height: 68px;
+  vertical-align: middle;
+  text-align: center;
+}
+
+#players .player .info {
+  display: table-cell;
+  width: 250px;
+}
+
+#players .player .info .name {
+}
+
+#players .player input {
+  display: inline-block;
+  border: none;
+  width: 100%;
+  margin: 0;
+  padding: 5px;
+  border: 1px dotted #9999FF;
+  border-radius: 0;
+  background-color: transparent;
+  text-shadow: none;
+  box-shadow: none;
+}
+
+#players .player input[readonly] {
+  border: 1px solid transparent;
+}
+
+
 #matches {
   padding: 15px;
-  margin-bottom: 100px;
 }
 
 .match {

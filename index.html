@@ -25,6 +25,7 @@
 
     <script src="js/src/home.js" type="text/javascript"></script>
     <script src="js/src/matches.js" type="text/javascript"></script>
+    <script src="js/src/players.js" type="text/javascript"></script>
     <script src="js/src/events.js" type="text/javascript"></script>
     <script src="js/src/data.js" type="text/javascript"></script>
     <script src="js/src/top-menu.js" type="text/javascript"></script>
@@ -42,6 +43,7 @@
       <a class="navmenu-brand" href="#">Tennis App</a>
       <ul class="nav navmenu-nav">
         <li><a href="#"><i class="fa fa-fw fa-home"></i> Home</a></li>
+        <li><a href="#players"><i class="fa fa-fw fa-user"></i> Players</a></li>
         <li><a href="#matches"><i class="fa fa-fw fa-play-circle"></i> Matches</a></li>
         <li><a href="#events"><i class="fa fa-fw fa-calendar-check-o"></i> Events</a></li>
       </ul>
@@ -51,6 +53,7 @@
       <div id="top-menu" class="navbar navbar-default navbar-fixed-top"></div>
       <div class="contents">
         <div id="home" class="content"></div>
+        <div id="players" class="content players"></div>
         <div id="matches" class="content matches"></div>
         <div id="events" class="content events"></div>
       </div>
@@ -68,6 +71,11 @@
         <button type="button" class="btn btn-default edit-matches"><i class="fa fa-fw <%=editMatches ? 'fa-save' : 'fa-pencil'%>"></i></button>
       </div>
     <% } %>
+    <% if (view == 'players') { %>
+      <div class="btn-group pull-right">
+        <button type="button" class="btn btn-default edit-players"><i class="fa fa-fw <%=editPlayers ? 'fa-save' : 'fa-pencil'%>"></i></button>
+      </div>
+    <% } %>
   </div>
 </script>
 
@@ -83,6 +91,18 @@
         <a href="#" class="change-account"><i class="fa fa-fw fa-arrow-circle-right"></i> Change account</a>
       </p>
     </div>
+  </div>
+</script>
+
+<script id="player-template" type="text/template">
+  <div class="picture">
+    <div class="wrapper">
+      <div class="initials"><%=initials%></div>
+    </div>
+  </div>
+  <div class="info">
+    <input type="text" name="name" value="<%=name%>" tabindex="<%=tabindex+1%>" />
+    <input type="text" name="email" value="<%=email%>" tabindex="<%=tabindex+2%>" />
   </div>
 </script>
 

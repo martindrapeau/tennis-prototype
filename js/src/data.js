@@ -1,5 +1,37 @@
 (function() {
 
+  window._players = [{
+    id: 2314,
+    name: "Abdelkader Merabet",
+    email: "abdel@merabet.com",
+    image: null
+  }, {
+    id: 2317,
+    name: "Samuel Gendron",
+    email: "sam@gendron.com",
+    image: null
+  }, {
+    id: 2414,
+    name: "Martin Gilbert Drapeau",
+    email: "martindrapeau@gmail.com",
+    image: null
+  }, {
+    id: 2415,
+    name: "Ludovic Bazinet",
+    email: "ludovicbazinet@gmail.com",
+    image: null
+  }, {
+    id: 2417,
+    name: "Alain Mussely",
+    email: "alain@must.com",
+    image: null
+  }, {
+    id: 2418,
+    name: "Eva Mussely",
+    email: "eva@must.com",
+    image: null
+  }];
+
   window._matches = [{
     id: 5402,
     type: "singles",

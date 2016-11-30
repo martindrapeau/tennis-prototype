@@ -2,7 +2,8 @@ $(document).ready(function() {
 
   Backbone.TennisAppState = Backbone.Model.extend({
     defaults: {
-      editMatches: false
+      editMatches: false,
+      editPlayers: false
     }
   });
 
@@ -18,6 +19,11 @@ $(document).ready(function() {
         home: new Backbone.HomeView({
           el: $('#home'),
           model: this.model
+        }),
+        players: new Backbone.PlayersView({
+          el: $('#players'),
+          model: this.model,
+          collection: new Backbone.PlayerCollection(window._players)
         }),
         matches: new Backbone.MatchesView({
           el: $('#matches'),

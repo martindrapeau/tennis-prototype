@@ -14,6 +14,12 @@
       return i+1 < pieces.length ? v[0] : v;
     }).join(' ');
   };
+  _.initials = function(name) {
+    var pieces = name.split(/\s+/);
+    return _.map(pieces, function(v, i) {
+      return v[0].toUpperCase();
+    }).join('');
+  };
 
   Backbone.MatchModel = Backbone.Model.extend({
     defaults: {
@@ -209,9 +215,9 @@
       'click .dropdown-menu.time a': 'onClickTime'
     },
     initialize: function(options) {
-      this.listenTo(this.model, 'change', this.onMatchChange);
+      this.listenTo(this.model, 'change', this.onChange);
     },
-    onMatchChange: function() {
+    onChange: function() {
       this.renderMarker(this.model.toRender());
     },
     onClickException: function(e) {
@@ -339,6 +345,7 @@
         this.$('.user .marker').addClass('exception').text('forfeit');
         this.$('.dropdown-menu .other-forfeited').addClass('strong');
       }
+      return this;
     }
   });
   $('document').ready(function() {
@@ -357,9 +364,9 @@
       $(window).on('resize', this.onResize);
     },
     onAddMatch: function(e) {
-      var lastMatch = this.collection.last(),
-          newMatch = new Backbone.MatchModel(lastMatch ? lastMatch.pick(['location', 'played_on']) : undefined);
-      this.collection.add(newMatch);
+      var last = this.collection.last(),
+          model = new Backbone.MatchModel(last ? last.pick(['location', 'played_on']) : undefined);
+      this.collection.add(model);
       var view = this.views[this.views.length-1];
       view.$el.css({
         backgroundColor: '#ddffdd'
@@ -379,7 +386,6 @@
       this.render();
     },
     render: function() {
-      console.log('MatchesView.render');
       this.views || (this.views = []);
       for (var i = 0; i < this.views.length; i++) this.views[i].remove();
       this.views = [];
