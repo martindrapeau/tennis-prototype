@@ -18,7 +18,11 @@
   });
 
   Backbone.PlayerCollection = Backbone.Collection.extend({
-    model: Backbone.PlayerModel
+    model: Backbone.PlayerModel,
+    getJSON: function(id) {
+      var model = this.get(id);
+      return model ? model.toJSON() : undefined;
+    }
   });
 
   Backbone.PlayerView = Backbone.View.extend({

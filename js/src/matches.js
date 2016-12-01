@@ -54,12 +54,55 @@
       user_tie5: null,
       other_tie5: null,
       exception: null,
-      user: null,
-      user_partner: null,
-      other: null,
-      other_partner: null,
       location: null,
       comment: null
+    },
+    initialize: function() {
+      this.bindPlayers();
+    },
+    bindPlayers: function() {
+      this.stopListening();
+
+      this.user = this.collection.playersCollection.get(this.get('user_id'));
+      if (this.user) {
+        this.listenTo(this.user, 'change', function(model) {
+          this.set({user: model.toJSON()}, {renderAll: true});
+        });
+        this.listenTo(this.user, 'destroy', function() {
+          this.set({user_id: null, user: null});
+        });
+      }
+
+      this.user_partner = this.collection.playersCollection.get(this.get('user_partner_id'));
+      if (this.user_partner) {
+        this.listenTo(this.user_partner, 'change', function(model) {
+          this.set({user_partner: model.toJSON()}, {renderAll: true});
+        });
+        this.listenTo(this.user_partner, 'destroy', function() {
+          this.set({user_partner_id: null, user_partner: null});
+        });
+      }
+
+      this.other = this.collection.playersCollection.get(this.get('other_id'));
+      if (this.other) {
+        this.listenTo(this.other, 'change', function(model) {
+          this.set({other: model.toJSON()}, {renderAll: true});
+        });
+        this.listenTo(this.other, 'destroy', function() {
+          this.set({other_id: null, other: null});
+        });
+      }
+
+      this.other_partner = this.collection.playersCollection.get(this.get('other_partner_id'));
+      if (this.other_partner) {
+        this.listenTo(this.other_partner, 'change', function(model) {
+          this.set({other_partner: model.toJSON()}, {renderAll: true});
+        });
+        this.listenTo(this.other_partner, 'destroy', function() {
+          this.set({other_partner_id: null, other_partner: null});
+        });
+      }
+
     },
     toRender: function() {
       var data = this.toJSON();
@@ -198,7 +241,10 @@
   });
 
   Backbone.MatchCollection = Backbone.Collection.extend({
-    model: Backbone.MatchModel
+    model: Backbone.MatchModel,
+    initialize: function(models, options) {
+      this.playersCollection = options.playersCollection;
+    }
   });
 
 
@@ -215,10 +261,18 @@
       'click .dropdown-menu.time a': 'onClickTime'
     },
     initialize: function(options) {
+      this.lastRenderOptions = {
+        editable: false,
+        tabindex: 100
+      };
+
       this.listenTo(this.model, 'change', this.onChange);
     },
-    onChange: function() {
-      this.renderMarker(this.model.toRender());
+    onChange: function(model, options) {
+      if (options && options.renderAll)
+        this.render();
+      else
+        this.renderMarker(this.model.toRender());
     },
     onClickException: function(e) {
       e.preventDefault();
@@ -274,9 +328,11 @@
       this.model.set(attr, value);
     },
     render: function(options) {
+      options || (options = this.lastRenderOptions);
       var data = this.model.toRender();
-      data.editable = options && options.editMatches;
-      data.tabindex = options && options.tabindex ? options.tabindex : 100;
+      data.editable = options.editMatches;
+      data.tabindex = options.tabindex ? options.tabindex : 100;
+      this.lastRenderOptions = _.clone(options);
 
       this.$el
         .html(this.template(data))
@@ -361,6 +417,7 @@
       this.onResize = _.bind(_.debounce(this.onResize, 100), this);
       this.listenTo(this.model, 'change:editMatches', this.render);
       this.listenTo(this.collection, 'add remove', this.render);
+      //this.listenTo(this.collection.playersCollection, 'add remove change', this.render);
       $(window).on('resize', this.onResize);
     },
     onAddMatch: function(e) {

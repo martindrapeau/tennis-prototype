@@ -15,6 +15,11 @@ $(document).ready(function() {
         model: this.model
       });
 
+      var players = new Backbone.PlayerCollection(window._players),
+          matches = new Backbone.MatchCollection(window._matches, {
+            playersCollection: players
+          });
+
       this.views = {
         home: new Backbone.HomeView({
           el: $('#home'),
@@ -23,12 +28,12 @@ $(document).ready(function() {
         players: new Backbone.PlayersView({
           el: $('#players'),
           model: this.model,
-          collection: new Backbone.PlayerCollection(window._players)
+          collection: players,
         }),
         matches: new Backbone.MatchesView({
           el: $('#matches'),
           model: this.model,
-          collection: new Backbone.MatchCollection(window._matches)
+          collection: matches
         }),
         events: new Backbone.EventsView({
           el: $('#events'),
