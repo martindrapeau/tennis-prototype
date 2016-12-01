@@ -116,7 +116,7 @@
       });
 
       if (options.editPlayers) {
-        var $add = $('<button class="btn btn-default add-player">Add a player...</button>');
+        var $add = $('<button class="btn btn-default add-player">' + _lang('addAPlayer') + '...</button>');
         this.$el.append($add);
         if (self.views.length) $add.css('width', self.views[0].$el.css('width'));
       }

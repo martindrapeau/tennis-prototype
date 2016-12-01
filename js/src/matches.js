@@ -111,7 +111,7 @@
           score += (match['user_points']?match['user_points']:'?')+'-'+(match['other_points']?match['other_points']:'?').'pts';
         }*/
         if (match['exception'] == USER_WON_BECAUSE_FORFEIT)
-          score += (score.length ? ' ' : '') + 'forfeit';
+          score += (score.length ? ' ' : '') + _lang('forfeit');
       } else {
         if (match['user_set1'] || match['other_set1'])
           score = (match['other_set1']!==null?match['other_set1']:'?')+'-'+(match['user_set1']!==null?match['user_set1']:'?');
@@ -128,7 +128,7 @@
           score += (match['other_points']?match['other_points']:'?')+'-'+(match['user_points']?match['user_points']:'?').'pts';
         }*/
         if (match['exception'] == OTHER_WON_BECAUSE_FORFEIT)
-          score += (score.length ? ' ' : '') + 'forfeit';
+          score += (score.length ? ' ' : '') + _lang('forfeit');
       }
 
       return score;
@@ -230,7 +230,7 @@
       var view = this;
       this.$el.animate({backgroundColor: '#ffdddd'}, 100);
       setTimeout(function() {
-        if (!confirm('Are you sure?')) {
+        if (!confirm(_lang('areYouSure'))) {
           view.$el.animate({backgroundColor: 'transparent'}, 100);
           return;
         }
@@ -337,12 +337,12 @@
       }
 
       if (data.exception == USER_WON_BECAUSE_FORFEIT) {
-        this.$('.other .marker').addClass('exception').text('forfeit');
+        this.$('.other .marker').addClass('exception').text(_lang('forfeit'));
         this.$('.dropdown-menu .user-forfeited').addClass('strong');
       }
 
       if (data.exception == OTHER_WON_BECAUSE_FORFEIT) {
-        this.$('.user .marker').addClass('exception').text('forfeit');
+        this.$('.user .marker').addClass('exception').text(_lang('forfeit'));
         this.$('.dropdown-menu .other-forfeited').addClass('strong');
       }
       return this;
@@ -403,7 +403,7 @@
       });
 
       if (options.editMatches) {
-        var $add = $('<button class="btn btn-default add-match">Add a match...</button>');
+        var $add = $('<button class="btn btn-default add-match">' + _lang('addAMatch') + '...</button>');
         this.$el.append($add);
         if (self.views.length) $add.css('width', self.views[0].$el.css('width'));
       }

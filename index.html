@@ -23,6 +23,7 @@
     <!--<script src="js/3rd/moment.fr-ca.js" type="text/javascript"></script>-->
     <script src="js/3rd/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
 
+    <script src="js/src/lang.js" type="text/javascript"></script>
     <script src="js/src/home.js" type="text/javascript"></script>
     <script src="js/src/matches.js" type="text/javascript"></script>
     <script src="js/src/players.js" type="text/javascript"></script>
@@ -82,13 +83,13 @@
 <script id="home-template" type="text/template">
   <div class="wrapper">
     <div class="center">
-      <h1>Tennis App</h1>
+      <h1><%=_lang('appName')%></h1>
       <br/>
       <p class="lead">
-        <span class="account">Account: John Doe</span>
+        <span class="account"><%=_lang('account')%>: John Doe</span>
       </p>
       <p>
-        <a href="#" class="change-account"><i class="fa fa-fw fa-arrow-circle-right"></i> Change account</a>
+        <a href="#" class="change-account"><i class="fa fa-fw fa-arrow-circle-right"></i> <%=_lang('changeAccount')%></a>
       </p>
     </div>
   </div>
@@ -117,7 +118,7 @@
         <input type="text" name="time" value="<%=time%>" tabindex="<%=tabindex+2%>" <% if (editable) { %>data-toggle="dropdown"<% } %> />
         <% if (editable) { %>
           <ul class="dropdown-menu dropdown-menu-right time">
-            <li class="dropdown-header text-center">Match time</li>
+            <li class="dropdown-header text-center"><%=_lang('matchTime')%></li>
             <li>
               <a href="#" class="inline">00:00</a>
               <a href="#" class="inline">06:00</a>
@@ -191,16 +192,16 @@
       </th>
       <% if (editable) { %>
         <th colspan="1" class="dropdown more">
-          <button class="btn btn-default btn-sm more dropdown-toggle" type="button" id="match-more-<%=id%>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">More <span class="caret"></span></button>
+          <button class="btn btn-default btn-sm more dropdown-toggle" type="button" id="match-more-<%=id%>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"><%=_lang('more')%> <span class="caret"></span></button>
           <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="match-more-<%=id%>">
             <li class="dropdown-header">Exceptions</li>
-            <li><a href="#" class="exception incomplete" data-exception="incomplete">Match incomplete</a></li>
-            <li><a href="#" class="exception user-forfeited" data-exception="user_won_because_forfeit"><%=user_title_inline%> forfeited</a></li>
-            <li><a href="#" class="exception other-forfeited" data-exception="other_won_because_forfeit"><%=other_title_inline%> forfeited</a></li>
+            <li><a href="#" class="exception incomplete" data-exception="incomplete"><%=_lang('matchIncomplete')%></a></li>
+            <li><a href="#" class="exception user-forfeited" data-exception="user_won_because_forfeit"><%=user_title_inline%> <%=_lang('forfeited')%></a></li>
+            <li><a href="#" class="exception other-forfeited" data-exception="other_won_because_forfeit"><%=other_title_inline%> <%=_lang('forfeited')%></a></li>
             <li role="separator" class="divider"></li>
             <li>
-              <a href="#" class="exception inline pull-left clear-exception" data-exception="null">Clear exception</a>
-              <a href="#" class="inline pull-right delete"><i class="fa fa-fw fa-trash"></i> Delete</a>
+              <a href="#" class="exception inline pull-left clear-exception" data-exception="null"><%=_lang('clearException')%></a>
+              <a href="#" class="inline pull-right delete"><i class="fa fa-fw fa-trash"></i> <%=_lang('delete')%></a>
             </li>
           </ul>
         </th>
