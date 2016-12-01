@@ -31,6 +31,10 @@
       user_partner_id: null,
       other_id: null,
       other_partner_id: null,
+      user: null,
+      user_partner: null,
+      other: null,
+      other_partner: null,
       user_points: null,
       other_points: null,
       user_set1: null,
@@ -62,6 +66,7 @@
     },
     bindPlayers: function() {
       this.stopListening();
+      if (!this.collection) return;
 
       this.user = this.collection.playersCollection.get(this.get('user_id'));
       if (this.user) {
@@ -417,13 +422,13 @@
       this.onResize = _.bind(_.debounce(this.onResize, 100), this);
       this.listenTo(this.model, 'change:editMatches', this.render);
       this.listenTo(this.collection, 'add remove', this.render);
-      //this.listenTo(this.collection.playersCollection, 'add remove change', this.render);
       $(window).on('resize', this.onResize);
     },
     onAddMatch: function(e) {
       var last = this.collection.last(),
           model = new Backbone.MatchModel(last ? last.pick(['location', 'played_on']) : undefined);
       this.collection.add(model);
+      model.bindPlayers();
       var view = this.views[this.views.length-1];
       view.$el.css({
         backgroundColor: '#ddffdd'

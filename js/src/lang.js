@@ -13,6 +13,10 @@
     dict: {
       appName: ['Tennis App', 'Tennis App'],
       account: ['Account', 'Compte'],
+      email: ['Email', 'Courriel'],
+      name: ['Name', 'Nom'],
+      comment: ['Comment', 'Commentaire'],
+      court: ['Court', 'Terrain'],
       changeAccount: ['Change account', 'Changer de compte'],
       player: ['Player', 'Joueur'],
       players: ['Players', 'Joueurs'],

@@ -28,7 +28,7 @@ $(document).ready(function() {
         players: new Backbone.PlayersView({
           el: $('#players'),
           model: this.model,
-          collection: players,
+          collection: players
         }),
         matches: new Backbone.MatchesView({
           el: $('#matches'),

@@ -102,8 +102,8 @@
     </div>
   </div>
   <div class="info">
-    <input type="text" name="name" value="<%=name%>" tabindex="<%=tabindex+1%>" />
-    <input type="text" name="email" value="<%=email%>" tabindex="<%=tabindex+2%>" />
+    <input type="text" name="name" value="<%=name%>" placeholder="<%=_lang('name')%>" tabindex="<%=tabindex+1%>" />
+    <input type="text" name="email" value="<%=email%>" placeholder="<%=_lang('email')%>" tabindex="<%=tabindex+2%>" />
   </div>
 </script>
 
@@ -111,7 +111,7 @@
   <thead>
     <tr>
       <th colspan="2">
-        <input type="text" name="location" value="<%=location%>" tabindex="<%=tabindex%>" />
+        <input type="text" name="location" value="<%=location%>" placeholder="<%=_lang('court')%>" tabindex="<%=tabindex%>" />
       </th>
       <th class="date-time dropdown" colspan="4">
         <input type="text" name="date" value="<%=date%>" tabindex="<%=tabindex+1%>" />
@@ -188,7 +188,7 @@
   <tfoot>
     <tr>
       <th colspan="<%=editable ? 5 : 6 %>">
-        <input type="text" name="comment" value="<%=comment%>" tabindex="<%=tabindex+20%>" />
+        <input type="text" name="comment" value="<%=comment%>" placeholder="<%=_lang('comment')%>" tabindex="<%=tabindex+20%>" />
       </th>
       <% if (editable) { %>
         <th colspan="1" class="dropdown more">
