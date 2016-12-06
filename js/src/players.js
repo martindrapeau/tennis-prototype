@@ -5,7 +5,17 @@
       id: undefined,
       name: null,
       email: null,
-      image: null
+      image: null,
+      match_ids: []
+    },
+    initialize: function() {
+      this.matches = [];
+      _.defer(this.bindMatches.bind(this));
+    },
+    bindMatches: function(matches) {
+      if (!this.collection || !this.collection.matchesCollection) return;
+      this.matches = matches || this.collection.matchesCollection.getMatchesForPlayer(this.id);
+      console.log('bindMatches', this.id, this.matches.length);
     },
     toRender: function() {
       var data = this.toJSON();
@@ -19,9 +29,65 @@
 
   Backbone.PlayerCollection = Backbone.Collection.extend({
     model: Backbone.PlayerModel,
-    getJSON: function(id) {
-      var model = this.get(id);
-      return model ? model.toJSON() : undefined;
+    initialize: function(models, options) {
+      this.matchesCollection = options.matchesCollection;
+      _.defer(this.bindMatches.bind(this));
+    },
+    bindMatches: function() {
+      this.stopListening();
+      if (!this.matchesCollection) return;
+      var matches = this.matchesCollection;
+
+      this.listenTo(matches, 'add', function(match) {
+        _.each(match.getPlayerIds(), function(id) {
+          var player = this.get(id);
+          if (player) player.bindMatches([match]);
+        }.bind(this));
+      });
+
+      this.listenTo(matches, 'remove', function(match) {
+        _.each(match.getPlayerIds(), function(id) {
+          var player = this.get(id);
+          if (player) player.bindMatches(_.filter(player.matches, function(o) {return o.id != id;}));
+        }.bind(this));
+      });
+
+      this.listenTo(matches, 'change', function(match) {
+        var id, player;
+        if (match.hasChanged('user_id')) {
+          id = match.previous('user_id');
+          player = this.get(id);
+          if (player) player.bindMatches(_.filter(player.matches, function(o) {return o.id != id;}));
+          id = match.get('user_id');
+          player = this.get(id);
+          if (player) player.bindMatches(player.matches.concat([match]));
+        }
+        if (match.hasChanged('user_partner_id')) {
+          id = match.previous('user_partner_id');
+          player = this.get(id);
+          if (player) player.bindMatches(_.filter(player.matches, function(o) {return o.id != id;}));
+          id = match.get('user_partner_id');
+          player = this.get(id);
+          if (player) player.bindMatches(player.matches.concat([match]));
+        }
+        if (match.hasChanged('other_id')) {
+          id = match.previous('other_id');
+          player = this.get(id);
+          if (player) player.bindMatches(_.filter(player.matches, function(o) {return o.id != id;}));
+          id = match.get('other_id');
+          player = this.get(id);
+          if (player) player.bindMatches(player.matches.concat([match]));
+        }
+        if (match.hasChanged('other_partner_id')) {
+          id = match.previous('other_partner_id');
+          player = this.get(id);
+          if (player) player.bindMatches(_.filter(player.matches, function(o) {return o.id != id;}));
+          id = match.get('other_partner_id');
+          player = this.get(id);
+          if (player) player.bindMatches(player.matches.concat([match]));
+        }
+      });
+
     }
   });
 
@@ -76,7 +142,7 @@
       'click .add-player': 'onAddPlayer'
     },
     initialize: function(options) {
-      this.onResize = _.bind(_.debounce(this.onResize, 100), this);
+      this.onResize = _.debounce(this.onResize.bind(this), 100);
       this.listenTo(this.model, 'change:editPlayers', this.render);
       this.listenTo(this.collection, 'add remove', this.render);
       $(window).on('resize', this.onResize);

@@ -62,11 +62,11 @@
       comment: null
     },
     initialize: function() {
-      this.bindPlayers();
+      _.defer(this.bindPlayers.bind(this));
     },
     bindPlayers: function() {
       this.stopListening();
-      if (!this.collection) return;
+      if (!this.collection || !this.collection.playersCollection) return;
 
       this.user = this.collection.playersCollection.get(this.get('user_id'));
       if (this.user) {
@@ -242,13 +242,50 @@
       if (match['user_set'+set] > match['other_set'+set]) return 'user';
       if (match['user_set'+set] < match['other_set'+set]) return 'other';
       return null;
+    },
+    hasPlayer: function(id) {
+      return this.get('user_id') == id ||
+        this.get('user_partner_id') == id ||
+        this.get('other_id') == id ||
+        this.get('other_partner_id') == id;
+    },
+    getPlayerIds: function() {
+      return _.compact([this.get('user_id'), this.get('user_partner_id'), this.get('other_id'), this.get('other_partner_id')]);
     }
   });
 
   Backbone.MatchCollection = Backbone.Collection.extend({
     model: Backbone.MatchModel,
     initialize: function(models, options) {
+      _.bindAll(this, 'getMatchesForPlayer');
       this.playersCollection = options.playersCollection;
+    },
+    getMatchesForPlayer: function(id) {
+      if (!id) return [];
+      return this.filter(function(model) {
+        return model.hasPlayer.call(model, id);
+      });
+    },
+    getPlayerIds: function() {
+      var playerIds = []
+      this.each(function(model) {
+        playerIds = _.union(playerIds, model.getPlayerIds(model));
+      });
+      return _.unique(playerIds);
+    },
+    getMatchesForPlayers: function() {
+      var map = {};
+      this.each(function(model) {
+        _.each(model.getPlayerIds(), function(id) {
+          if (!map[id]) {
+            map[id] = [model.id];
+          }
+          else if (map[id].indexOf(model.id) == -1) {
+            map[id].push(model.id);
+          }
+        });
+      });
+      return map;
     }
   });
 
@@ -419,7 +456,7 @@
       'click .add-match': 'onAddMatch'
     },
     initialize: function(options) {
-      this.onResize = _.bind(_.debounce(this.onResize, 100), this);
+      this.onResize = _.debounce(this.onResize.bind(this), 100);
       this.listenTo(this.model, 'change:editMatches', this.render);
       this.listenTo(this.collection, 'add remove', this.render);
       $(window).on('resize', this.onResize);

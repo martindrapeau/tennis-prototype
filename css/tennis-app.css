@@ -307,8 +307,8 @@ body {
   text-align: right;
 }
 .match>tfoot>tr>th.dropdown>.dropdown-menu {
-  max-width: 300px;
-  min-width: 250px;
+  max-width: 320px;
+  min-width: 280px;
 }
 .match>tfoot>tr>th.dropdown>.dropdown-menu a.strong {
   font-weight: bold;

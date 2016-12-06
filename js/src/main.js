@@ -15,10 +15,12 @@ $(document).ready(function() {
         model: this.model
       });
 
-      var players = new Backbone.PlayerCollection(window._players),
+      var players = new Backbone.PlayerCollection(window._players, {}),
           matches = new Backbone.MatchCollection(window._matches, {
             playersCollection: players
           });
+      players.matchesCollection = matches;
+
 
       this.views = {
         home: new Backbone.HomeView({
