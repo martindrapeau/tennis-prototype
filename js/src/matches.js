@@ -73,8 +73,8 @@
         this.listenTo(this.user, 'change', function(model) {
           this.set({user: model.toJSON()}, {renderAll: true});
         });
-        this.listenTo(this.user, 'destroy', function() {
-          this.set({user_id: null, user: null});
+        this.listenTo(this.user, 'remove', function() {
+          this.set({user_id: null, user: null}, {renderAll: true});
         });
       }
 
@@ -83,8 +83,8 @@
         this.listenTo(this.user_partner, 'change', function(model) {
           this.set({user_partner: model.toJSON()}, {renderAll: true});
         });
-        this.listenTo(this.user_partner, 'destroy', function() {
-          this.set({user_partner_id: null, user_partner: null});
+        this.listenTo(this.user_partner, 'remove', function() {
+          this.set({user_partner_id: null, user_partner: null}, {renderAll: true});
         });
       }
 
@@ -93,8 +93,8 @@
         this.listenTo(this.other, 'change', function(model) {
           this.set({other: model.toJSON()}, {renderAll: true});
         });
-        this.listenTo(this.other, 'destroy', function() {
-          this.set({other_id: null, other: null});
+        this.listenTo(this.other, 'remove', function() {
+          this.set({other_id: null, other: null}, {renderAll: true});
         });
       }
 
@@ -103,8 +103,8 @@
         this.listenTo(this.other_partner, 'change', function(model) {
           this.set({other_partner: model.toJSON()}, {renderAll: true});
         });
-        this.listenTo(this.other_partner, 'destroy', function() {
-          this.set({other_partner_id: null, other_partner: null});
+        this.listenTo(this.other_partner, 'remove', function() {
+          this.set({other_partner_id: null, other_partner: null}, {renderAll: true});
         });
       }
 
@@ -334,6 +334,7 @@
           opacity: 0
         }, 750, function() {
           view.model.collection.remove(view.model);
+          //view.model.destroy();
         });
       }, 100);
     },

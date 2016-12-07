@@ -20,6 +20,7 @@ $(document).ready(function() {
             playersCollection: players
           });
       players.matchesCollection = matches;
+      players.bindMatches();
 
 
       this.views = {

@@ -10,11 +10,11 @@
     },
     initialize: function() {
       this.matches = [];
-      _.defer(this.bindMatches.bind(this));
     },
     bindMatches: function(matches) {
       if (!this.collection || !this.collection.matchesCollection) return;
       this.matches = matches || this.collection.matchesCollection.getMatchesForPlayer(this.id);
+      this.set({match_ids: _.pluck(this.matches, ['id'])});
       console.log('bindMatches', this.id, this.matches.length);
     },
     toRender: function() {
@@ -37,6 +37,10 @@
       this.stopListening();
       if (!this.matchesCollection) return;
       var matches = this.matchesCollection;
+
+      this.each(function(match) {
+        match.bindMatches();
+      });
 
       this.listenTo(matches, 'add', function(match) {
         _.each(match.getPlayerIds(), function(id) {
@@ -93,9 +97,11 @@
 
   Backbone.PlayerView = Backbone.View.extend({
     className: 'player',
+    tagName: 'table',
     events: {
       'keydown input': 'onInputKeydown',
-      'blur input': 'saveInputToModel'
+      'blur input': 'saveInputToModel',
+      'click .dropdown-menu a.delete': 'onClickDelete'
     },
     initialize: function(options) {
       this.listenTo(this.model, 'change', this.onChange);
@@ -120,6 +126,23 @@
     renderPicture: function(data) {
       this.$('.initials').text(data.initials);
       return this;
+    },
+    onClickDelete: function(e) {
+      e.preventDefault();
+      var view = this;
+      this.$el.animate({backgroundColor: '#ffdddd'}, 100);
+      setTimeout(function() {
+        if (!confirm(_lang('areYouSure'))) {
+          view.$el.animate({backgroundColor: 'transparent'}, 100);
+          return;
+        }
+        view.$el.animate({
+          opacity: 0
+        }, 750, function() {
+          view.model.collection.remove(view.model);
+          //view.model.destroy();
+        });
+      }, 100);
     },
     onInputKeydown: function(e) {
       if (e.keyCode == 13) this.saveInputToModel.apply(this, arguments);

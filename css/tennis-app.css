@@ -144,33 +144,39 @@ body {
 }
 
 #players .player {
-  display: table;
-  margin-bottom: 15px;
-  border: 1px solid #999;
   font-size: 16px;
+  margin-bottom: 10px;
 }
 
-#players .player .picture {
+#players .player tbody {
+  border: 1px solid #999;
+}
+
+#players .player tbody .picture {
+  padding: 10px;
+}
+
+#players .player tbody .picture .wrapper {
   display: table-cell;
-  width: 68px;
-  height: 68px;
+  width: 50px;
+  height: 50px;
   vertical-align: middle;
   text-align: center;
+  background-color: #ddd;
+  border-radius: 50%;
 }
 
-#players .player .info {
-  display: table-cell;
+#players .player tbody .info {
   width: 250px;
 }
 
-#players .player .info .name {
+#players .player tbody .info .name {
 }
 
 #players .player input {
   display: inline-block;
   border: none;
   width: 100%;
-  margin: 0;
   padding: 5px;
   border: 1px dotted #9999FF;
   border-radius: 0;
@@ -181,6 +187,26 @@ body {
 
 #players .player input[readonly] {
   border: 1px solid transparent;
+  margin: 0;
+  padding: 0;
+  font-size: 16px;
+  color: #000;
+}
+
+#players .player input[readonly][name=email],
+#players .player input[readonly][name=phone] {
+  font-size: 14px;
+  color: #666;
+}
+
+#players .player tfoot {
+  font-size: 14px;
+  padding: 5px 0;
+}
+
+#players .player tfoot th {
+  padding: 5px 0 5px 5px;
+  font-weight: normal;
 }
 
 
