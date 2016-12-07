@@ -62,7 +62,10 @@
       comment: null
     },
     initialize: function() {
-      _.defer(this.bindPlayers.bind(this));
+      this.user = null;
+      this.user_partner = null;
+      this.other = null;
+      this.other_partner = null;
     },
     bindPlayers: function() {
       this.stopListening();
@@ -256,9 +259,12 @@
 
   Backbone.MatchCollection = Backbone.Collection.extend({
     model: Backbone.MatchModel,
-    initialize: function(models, options) {
-      _.bindAll(this, 'getMatchesForPlayer');
-      this.playersCollection = options.playersCollection;
+    bindPlayers: function(players) {
+      this.stopListening();
+      this.playersCollection = players;
+      this.each(function(match) {
+        match.bindPlayers();
+      });
     },
     getMatchesForPlayer: function(id) {
       if (!id) return [];

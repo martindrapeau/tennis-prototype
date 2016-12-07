@@ -15,7 +15,6 @@
       if (!this.collection || !this.collection.matchesCollection) return;
       this.matches = matches || this.collection.matchesCollection.getMatchesForPlayer(this.id);
       this.set({match_ids: _.pluck(this.matches, ['id'])});
-      console.log('bindMatches', this.id, this.matches.length);
     },
     toRender: function() {
       var data = this.toJSON();
@@ -29,17 +28,12 @@
 
   Backbone.PlayerCollection = Backbone.Collection.extend({
     model: Backbone.PlayerModel,
-    initialize: function(models, options) {
-      this.matchesCollection = options.matchesCollection;
-      _.defer(this.bindMatches.bind(this));
-    },
-    bindMatches: function() {
+    bindMatches: function(matches) {
       this.stopListening();
-      if (!this.matchesCollection) return;
-      var matches = this.matchesCollection;
+      this.matchesCollection = matches;
 
-      this.each(function(match) {
-        match.bindMatches();
+      this.each(function(player) {
+        player.bindMatches();
       });
 
       this.listenTo(matches, 'add', function(match) {
