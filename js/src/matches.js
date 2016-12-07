@@ -381,7 +381,20 @@
       var data = this.model.toRender();
       data.editable = options.editMatches;
       data.tabindex = options.tabindex ? options.tabindex : 100;
+      var players = options.players || this.model.collection.playersCollection.toJSON();
       this.lastRenderOptions = _.clone(options);
+
+      data.user = function() {
+        if (!data.editable) {
+          return '<div title="' + data.user_tooltip + '">' + data.user_title + '</div>';
+        }
+        return this.playerSelectTemplate({
+          key: 'user',
+          id: data.user_id,
+          players: players,
+          match: data
+        });
+      }.bind(this);
 
       this.$el
         .html(this.template(data))
@@ -425,6 +438,8 @@
         this.$('input:not([name=time])').on('focus', function(e) {
           if ($timeDropdown.is(':visible')) $timeInput.dropdown('toggle');
         });
+
+        this.$('.selectpicker').selectpicker();
       }
 
       this.renderMarker(data);
@@ -442,12 +457,12 @@
       }
 
       if (data.exception == USER_WON_BECAUSE_FORFEIT) {
-        this.$('.other .marker').addClass('exception').text(_lang('forfeit'));
+        this.$('.other .marker').addClass('exception').text(_lang('forfeitShort')).attr('title', _lang('forfeit'));
         this.$('.dropdown-menu .user-forfeited').addClass('strong');
       }
 
       if (data.exception == OTHER_WON_BECAUSE_FORFEIT) {
-        this.$('.user .marker').addClass('exception').text(_lang('forfeit'));
+        this.$('.user .marker').addClass('exception').text(_lang('forfeitShort')).attr('title', _lang('forfeit'));
         this.$('.dropdown-menu .other-forfeited').addClass('strong');
       }
       return this;
@@ -455,6 +470,7 @@
   });
   $('document').ready(function() {
     Backbone.MatchView.prototype.template = _.template($('#match-template').html());
+    Backbone.MatchView.prototype.playerSelectTemplate = _.template($('#match-player-select-template').html());
   });
 
   Backbone.MatchesView = Backbone.View.extend({

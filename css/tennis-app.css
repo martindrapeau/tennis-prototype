@@ -216,6 +216,7 @@ body {
 
 .match {
   margin-bottom: 15px;
+  max-width: 320px;
 }
 
 .match>tbody {
@@ -235,10 +236,12 @@ body {
 }
 
 .match td.player {
+  width: 120px;
 }
 
 .match td.marker {
   width: 40px;
+  max-width: 40px;
   font-weight: bold;
   padding: 5px;
   text-align: center;

@@ -28,6 +28,7 @@
       more: ['More', 'Plus'],
       matchIncomplete: ['Match incomplete', 'Match incomplet'],
       forfeit: ['forfeit', 'abandon'],
+      forfeitShort: ['-', '-'],
       forfeited: ['forfeited', 'a abandonné'],
       clearException: ['Clear exception', "Effacer l'exception"],
       delete: ['Delete', 'Effacer'],

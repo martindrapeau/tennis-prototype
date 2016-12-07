@@ -17,10 +17,12 @@
     <script src="js/3rd/jquery-color.js" type="text/javascript"></script>
     <script src="js/3rd/bootstrap.min.js" type="text/javascript"></script>
     <script src="js/3rd/jasny-bootstrap.min.js" type="text/javascript"></script>
+    <script src="js/3rd/bootstrap-select.min.js" type="text/javascript"></script>
+    <script src="js/3rd/bootstrap-select-fr_FR.min.js" type="text/javascript"></script>
     <script src="js/3rd/underscore.js" type="text/javascript"></script>
     <script src="js/3rd/backbone.js" type="text/javascript"></script>
     <script src="js/3rd/moment.js" type="text/javascript"></script>
-    <!--<script src="js/3rd/moment.fr-ca.js" type="text/javascript"></script>-->
+    <script src="js/3rd/moment.fr-ca.js" type="text/javascript"></script>
     <script src="js/3rd/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
 
     <script src="js/src/lang.js" type="text/javascript"></script>
@@ -34,6 +36,7 @@
 
     <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
     <link href="css/jasny-bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="css/bootstrap-select.min.css" rel="stylesheet" type="text/css">
     <link href="css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href="css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css">
     <link href="css/tennis-app.css" rel="stylesheet" type="text/css">
@@ -131,6 +134,15 @@
   </tfoot>
 </script>
 
+<script id="match-player-select-template" type="text/template">
+  <select name="<%=key%>" class="selectpicker" data-width="120px">
+    <% for (var i = 0; i < players.length; i++) { %>
+      <% var player = players[i]; %>
+      <option value="<%=player.id%>" <%=player.id == id ? "selected" : ""%>><%=player.name%></option>
+    <% } %>
+  </select>
+</script>
+
 <script id="match-template" type="text/template">
   <thead>
     <tr>
@@ -186,7 +198,9 @@
   </thead>
   <tbody>
     <tr class="user">
-      <td class="player" title="<%=user_tooltip%>"><%=user_title%></td>
+      <td class="player">
+        <%=user()%>
+      </td>
       <td class="marker"></td>
       <td class="set"><input type="number" pattern="[0-9]*" inputmode="numeric" name="user_set1" value="<%=user_set1%>" tabindex="<%=tabindex+10%>" /></td>
       <td class="set"><input type="number" pattern="[0-9]*" inputmode="numeric" name="user_set2" value="<%=user_set2%>" tabindex="<%=tabindex+12%>" /></td>
