@@ -66,51 +66,38 @@
       this.user_partner = null;
       this.other = null;
       this.other_partner = null;
+      this.on('change:user_id', _.partial(this.bindPlayer, 'user'));
+      this.on('change:user_partner_id', _.partial(this.bindPlayer, 'user_partner'));
+      this.on('change:other_id', _.partial(this.bindPlayer, 'other'));
+      this.on('change:other_partner_id', _.partial(this.bindPlayer, 'other_partner'));
+    },
+    setPlayer: function(key, player) {
+      var attrs = {};
+      attrs[key] = player.toJSON();
+      this.set(attrs, {renderAll: true});
+    },
+    bindPlayer: function(key) {
+      if (this[key]) this.stopListening(this[key]);
+
+      this[key] = this.collection.playersCollection.get(this.get(key+'_id'));
+      if (this[key]) {
+        this.setPlayer(key, this[key]);
+        this.listenTo(this[key], 'change:name change:image', _.partial(this.setPlayer, key));
+        this.listenTo(this[key], 'remove', function() {
+          var attrs = {};
+          attrs[key] = null;
+          attrs[key+'_id'] = null;
+          this.set(attrs, {renderAll: true});
+        });
+      }
+
     },
     bindPlayers: function() {
-      this.stopListening();
       if (!this.collection || !this.collection.playersCollection) return;
-
-      this.user = this.collection.playersCollection.get(this.get('user_id'));
-      if (this.user) {
-        this.listenTo(this.user, 'change', function(model) {
-          this.set({user: model.toJSON()}, {renderAll: true});
-        });
-        this.listenTo(this.user, 'remove', function() {
-          this.set({user_id: null, user: null}, {renderAll: true});
-        });
-      }
-
-      this.user_partner = this.collection.playersCollection.get(this.get('user_partner_id'));
-      if (this.user_partner) {
-        this.listenTo(this.user_partner, 'change', function(model) {
-          this.set({user_partner: model.toJSON()}, {renderAll: true});
-        });
-        this.listenTo(this.user_partner, 'remove', function() {
-          this.set({user_partner_id: null, user_partner: null}, {renderAll: true});
-        });
-      }
-
-      this.other = this.collection.playersCollection.get(this.get('other_id'));
-      if (this.other) {
-        this.listenTo(this.other, 'change', function(model) {
-          this.set({other: model.toJSON()}, {renderAll: true});
-        });
-        this.listenTo(this.other, 'remove', function() {
-          this.set({other_id: null, other: null}, {renderAll: true});
-        });
-      }
-
-      this.other_partner = this.collection.playersCollection.get(this.get('other_partner_id'));
-      if (this.other_partner) {
-        this.listenTo(this.other_partner, 'change', function(model) {
-          this.set({other_partner: model.toJSON()}, {renderAll: true});
-        });
-        this.listenTo(this.other_partner, 'remove', function() {
-          this.set({other_partner_id: null, other_partner: null}, {renderAll: true});
-        });
-      }
-
+      this.bindPlayer('user');
+      this.bindPlayer('user_partner');
+      this.bindPlayer('other');
+      this.bindPlayer('other_partner');
     },
     toRender: function() {
       var data = this.toJSON();
@@ -306,7 +293,8 @@
       'focus input[readonly]:not(.editing)': 'onReadonlyInputFocus',
       'click .dropdown-menu a.exception': 'onClickException',
       'click .dropdown-menu a.delete': 'onClickDelete',
-      'click .dropdown-menu.time a': 'onClickTime'
+      'click .dropdown-menu.time a': 'onClickTime',
+      'changed.bs.select .player .selectpicker': 'onPlayerSelect'
     },
     initialize: function(options) {
       this.lastRenderOptions = {
@@ -315,6 +303,12 @@
       };
 
       this.listenTo(this.model, 'change', this.onChange);
+    },
+    onPlayerSelect: function(e) {
+      var id = $(e.currentTarget).val();
+      id = id ? parseInt(id, 10) : null;
+      var key = $(e.currentTarget).attr('name');
+      this.model.set(key + '_id', id);
     },
     onChange: function(model, options) {
       if (options && options.renderAll)
@@ -388,12 +382,44 @@
         if (!data.editable) {
           return '<div title="' + data.user_tooltip + '">' + data.user_title + '</div>';
         }
-        return this.playerSelectTemplate({
+        var html = this.playerSelectTemplate({
           key: 'user',
           id: data.user_id,
           players: players,
           match: data
         });
+        if (data.type == DOUBLES) {
+          html += '<br/>';
+          html += this.playerSelectTemplate({
+            key: 'user_partner',
+            id: data.user_partner_id,
+            players: players,
+            match: data
+          });
+        }
+        return html;
+      }.bind(this);
+
+      data.other = function() {
+        if (!data.editable) {
+          return '<div title="' + data.other_tooltip + '">' + data.other_title + '</div>';
+        }
+        var html = this.playerSelectTemplate({
+          key: 'other',
+          id: data.other_id,
+          players: players,
+          match: data
+        });
+        if (data.type == DOUBLES) {
+          html += '<br/>';
+          html += this.playerSelectTemplate({
+            key: 'other_partner',
+            id: data.other_partner_id,
+            players: players,
+            match: data
+          });
+        }
+        return html;
       }.bind(this);
 
       this.$el

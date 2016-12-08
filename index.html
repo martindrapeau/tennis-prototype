@@ -198,9 +198,7 @@
   </thead>
   <tbody>
     <tr class="user">
-      <td class="player">
-        <%=user()%>
-      </td>
+      <td class="player"><%=user()%></td>
       <td class="marker"></td>
       <td class="set"><input type="number" pattern="[0-9]*" inputmode="numeric" name="user_set1" value="<%=user_set1%>" tabindex="<%=tabindex+10%>" /></td>
       <td class="set"><input type="number" pattern="[0-9]*" inputmode="numeric" name="user_set2" value="<%=user_set2%>" tabindex="<%=tabindex+12%>" /></td>
@@ -211,7 +209,7 @@
       </td>
     </tr>
     <tr class="other">
-      <td class="player" title="<%=other_tooltip%>"><%=other_title%></td>
+      <td class="player"><%=other()%></td>
       <td class="marker"></td>
       <td class="set"><input type="number" pattern="[0-9]*" inputmode="numeric" name="other_set1" value="<%=other_set1%>" tabindex="<%=tabindex+11%>" /></td>
       <td class="set"><input type="number" pattern="[0-9]*" inputmode="numeric" name="other_set2" value="<%=other_set2%>" tabindex="<%=tabindex+13%>" /></td>
