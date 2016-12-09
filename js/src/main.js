@@ -3,7 +3,14 @@ $(document).ready(function() {
   Backbone.TennisAppState = Backbone.Model.extend({
     defaults: {
       editMatches: false,
-      editPlayers: false
+      editPlayers: false,
+      programs: _.map(window._programs, function(o) {
+        return {
+          id: o.id,
+          name: o.name
+        };
+      }),
+      program: window._programs[0]
     }
   });
 
@@ -11,16 +18,16 @@ $(document).ready(function() {
     sideMenuTemplate: _.template($('#side-menu-template').html()),
     initialize: function(options) {
 
-      this.topMenu = new Backbone.TopMenuView({
+      this.topMenuView = new Backbone.TopMenuView({
         el: $('#top-menu'),
         model: this.model
       });
 
       var players = new Backbone.PlayerCollection(window._players),
-          matches = new Backbone.MatchCollection(window._matches);
+          matches = new Backbone.MatchCollection(window._matches),
+          programs = new Backbone.ProgramCollection(window._programs);
       matches.bindPlayers(players);
       players.bindMatches(matches);
-
 
       this.views = {
         home: new Backbone.HomeView({
@@ -36,11 +43,6 @@ $(document).ready(function() {
           el: $('#matches'),
           model: this.model,
           collection: matches
-        }),
-        events: new Backbone.EventsView({
-          el: $('#events'),
-          model: this.model,
-          collection: new Backbone.EventCollection(window._events)
         })
       };
 
@@ -51,8 +53,9 @@ $(document).ready(function() {
     onClick: function(e) {
       e.preventDefault();
       var $a = $(e.currentTarget),
-          name = $a.attr('href').replace('#', '');
-      this.show(name);
+          name = $a.attr('href').replace('#', ''),
+          state = $a.data('state');
+      this.show(name, state);
       this.$el.offcanvas('hide');
       return false;
     },
@@ -65,21 +68,29 @@ $(document).ready(function() {
       this.show();
       return this;
     },
-    show: function(name) {
+    show: function(name, state) {
       var parts = window.location.href.split('#'),
           url = parts[0],
-          hash = parts[1] || '';
-      name = name == undefined ? hash : name;
+          hash = parts[1] || '',
+          firstAmp = hash.indexOf('&'),
+          hashName = hash ? hash.substr(0, firstAmp == -1 ? hash.length : firstAmp) : '',
+          hashState = firstAmp >= 0 ? $.deparam(hash.substr(firstAmp+1)) : {};
+
+      if (name === undefined) {
+        name = hashName;
+        state = hashState;
+      }
 
       this.hideAll();
       var viewName = name || 'home',
           view = this.views[viewName];
-      this.model.set({view: viewName});
+      this.model.set(_.extend({view: viewName}, state));
 
       view.$el.show();
-      this.topMenu.render();
+      this.topMenuView.render();
 
       var route = !name || name == 'home' ? '' : name;
+      if (state) route += '&' + $.param(state);
       history.pushState({name:name}, '', url + (route ? '#' : '') + route);
 
       this.updateLinks();
@@ -87,7 +98,7 @@ $(document).ready(function() {
     hide: function(name) {
       var view = this.views[name || 'home'];
       view.$el.show();
-      this.topMenu.render();
+      this.topMenuView.render();
     },
     hideAll: function() {
       _.each(this.views, function(view) {

@@ -1,5 +1,20 @@
 (function() {
 
+  window._programs = [{
+    id: 1000,
+    name: "Saison 2016",
+    categories: [{
+      id: 3000,
+      name: "A1",
+      player_ids: []
+    }],
+    rounds: [{
+      id: 4000,
+      name: "Semaine 1",
+      date: "2016-05-01"
+    }]
+  }];
+
   window._players = [{
     id: 2314,
     name: "Abdelkader Merabet",
