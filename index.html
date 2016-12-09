@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
   <head>
-    <title>Tennis</title>
+    <title>Tennis App</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link href="favicon.ico" rel="shortcut icon" type="image/x-icon" />
@@ -43,16 +43,7 @@
   </head>
 
   <body>
-    <div id="side-menu" class="navmenu navmenu-default navmenu-fixed-left">
-      <a class="navmenu-brand" href="#">Tennis App</a>
-      <ul class="nav navmenu-nav">
-        <li><a href="#"><i class="fa fa-fw fa-home"></i> Home</a></li>
-        <li><a href="#players"><i class="fa fa-fw fa-user"></i> Players</a></li>
-        <li><a href="#matches"><i class="fa fa-fw fa-play-circle"></i> Matches</a></li>
-        <li><a href="#events"><i class="fa fa-fw fa-calendar-check-o"></i> Events</a></li>
-      </ul>
-    </div>
-    
+    <div id="side-menu" class="navmenu navmenu-default navmenu-fixed-left"></div>
     <div class="canvas">
       <div id="top-menu" class="navbar navbar-default navbar-fixed-top"></div>
       <div class="contents">
@@ -62,6 +53,16 @@
         <div id="events" class="content events"></div>
       </div>
     </div>
+
+<script id="side-menu-template" type="text/template">
+  <a class="navmenu-brand" href="#"><%=_lang('appName')%></a>
+  <ul class="nav navmenu-nav">
+    <li><a href="#"><i class="fa fa-fw fa-home"></i> <%=_lang('home')%></a></li>
+    <li><a href="#players"><i class="fa fa-fw fa-user"></i> <%=_lang('players')%></a></li>
+    <li><a href="#matches"><i class="fa fa-fw fa-play-circle"></i> <%=_lang('matches')%></a></li>
+    <li><a href="#events"><i class="fa fa-fw fa-calendar-check-o"></i> Events</a></li>
+  </ul>
+</script>
 
 <script id="top-menu-template" type="text/template">
   <button type="button" class="navbar-toggle" data-toggle="offcanvas" data-recalc="false" data-target=".navmenu" data-canvas=".canvas">
@@ -116,9 +117,7 @@
   <tfoot>
     <tr>
       <th colspan="2">
-        <div class="matches pull-left">
-          <%= match_ids.length %> <%=_lang(match_ids.length == 1 ? 'match' : 'matches').toLowerCase()%>
-        </div>
+        <div class="matches pull-left"></div>
         <% if (editable) { %>
           <div class="dropdown more pull-right">
             <button class="btn btn-default btn-sm more dropdown-toggle" type="button" id="match-more-<%=id%>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"><%=_lang('more')%> <span class="caret"></span></button>
@@ -230,7 +229,6 @@
         <th colspan="1" class="dropdown more">
           <button class="btn btn-default btn-sm more dropdown-toggle" type="button" id="match-more-<%=id%>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"><%=_lang('more')%> <span class="caret"></span></button>
           <ul class="dropdown-menu dropdown-menu-right more" aria-labelledby="match-more-<%=id%>">
-            <li class="dropdown-header">Exceptions</li>
             <li><a href="#" class="exception incomplete" data-exception="incomplete"><%=_lang('matchIncomplete')%></a></li>
             <li><a href="#" class="exception user-forfeited" data-exception="user_won_because_forfeit"><%=user_title_inline%> <%=_lang('forfeited')%></a></li>
             <li><a href="#" class="exception other-forfeited" data-exception="other_won_because_forfeit"><%=other_title_inline%> <%=_lang('forfeited')%></a></li>

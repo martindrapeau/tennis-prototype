@@ -12,7 +12,7 @@
       this.matches = [];
     },
     bindMatches: function(matches) {
-      if (!this.collection || !this.collection.matchesCollection) return;
+      console.log('bindMatches', matches);
       this.matches = matches || this.collection.matchesCollection.getMatchesForPlayer(this.id);
       this.set({match_ids: _.pluck(this.matches, ['id'])});
     },
@@ -46,7 +46,7 @@
       this.listenTo(matches, 'remove', function(match) {
         _.each(match.getPlayerIds(), function(id) {
           var player = this.get(id);
-          if (player) player.bindMatches(_.filter(player.matches, function(o) {return o.id != id;}));
+          if (player) player.bindMatches(_.filter(player.matches, function(o) {return o.id != match.id;}));
         }.bind(this));
       });
 
@@ -55,7 +55,7 @@
         if (match.hasChanged('user_id')) {
           id = match.previous('user_id');
           player = this.get(id);
-          if (player) player.bindMatches(_.filter(player.matches, function(o) {return o.id != id;}));
+          if (player) player.bindMatches(_.filter(player.matches, function(o) {return o.id != match.id;}));
           id = match.get('user_id');
           player = this.get(id);
           if (player) player.bindMatches(player.matches.concat([match]));
@@ -63,7 +63,7 @@
         if (match.hasChanged('user_partner_id')) {
           id = match.previous('user_partner_id');
           player = this.get(id);
-          if (player) player.bindMatches(_.filter(player.matches, function(o) {return o.id != id;}));
+          if (player) player.bindMatches(_.filter(player.matches, function(o) {return o.id != match.id;}));
           id = match.get('user_partner_id');
           player = this.get(id);
           if (player) player.bindMatches(player.matches.concat([match]));
@@ -71,7 +71,7 @@
         if (match.hasChanged('other_id')) {
           id = match.previous('other_id');
           player = this.get(id);
-          if (player) player.bindMatches(_.filter(player.matches, function(o) {return o.id != id;}));
+          if (player) player.bindMatches(_.filter(player.matches, function(o) {return o.id != match.id;}));
           id = match.get('other_id');
           player = this.get(id);
           if (player) player.bindMatches(player.matches.concat([match]));
@@ -79,7 +79,7 @@
         if (match.hasChanged('other_partner_id')) {
           id = match.previous('other_partner_id');
           player = this.get(id);
-          if (player) player.bindMatches(_.filter(player.matches, function(o) {return o.id != id;}));
+          if (player) player.bindMatches(_.filter(player.matches, function(o) {return o.id != match.id;}));
           id = match.get('other_partner_id');
           player = this.get(id);
           if (player) player.bindMatches(player.matches.concat([match]));
@@ -101,7 +101,9 @@
       this.listenTo(this.model, 'change', this.onChange);
     },
     onChange: function() {
-      this.renderPicture(this.model.toRender());
+      var data = this.model.toRender();
+      this.renderPicture(data);
+      this.renderMatches(data);
     },
     render: function(options) {
       var data = this.model.toRender();
@@ -114,11 +116,16 @@
         .find('input').prop('readonly', !data.editable);
 
       this.renderPicture(data);
+      this.renderMatches(data);
 
       return this;
     },
     renderPicture: function(data) {
       this.$('.initials').text(data.initials);
+      return this;
+    },
+    renderMatches: function(data) {
+      this.$('.matches').text(data.match_ids.length + ' ' + _lang(data.match_ids.length == 1 ? 'match' : 'matches').toLowerCase());
       return this;
     },
     onClickDelete: function(e) {

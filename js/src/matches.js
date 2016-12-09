@@ -73,15 +73,15 @@
     },
     setPlayer: function(key, player) {
       var attrs = {};
-      attrs[key] = player.toJSON();
+      attrs[key] = player ? player.toJSON() : null;
       this.set(attrs, {renderAll: true});
     },
     bindPlayer: function(key) {
       if (this[key]) this.stopListening(this[key]);
 
-      this[key] = this.collection.playersCollection.get(this.get(key+'_id'));
+      this[key] = this.collection.playersCollection.get(this.get(key+'_id')) || null;
+      this.setPlayer(key, this[key]);
       if (this[key]) {
-        this.setPlayer(key, this[key]);
         this.listenTo(this[key], 'change:name change:image', _.partial(this.setPlayer, key));
         this.listenTo(this[key], 'remove', function() {
           var attrs = {};
@@ -375,7 +375,11 @@
       var data = this.model.toRender();
       data.editable = options.editMatches;
       data.tabindex = options.tabindex ? options.tabindex : 100;
-      var players = options.players || this.model.collection.playersCollection.toJSON();
+      var players = options.players;
+      if (!players) {
+        players = this.model.collection.playersCollection.toJSON();
+        players.unshift({id: null, name: '--'});
+      }
       this.lastRenderOptions = _.clone(options);
 
       data.user = function() {
@@ -465,7 +469,11 @@
           if ($timeDropdown.is(':visible')) $timeInput.dropdown('toggle');
         });
 
-        this.$('.selectpicker').selectpicker();
+        this.$('.selectpicker').selectpicker({
+          iconBase: 'fa',
+          showTick: true,
+          tickIcon: "fa-user"
+        });
       }
 
       this.renderMarker(data);
@@ -540,7 +548,11 @@
       this.$el.empty();
 
       var self = this,
-          options = _.extend(this.model.toJSON(), {tabindex: 100});
+          options = _.extend(this.model.toJSON(), {
+            tabindex: 100,
+            players: this.collection.playersCollection.toJSON()
+          });
+      options.players.unshift({id: null, name: '--'});
       this.collection.each(function(model) {
         var view = new Backbone.MatchView({
           model: model

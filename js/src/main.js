@@ -8,6 +8,7 @@ $(document).ready(function() {
   });
 
   Backbone.TennisApp = Backbone.View.extend({
+    sideMenuTemplate: _.template($('#side-menu-template').html()),
     initialize: function(options) {
 
       this.topMenu = new Backbone.TopMenuView({
@@ -56,6 +57,7 @@ $(document).ready(function() {
       return false;
     },
     render: function() {
+      this.$el.html(this.sideMenuTemplate(this.model.toJSON()));
       _.each(this.views, function(view) {
         view.render();
       });
