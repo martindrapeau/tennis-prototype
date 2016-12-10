@@ -514,6 +514,10 @@
     },
     initialize: function(options) {
       this.onResize = _.debounce(this.onResize.bind(this), 100);
+      this.listenTo(this.model, 'change:view', function() {
+        this.model.set('editMatches', false);
+      });
+      this.listenTo(this.model, 'change:program_id', this.render);
       this.listenTo(this.model, 'change:editMatches', this.render);
       this.listenTo(this.collection, 'add remove', this.render);
       $(window).on('resize', this.onResize);
@@ -554,6 +558,7 @@
           });
       options.players.unshift({id: null, name: '--'});
       this.collection.each(function(model) {
+        if (model.get('program_id') != options.program_id) return true;
         var view = new Backbone.MatchView({
           model: model
         });

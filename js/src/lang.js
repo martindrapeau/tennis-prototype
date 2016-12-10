@@ -21,6 +21,7 @@
       changeAccount: ['Change account', 'Changer de compte'],
       player: ['Player', 'Joueur'],
       players: ['Players', 'Joueurs'],
+      allPlayers: ['All players', 'Tous les joueurs'],
       match: ['Match', 'Match'],
       matches: ['Matches', 'Matches'],
       home: ['Home', 'Accueil'],

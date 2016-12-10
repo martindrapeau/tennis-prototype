@@ -167,7 +167,11 @@
     },
     initialize: function(options) {
       this.onResize = _.debounce(this.onResize.bind(this), 100);
+      this.listenTo(this.model, 'change:view', function() {
+        this.model.set('editPlayers', false);
+      });
       this.listenTo(this.model, 'change:editPlayers', this.render);
+      this.listenTo(this.model, 'change:program_id', this.render);
       this.listenTo(this.collection, 'add remove', this.render);
       $(window).on('resize', this.onResize);
     },
@@ -201,6 +205,11 @@
       var self = this,
           options = _.extend(this.model.toJSON(), {tabindex: 100});
       this.collection.each(function(model) {
+        if (options.program_id) {
+          if (!_.some(model.matches, function(match) {
+            return match.get('program_id') == options.program_id;
+          })) return true;
+        }
         var view = new Backbone.PlayerView({
           model: model
         });

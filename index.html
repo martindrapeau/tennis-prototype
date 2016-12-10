@@ -50,6 +50,7 @@
       <div id="top-menu" class="navbar navbar-default navbar-fixed-top"></div>
       <div class="contents">
         <div id="home" class="content"></div>
+        <div id="program" class="content program"></div>
         <div id="players" class="content players"></div>
         <div id="matches" class="content matches"></div>
         <div id="events" class="content events"></div>
@@ -60,10 +61,13 @@
   <a class="navmenu-brand" href="#"><%=_lang('appName')%></a>
   <ul class="nav navmenu-nav">
     <li><a href="#"><i class="fa fa-fw fa-home"></i> <%=_lang('home')%></a></li>
-    <li><a href="#players" ><i class="fa fa-fw fa-user"></i> <%=_lang('players')%></a></li>
+    <li><a href="#players"><i class="fa fa-fw fa-users"></i> <%=_lang('allPlayers')%></a></li>
     <% for (var i = 0; i < programs.length; i++) { %>
       <% var program = programs[i]; %>
-      <li><a href="#matches" data-state='<%=JSON.stringify({program_id: program.id})%>'><i class="fa fa-fw fa-play-circle"></i> <%=program.name%></a></li>
+      <% var state = {program_id: program.id}; %>
+      <li><a href="#program" data-state='<%=JSON.stringify(state)%>'><i class="fa fa-fw fa-calendar-o"></i> <%=program.name%></a></li>
+      <li><a href="#matches" data-state='<%=JSON.stringify(state)%>'><i class="fa fa-fw"></i> <i class="fa fa-fw fa-arrow-circle-right"></i> <%=_lang('matches')%></a></li>
+      <li><a href="#players" data-state='<%=JSON.stringify(state)%>'><i class="fa fa-fw"></i> <i class="fa fa-fw fa-users"></i> <%=_lang('players')%></a></li>
     <% } %>
   </ul>
 </script>
@@ -75,7 +79,7 @@
     <span class="icon-bar"></span>
   </button>
     <% if (view == 'matches') { %>
-      <div class="navbar-brand"><%=program.name%></div>
+      <div class="navbar-brand"><%=_lang('matches')%></div>
       <div class="nav-buttons">
         <div class="btn-group pull-right">
           <button type="button" class="btn btn-default edit-matches"><i class="fa fa-fw <%=editMatches ? 'fa-save' : 'fa-pencil'%>"></i></button>
@@ -105,6 +109,10 @@
       </p>
     </div>
   </div>
+</script>
+
+<script id="program-template" type="text/template">
+  <h1><%=name%></h1>
 </script>
 
 <script id="player-template" type="text/template">

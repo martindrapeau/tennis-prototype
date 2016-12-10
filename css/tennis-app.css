@@ -138,6 +138,9 @@ body {
   text-align: right;
 }
 
+#program {
+  padding: 15px;
+}
 
 #players {
   padding: 15px;

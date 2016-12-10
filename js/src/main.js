@@ -2,6 +2,7 @@ $(document).ready(function() {
 
   Backbone.TennisAppState = Backbone.Model.extend({
     defaults: {
+      view: undefined,
       editMatches: false,
       editPlayers: false,
       programs: _.map(window._programs, function(o) {
@@ -10,7 +11,11 @@ $(document).ready(function() {
           name: o.name
         };
       }),
-      program: window._programs[0]
+      program_id: window._programs[0].id,
+      program: {
+        id: window._programs[0].id,
+        name: window._programs[0].name
+      }
     }
   });
 
@@ -23,26 +28,32 @@ $(document).ready(function() {
         model: this.model
       });
 
-      var players = new Backbone.PlayerCollection(window._players),
-          matches = new Backbone.MatchCollection(window._matches),
-          programs = new Backbone.ProgramCollection(window._programs);
-      matches.bindPlayers(players);
-      players.bindMatches(matches);
+      this.players = new Backbone.PlayerCollection(window._players);
+      this.matches = new Backbone.MatchCollection(window._matches);
+      this.programs = new Backbone.ProgramCollection(window._programs);
+      this.matches.bindPlayers(this.players);
+      this.players.bindMatches(this.matches);
 
       this.views = {
         home: new Backbone.HomeView({
           el: $('#home'),
           model: this.model
         }),
+        program: new Backbone.ProgramView({
+          el: $('#program'),
+          model: this.programs.first(),
+          collection: this.programs,
+          stateModel: this.model
+        }),
         players: new Backbone.PlayersView({
           el: $('#players'),
           model: this.model,
-          collection: players
+          collection: this.players
         }),
         matches: new Backbone.MatchesView({
           el: $('#matches'),
           model: this.model,
-          collection: matches
+          collection: this.matches
         })
       };
 
@@ -68,30 +79,39 @@ $(document).ready(function() {
       this.show();
       return this;
     },
-    show: function(name, state) {
+    getHash: function() {
       var parts = window.location.href.split('#'),
           url = parts[0],
           hash = parts[1] || '',
           firstAmp = hash.indexOf('&'),
-          hashName = hash ? hash.substr(0, firstAmp == -1 ? hash.length : firstAmp) : '',
-          hashState = firstAmp >= 0 ? $.deparam(hash.substr(firstAmp+1)) : {};
-
+          name = hash ? hash.substr(0, firstAmp == -1 ? hash.length : firstAmp) : '',
+          state = firstAmp >= 0 ? $.deparam(hash.substr(firstAmp+1), true) : {};
+      return {
+        url: url,
+        name: name,
+        state: state
+      };
+    },
+    show: function(name, state) {
+      var hash = this.getHash();
       if (name === undefined) {
-        name = hashName;
-        state = hashState;
+        name = hash.name;
+        state = hash.state;
       }
 
       this.hideAll();
       var viewName = name || 'home',
           view = this.views[viewName];
-      this.model.set(_.extend({view: viewName}, state));
+      var program = null;
+      if (state && state.program_id) program = this.programs.get(state.program_id);
+      this.model.set(_.extend({view: viewName, program_id: program ? program.id : null, program: program ? program.pick('id', 'name') : null}, state));
 
       view.$el.show();
       this.topMenuView.render();
 
       var route = !name || name == 'home' ? '' : name;
-      if (state) route += '&' + $.param(state);
-      history.pushState({name:name}, '', url + (route ? '#' : '') + route);
+      if (!_.isEmpty(state)) route += '&' + $.param(state);
+      history.pushState({name:name}, '', hash.url + (route ? '#' : '') + route);
 
       this.updateLinks();
     },
@@ -106,12 +126,15 @@ $(document).ready(function() {
       });
     },
     updateLinks: function() {
-      var hash = window.location.hash || '#';
+      var hash = this.getHash();
       this.$el.find('a').each(function() {
-        if ($(this).attr('href') == hash)
-          $(this).closest('li').addClass('active');
+        var $a = $(this),
+            name = $a.attr('href').replace('#', ''),
+            state = $a.data('state') || {};
+        if (name == hash.name && _.isEqual(state, hash.state))
+          $a.closest('li').addClass('active');
         else
-          $(this).closest('li').removeClass('active');
+          $a.closest('li').removeClass('active');
       });
     }
   });

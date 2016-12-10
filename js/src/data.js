@@ -13,6 +13,19 @@
       name: "Semaine 1",
       date: "2016-05-01"
     }]
+  }, {
+    id: 1010,
+    name: "Saison 2015",
+    categories: [{
+      id: 3010,
+      name: "A1",
+      player_ids: []
+    }],
+    rounds: [{
+      id: 4010,
+      name: "Semaine 1",
+      date: "2015-05-01"
+    }]
   }];
 
   window._players = [{
@@ -55,6 +68,7 @@
 
   window._matches = [{
     id: 5402,
+    program_id: 1000,
     type: "singles",
     created_on: "2016-08-21 22:02:43",
     played_on: "2016-08-22 08:00:00",
@@ -99,6 +113,7 @@
     comment: "Bon match!"
   }, {
     id: 5406,
+    program_id: 1010,
     type: "doubles",
     created_on: "2016-08-21 22:02:43",
     played_on: "2016-09-01 17:00:00",
