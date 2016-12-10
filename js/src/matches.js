@@ -517,14 +517,13 @@
       this.listenTo(this.model, 'change:view', function() {
         this.model.set('editMatches', false);
       });
-      this.listenTo(this.model, 'change:program_id', this.render);
       this.listenTo(this.model, 'change:editMatches', this.render);
       this.listenTo(this.collection, 'add remove', this.render);
       $(window).on('resize', this.onResize);
     },
     onAddMatch: function(e) {
       var last = this.collection.last(),
-          model = new Backbone.MatchModel(last ? last.pick(['location', 'played_on']) : undefined);
+          model = new Backbone.MatchModel(last ? last.pick(['location', 'played_on', 'program_id']) : undefined);
       this.collection.add(model);
       model.bindPlayers();
       var view = this.views[this.views.length-1];

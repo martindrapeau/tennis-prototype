@@ -106,6 +106,7 @@ $(document).ready(function() {
       if (state && state.program_id) program = this.programs.get(state.program_id);
       this.model.set(_.extend({view: viewName, program_id: program ? program.id : null, program: program ? program.pick('id', 'name') : null}, state));
 
+      view.render();
       view.$el.show();
       this.topMenuView.render();
 

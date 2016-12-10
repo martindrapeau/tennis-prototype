@@ -171,7 +171,6 @@
         this.model.set('editPlayers', false);
       });
       this.listenTo(this.model, 'change:editPlayers', this.render);
-      this.listenTo(this.model, 'change:program_id', this.render);
       this.listenTo(this.collection, 'add remove', this.render);
       $(window).on('resize', this.onResize);
     },
