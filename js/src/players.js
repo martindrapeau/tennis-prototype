@@ -12,7 +12,6 @@
       this.matches = [];
     },
     bindMatches: function(matches) {
-      console.log('bindMatches', matches);
       this.matches = matches || this.collection.matchesCollection.getMatchesForPlayer(this.id);
       this.set({match_ids: _.pluck(this.matches, ['id'])});
     },
