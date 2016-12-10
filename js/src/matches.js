@@ -279,6 +279,10 @@
         });
       });
       return map;
+    },
+    lastInProgram: function(program_id) {
+      var index = this.findLastIndex({program_id: program_id});
+      return index >= 0 ? this.at(index) : undefined;
     }
   });
 
@@ -522,7 +526,7 @@
       $(window).on('resize', this.onResize);
     },
     onAddMatch: function(e) {
-      var last = this.collection.last(),
+      var last = this.collection.lastInProgram(this.model.get('program_id')),
           model = new Backbone.MatchModel(last ? last.pick(['location', 'played_on', 'program_id']) : undefined);
       this.collection.add(model);
       model.bindPlayers();
