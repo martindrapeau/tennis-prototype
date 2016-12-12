@@ -59,7 +59,8 @@
       other_tie5: null,
       exception: null,
       location: null,
-      comment: null
+      comment: null,
+      editable: false
     },
     initialize: function() {
       this.user = null;
@@ -301,11 +302,6 @@
       'changed.bs.select .player .selectpicker': 'onPlayerSelect'
     },
     initialize: function(options) {
-      this.lastRenderOptions = {
-        editable: false,
-        tabindex: 100
-      };
-
       this.listenTo(this.model, 'change', this.onChange);
     },
     onPlayerSelect: function(e) {
@@ -377,8 +373,7 @@
     render: function(options) {
       options || (options = this.lastRenderOptions);
       var data = this.model.toRender();
-      data.editable = options.editMatches;
-      data.tabindex = options.tabindex ? options.tabindex : 100;
+      data.tabindex = 100;
       var players = options.players;
       if (!players) {
         players = this.model.collection.playersCollection.toJSON();
@@ -432,7 +427,8 @@
 
       this.$el
         .html(this.template(data))
-        .data('id', data.id)
+        .data('id', this.model.id)
+        .data('cid', this.model.cid)
         .find('input').prop('readonly', !data.editable);
 
       if (data.editable) {
@@ -512,18 +508,40 @@
   });
 
   Backbone.MatchesView = Backbone.View.extend({
-    className: 'match',
     events: {
-      'click .add-match': 'onAddMatch'
+      'click .add-match': 'onAddMatch',
+      'click .match': 'onClickMatch'
     },
     initialize: function(options) {
-      this.onResize = _.debounce(this.onResize.bind(this), 100);
+      this.modelInEdit = null;
       this.listenTo(this.model, 'change:view', function() {
-        this.model.set('editMatches', false);
+        if (this.modelInEdit) this.modelInEdit.set('editable', false);
+        this.modelInEdit = null;
       });
-      this.listenTo(this.model, 'change:editMatches', this.render);
       this.listenTo(this.collection, 'add remove', this.render);
+      this.onResize = _.debounce(this.onResize.bind(this), 100);
       $(window).on('resize', this.onResize);
+      $('body').on('click', this.onClickBody.bind(this));
+    },
+    onClickMatch: function(e) {
+      var $el = $(e.currentTarget);
+      if ($el.is('.match')) {
+        var cid = $el.data('cid');
+        if (this.modelInEdit && cid == this.modelInEdit.cid) return;
+        if (this.modelInEdit) this.modelInEdit.set({editable: false}, {renderAll: true});
+        var model = this.collection.get(cid);
+        if (model) model.set({editable: true}, {renderAll: true});
+        this.modelInEdit = model;
+        e.stopPropagation();
+      }
+    },
+    onClickBody: function(e) {
+      var $el = $(e.target);
+      console.log('onClickBody', $el);
+      if (this.modelInEdit && !$el.is('.match') && !$el.closest('.match').is('.match')) {
+        this.modelInEdit.set({editable: false}, {renderAll: true});
+        this.modelInEdit = null;
+      }
     },
     onAddMatch: function(e) {
       var last = this.collection.lastInProgram(this.model.get('program_id')),
@@ -554,27 +572,23 @@
       this.views = [];
       this.$el.empty();
 
-      var self = this,
-          options = _.extend(this.model.toJSON(), {
-            tabindex: 100,
-            players: this.collection.playersCollection.toJSON()
-          });
+      var state = this.model.toJSON(),
+          options = {players: this.collection.playersCollection.toJSON()};
       options.players.unshift({id: null, name: '--'});
       this.collection.each(function(model) {
-        if (model.get('program_id') != options.program_id) return true;
+        if (model.get('program_id') != state.program_id) return true;
         var view = new Backbone.MatchView({
           model: model
         });
-        self.$el.append(view.render(options).$el);
-        self.views.push(view);
-        options.tabindex += 100;
-      });
+        this.$el.append(view.render(options).$el);
+        this.views.push(view);
+      }.bind(this));
 
-      if (options.editMatches) {
-        var $add = $('<button class="btn btn-default add-match">' + _lang('addAMatch') + '...</button>');
-        this.$el.append($add);
-        if (self.views.length) $add.css('width', self.views[0].$el.css('width'));
-      }
+      this.$add = $('<button class="btn btn-default add-match">' + _lang('addAMatch') + '...</button>');
+      this.$el.append(this.$add);
+      _.defer(function() {
+        if (this.views.length) this.$add.css('width', this.views[0].$el.css('width'));
+      }.bind(this));
       
       return this;
     }

@@ -5,8 +5,10 @@
       id: undefined,
       name: null,
       email: null,
+      phone: null,
       image: null,
-      match_ids: []
+      match_ids: [],
+      editable: false
     },
     initialize: function() {
       this.matches = [];
@@ -99,19 +101,23 @@
     initialize: function(options) {
       this.listenTo(this.model, 'change', this.onChange);
     },
-    onChange: function() {
+    onChange: function(model, options) {
       var data = this.model.toRender();
-      this.renderPicture(data);
-      this.renderMatches(data);
+      if (options && options.renderAll) {
+        this.render();
+      } else {
+        this.renderPicture(data);
+        this.renderMatches(data);
+      }
     },
-    render: function(options) {
+    render: function() {
       var data = this.model.toRender();
-      data.editable = options && options.editPlayers;
-      data.tabindex = options && options.tabindex ? options.tabindex : 100;
+      data.tabindex = 100;
 
       this.$el
         .html(this.template(data))
-        .data('id', data.id)
+        .data('id', this.model.id)
+        .data('cid', this.model.cid)
         .find('input').prop('readonly', !data.editable);
 
       this.renderPicture(data);
@@ -162,16 +168,39 @@
   Backbone.PlayersView = Backbone.View.extend({
     className: 'player',
     events: {
-      'click .add-player': 'onAddPlayer'
+      'click .add-player': 'onAddPlayer',
+      'click .player': 'onClickPlayer'
     },
     initialize: function(options) {
-      this.onResize = _.debounce(this.onResize.bind(this), 100);
+      this.modelInEdit = null;
       this.listenTo(this.model, 'change:view', function() {
-        this.model.set('editPlayers', false);
+        if (this.modelInEdit) this.modelInEdit.set('editable', false);
+        this.modelInEdit = null;
       });
-      this.listenTo(this.model, 'change:editPlayers', this.render);
       this.listenTo(this.collection, 'add remove', this.render);
+      this.onResize = _.debounce(this.onResize.bind(this), 100);
       $(window).on('resize', this.onResize);
+      $('body').on('click', this.onClickBody.bind(this));
+    },
+    onClickPlayer: function(e) {
+      var $el = $(e.currentTarget);
+      if ($el.is('.player')) {
+        var cid = $el.data('cid');
+        if (this.modelInEdit && cid == this.modelInEdit.cid) return;
+        if (this.modelInEdit) this.modelInEdit.set({editable: false}, {renderAll: true});
+        var model = this.collection.get(cid);
+        if (model) model.set({editable: true}, {renderAll: true});
+        this.modelInEdit = model;
+        e.stopPropagation();
+      }
+    },
+    onClickBody: function(e) {
+      var $el = $(e.target);
+      console.log('onClickBody', $el);
+      if (this.modelInEdit && !$el.is('.player') && !$el.closest('.player').is('.player')) {
+        this.modelInEdit.set({editable: false}, {renderAll: true});
+        this.modelInEdit = null;
+      }
     },
     onAddPlayer: function(e) {
       var model = new Backbone.PlayerModel();
@@ -200,27 +229,25 @@
       this.views = [];
       this.$el.empty();
 
-      var self = this,
-          options = _.extend(this.model.toJSON(), {tabindex: 100});
+      var state = this.model.toJSON();
       this.collection.each(function(model) {
-        if (options.program_id) {
+        if (state.program_id) {
           if (!_.some(model.matches, function(match) {
-            return match.get('program_id') == options.program_id;
+            return match.get('program_id') == state.program_id;
           })) return true;
         }
         var view = new Backbone.PlayerView({
           model: model
         });
-        self.$el.append(view.render(options).$el);
-        self.views.push(view);
-        options.tabindex += 100;
-      });
+        this.$el.append(view.render().$el);
+        this.views.push(view);
+      }.bind(this));
 
-      if (options.editPlayers) {
-        var $add = $('<button class="btn btn-default add-player">' + _lang('addAPlayer') + '...</button>');
-        this.$el.append($add);
-        if (self.views.length) $add.css('width', self.views[0].$el.css('width'));
-      }
+      this.$add = $('<button class="btn btn-default add-player">' + _lang('addAPlayer') + '...</button>');
+      this.$el.append(this.$add);
+      _.defer(function() {
+        if (this.views.length) this.$add.css('width', this.views[0].$el.css('width'));
+      }.bind(this));
       
       return this;
     }
