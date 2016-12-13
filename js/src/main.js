@@ -3,8 +3,6 @@ $(document).ready(function() {
   Backbone.TennisAppState = Backbone.Model.extend({
     defaults: {
       view: undefined,
-      editMatches: false,
-      editPlayers: false,
       programs: _.map(window._programs, function(o) {
         return {
           id: o.id,
@@ -16,6 +14,18 @@ $(document).ready(function() {
         id: window._programs[0].id,
         name: window._programs[0].name
       }
+    }
+  });
+
+  _.extend(Backbone.View.prototype, {
+    show: function() {
+      this.delegateEvents();
+      this.render();
+      this.$el.show();
+    },
+    hide: function() {
+      this.$el.hide();
+      this.undelegateEvents();
     }
   });
 
@@ -59,7 +69,9 @@ $(document).ready(function() {
 
     },
     events: {
-      'click a': 'onClick'
+      'click a': 'onClick',
+      'show.bs.offcanvas': 'onShowMenu',
+      'hide.bs.offcanvas': 'onHideMenu'
     },
     onClick: function(e) {
       e.preventDefault();
@@ -70,14 +82,16 @@ $(document).ready(function() {
       this.$el.offcanvas('hide');
       return false;
     },
-    render: function() {
-      this.$el.html(this.sideMenuTemplate(this.model.toJSON()));
-      _.each(this.views, function(view) {
-        view.render();
-      });
-      this.hideAll();
-      this.show();
-      return this;
+    onShowMenu: function(e) {
+      var hash = this.getHash();
+      if (!hash || !hash.name) return;
+      var view = this.views[hash.name || 'home'];
+      view.undelegateEvents();
+      this.viewNeedsDelegateEvents = view;
+    },
+    onHideMenu: function(e) {
+      if (this.viewNeedsDelegateEvents) this.viewNeedsDelegateEvents.delegateEvents();
+      this.viewNeedsDelegateEvents = undefined;
     },
     getHash: function() {
       var parts = window.location.href.split('#'),
@@ -93,21 +107,21 @@ $(document).ready(function() {
       };
     },
     show: function(name, state) {
+      this.viewNeedsDelegateEvents = undefined;
       var hash = this.getHash();
       if (name === undefined) {
         name = hash.name;
         state = hash.state;
       }
 
-      this.hideAll();
+      this.hide();
       var viewName = name || 'home',
           view = this.views[viewName];
       var program = null;
       if (state && state.program_id) program = this.programs.get(state.program_id);
       this.model.set(_.extend({view: viewName, program_id: program ? program.id : null, program: program ? program.pick('id', 'name') : null}, state));
 
-      view.render();
-      view.$el.show();
+      view.show();
       this.topMenuView.render();
 
       var route = !name || name == 'home' ? '' : name;
@@ -117,14 +131,24 @@ $(document).ready(function() {
       this.updateLinks();
     },
     hide: function(name) {
-      var view = this.views[name || 'home'];
-      view.$el.show();
+      var hash = this.getHash();
+      if (name === undefined) {
+        name = hash.name;
+        state = hash.state;
+      }
+      var viewName = name || 'home',
+          view = this.views[viewName];
+      view.hide();
       this.topMenuView.render();
     },
-    hideAll: function() {
+    render: function() {
+      this.$el.html(this.sideMenuTemplate(this.model.toJSON()));
       _.each(this.views, function(view) {
-        view.$el.hide();
+        view.render();
+        view.hide();
       });
+      this.show();
+      return this;
     },
     updateLinks: function() {
       var hash = this.getHash();

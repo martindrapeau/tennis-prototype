@@ -102,6 +102,7 @@
     },
     toRender: function() {
       var data = this.toJSON();
+      data.tabindex = this.cid.replace('c', '') * 100;
 
       var when = moment(data.played_on);
       data.date = when.isValid() ? when.format('YYYY-MM-DD') : '';
@@ -373,7 +374,6 @@
     render: function(options) {
       options || (options = this.lastRenderOptions);
       var data = this.model.toRender();
-      data.tabindex = 100;
       var players = options.players;
       if (!players) {
         players = this.model.collection.playersCollection.toJSON();
@@ -510,20 +510,26 @@
   Backbone.MatchesView = Backbone.View.extend({
     events: {
       'click .add-match': 'onAddMatch',
-      'click .match': 'onClickMatch'
+      'focus .match': 'onFocusMatch'
     },
     initialize: function(options) {
       this.modelInEdit = null;
-      this.listenTo(this.model, 'change:view', function() {
-        if (this.modelInEdit) this.modelInEdit.set('editable', false);
-        this.modelInEdit = null;
-      });
       this.listenTo(this.collection, 'add remove', this.render);
       this.onResize = _.debounce(this.onResize.bind(this), 100);
-      $(window).on('resize', this.onResize);
-      $('body').on('click', this.onClickBody.bind(this));
     },
-    onClickMatch: function(e) {
+    delegateEvents: function() {
+      Backbone.View.prototype.delegateEvents.apply(this, arguments);
+      $(window).on('resize.matches', this.onResize);
+      $('body').on('click.matches', this.onClickBody.bind(this));
+    },
+    undelegateEvents: function() {
+      Backbone.View.prototype.undelegateEvents.apply(this, arguments);
+      if (this.modelInEdit) this.modelInEdit.set('editable', false);
+      this.modelInEdit = null;
+      $(window).off('resize.matches');
+      $('body').off('click.matches');
+    },
+    onFocusMatch: function(e) {
       var $el = $(e.currentTarget);
       if ($el.is('.match')) {
         var cid = $el.data('cid');
@@ -537,7 +543,7 @@
     },
     onClickBody: function(e) {
       var $el = $(e.target);
-      console.log('onClickBody', $el);
+      if (this.model.get('view') != 'matches' || $el.closest('.bootstrap-select').length) return;
       if (this.modelInEdit && !$el.is('.match') && !$el.closest('.match').is('.match')) {
         this.modelInEdit.set({editable: false}, {renderAll: true});
         this.modelInEdit = null;

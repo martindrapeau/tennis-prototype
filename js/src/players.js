@@ -19,6 +19,7 @@
     },
     toRender: function() {
       var data = this.toJSON();
+      data.tabindex = this.cid.replace('c', '') * 100;
 
       data.title = data.name ? _.shortName(data.name) : null;
       data.initials = data.name ? _.initials(data.name) : null;
@@ -112,7 +113,6 @@
     },
     render: function() {
       var data = this.model.toRender();
-      data.tabindex = 100;
 
       this.$el
         .html(this.template(data))
@@ -169,20 +169,26 @@
     className: 'player',
     events: {
       'click .add-player': 'onAddPlayer',
-      'click .player': 'onClickPlayer'
+      'focus .player': 'onFocusPlayer'
     },
     initialize: function(options) {
       this.modelInEdit = null;
-      this.listenTo(this.model, 'change:view', function() {
-        if (this.modelInEdit) this.modelInEdit.set('editable', false);
-        this.modelInEdit = null;
-      });
       this.listenTo(this.collection, 'add remove', this.render);
       this.onResize = _.debounce(this.onResize.bind(this), 100);
-      $(window).on('resize', this.onResize);
-      $('body').on('click', this.onClickBody.bind(this));
     },
-    onClickPlayer: function(e) {
+    delegateEvents: function() {
+      Backbone.View.prototype.delegateEvents.apply(this, arguments);
+      $(window).on('resize.players', this.onResize);
+      $('body').on('click.players', this.onClickBody.bind(this));
+    },
+    undelegateEvents: function() {
+      Backbone.View.prototype.undelegateEvents.apply(this, arguments);
+      if (this.modelInEdit) this.modelInEdit.set('editable', false);
+      this.modelInEdit = null;
+      $(window).off('resize.players');
+      $('body').off('click.players');
+    },
+    onFocusPlayer: function(e) {
       var $el = $(e.currentTarget);
       if ($el.is('.player')) {
         var cid = $el.data('cid');
@@ -196,7 +202,7 @@
     },
     onClickBody: function(e) {
       var $el = $(e.target);
-      console.log('onClickBody', $el);
+      if (this.model.get('view') != 'players' || $el.closest('.bootstrap-select').length) return;
       if (this.modelInEdit && !$el.is('.player') && !$el.closest('.player').is('.player')) {
         this.modelInEdit.set({editable: false}, {renderAll: true});
         this.modelInEdit = null;
