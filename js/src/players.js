@@ -169,6 +169,7 @@
     className: 'player',
     events: {
       'click .add-player': 'onAddPlayer',
+      'click .player': 'onFocusPlayer',
       'focus .player': 'onFocusPlayer'
     },
     initialize: function(options) {
@@ -249,11 +250,13 @@
         this.views.push(view);
       }.bind(this));
 
-      this.$add = $('<button class="btn btn-default add-player">' + _lang('addAPlayer') + '...</button>');
-      this.$el.append(this.$add);
-      _.defer(function() {
-        if (this.views.length) this.$add.css('width', this.views[0].$el.css('width'));
-      }.bind(this));
+      if (!state.program_id) {
+        this.$add = $('<button class="btn btn-default add-player">' + _lang('addAPlayer') + '...</button>');
+        this.$el.append(this.$add);
+        _.defer(function() {
+          if (this.views.length) this.$add.css('width', this.views[0].$el.css('width'));
+        }.bind(this));
+      }
       
       return this;
     }

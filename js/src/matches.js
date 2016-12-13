@@ -510,6 +510,7 @@
   Backbone.MatchesView = Backbone.View.extend({
     events: {
       'click .add-match': 'onAddMatch',
+      'click .match': 'onFocusMatch',
       'focus .match': 'onFocusMatch'
     },
     initialize: function(options) {
