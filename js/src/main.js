@@ -83,6 +83,7 @@ $(document).ready(function() {
       return false;
     },
     onShowMenu: function(e) {
+      $('html').css({overflow:'hidden'});
       var hash = this.getHash();
       if (!hash || !hash.name) return;
       var view = this.views[hash.name || 'home'];
@@ -90,6 +91,7 @@ $(document).ready(function() {
       this.viewNeedsDelegateEvents = view;
     },
     onHideMenu: function(e) {
+      $('html').css({overflow:''});
       if (this.viewNeedsDelegateEvents) this.viewNeedsDelegateEvents.delegateEvents();
       this.viewNeedsDelegateEvents = undefined;
     },
