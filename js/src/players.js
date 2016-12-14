@@ -111,6 +111,9 @@
         this.renderMatches(data);
       }
     },
+    focus: function() {
+      this.$el.find('input').first().focus();
+    },
     render: function() {
       var data = this.model.toRender();
 
@@ -169,7 +172,7 @@
     className: 'player',
     events: {
       'click .add-player': 'onAddPlayer',
-      'click .player': 'onFocusPlayer',
+      'click .player tbody': 'onFocusPlayer',
       'focus .player': 'onFocusPlayer'
     },
     initialize: function(options) {
@@ -210,7 +213,7 @@
       }
     },
     onAddPlayer: function(e) {
-      var model = new Backbone.PlayerModel();
+      var model = new Backbone.PlayerModel({editable:true});
       this.collection.add(model);
       var view = this.views[this.views.length-1];
       view.$el.css({
@@ -221,7 +224,7 @@
       }, 500);
       view.$el.animate({
         backgroundColor: 'transparent'
-      }, 750);
+      }, 750, view.focus.bind(view));
     },
     remove: function() {
       $(window).off('resize', this.onResize);

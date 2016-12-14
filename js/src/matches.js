@@ -371,6 +371,9 @@
       }
       this.model.set(attr, value);
     },
+    focus: function() {
+      this.$el.find('input').first().focus();
+    },
     render: function(options) {
       options || (options = this.lastRenderOptions);
       var data = this.model.toRender();
@@ -517,7 +520,7 @@
   Backbone.MatchesView = Backbone.View.extend({
     events: {
       'click .add-match': 'onAddMatch',
-      'click .match': 'onFocusMatch',
+      'click .match tbody': 'onFocusMatch',
       'focus .match': 'onFocusMatch'
     },
     initialize: function(options) {
@@ -559,7 +562,7 @@
     },
     onAddMatch: function(e) {
       var last = this.collection.lastInProgram(this.model.get('program_id')),
-          model = new Backbone.MatchModel(last ? last.pick(['location', 'played_on', 'program_id']) : undefined);
+          model = new Backbone.MatchModel(_.extend({editable:true}, last ? last.pick(['location', 'played_on', 'program_id']) : undefined));
       this.collection.add(model);
       model.bindPlayers();
       var view = this.views[this.views.length-1];
@@ -571,7 +574,7 @@
       }, 500);
       view.$el.animate({
         backgroundColor: 'transparent'
-      }, 750);
+      }, 750, view.focus.bind(view));
     },
     remove: function() {
       $(window).off('resize', this.onResize);

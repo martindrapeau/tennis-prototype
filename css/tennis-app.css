@@ -1,6 +1,5 @@
 html {
   touch-action: manipulation;
-  /*overflow: hidden;*/
 }
 
 html, body {
@@ -8,8 +7,6 @@ html, body {
 }
 
 body {
-  /*position: relative;
-  overflow: scroll;*/
   -webkit-overflow-scrolling: touch;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
