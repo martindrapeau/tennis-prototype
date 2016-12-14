@@ -65,6 +65,11 @@ body {
   -webkit-overflow-scrolling: touch;
 }
 
+.spacer {
+  min-height: 200px;
+  height: 200px;
+}
+
 #home {
   text-align: center;
   color: white;

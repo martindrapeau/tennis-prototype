@@ -257,6 +257,8 @@
           if (this.views.length) this.$add.css('width', this.views[0].$el.css('width'));
         }.bind(this));
       }
+
+      this.$el.append('<div class="spacer">&nbsp;</div>');
       
       return this;
     }

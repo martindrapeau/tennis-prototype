@@ -469,15 +469,22 @@
           if ($timeDropdown.is(':visible')) $timeInput.dropdown('toggle');
         });
 
-        this.$('.selectpicker').selectpicker({
-          iconBase: 'fa',
-          showTick: true,
-          tickIcon: "fa-user"
-        });
+        this.$('.selectpicker')
+          .selectpicker({
+            iconBase: 'fa',
+            showTick: true,
+            tickIcon: "fa-user"
+          })
+          .on('show.bs.select', this.onShowUserSelectPicker.bind(this));
       }
 
       this.renderMarker(data);
       return this;
+    },
+    onShowUserSelectPicker: function(e) {
+      var $select = $(e.target),
+          key = $select.attr('name');
+      console.log('onShowUserSelectPicker', $select, key, this);
     },
     renderMarker: function(data) {
       this.$('.marker').removeClass('exception').prop('title', undefined).empty();
@@ -596,6 +603,8 @@
       _.defer(function() {
         if (this.views.length) this.$add.css('width', this.views[0].$el.css('width'));
       }.bind(this));
+
+      this.$el.append('<div class="spacer">&nbsp;</div>');
       
       return this;
     }
