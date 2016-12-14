@@ -10,6 +10,7 @@ html, body {
 body {
   position: relative;
   overflow: scroll;
+  -webkit-overflow-scrolling: touch;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -khtml-user-select: none;
