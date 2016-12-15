@@ -1,5 +1,7 @@
 (function() {
 
+  var dataStore = new BackboneLocalStorage('programs');
+
   Backbone.CategoryModel = Backbone.Model.extend({
     defaults: {
       id: undefined,
@@ -23,6 +25,7 @@
   });
 
   Backbone.ProgramModel = Backbone.Model.extend({
+    sync: dataStore.sync,
     defaults: {
       id: undefined,
       name: null,
@@ -31,6 +34,7 @@
     }
   });
   Backbone.ProgramCollection = Backbone.Collection.extend({
+    sync: dataStore.sync,
     model: Backbone.ProgramModel
   });
 

@@ -1,6 +1,9 @@
 (function() {
 
+  var dataStore = new BackboneLocalStorage('players');
+
   Backbone.PlayerModel = Backbone.Model.extend({
+    sync: dataStore.sync,
     defaults: {
       id: undefined,
       name: null,
@@ -30,6 +33,7 @@
 
   Backbone.PlayerCollection = Backbone.Collection.extend({
     model: Backbone.PlayerModel,
+    sync: dataStore.sync,
     bindMatches: function(matches) {
       this.stopListening();
       this.matchesCollection = matches;
@@ -160,8 +164,10 @@
       var $input = $(e.currentTarget),
           attr = $input.attr('name'),
           type = $input.attr('type'),
-          value = $input.val();
-      this.model.set(attr, value);
+          value = $input.val(),
+          attributes = {};
+      attributes[attr] = value;
+      this.model.save(attributes, {wait: true});
     }
   });
   $('document').ready(function() {

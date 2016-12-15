@@ -21,7 +21,10 @@
     }).join('');
   };
 
+  var dataStore = new BackboneLocalStorage('matches');
+
   Backbone.MatchModel = Backbone.Model.extend({
+    sync: dataStore.sync,
     defaults: {
       id: undefined,
       type: "singles",
@@ -248,6 +251,7 @@
 
   Backbone.MatchCollection = Backbone.Collection.extend({
     model: Backbone.MatchModel,
+    sync: dataStore.sync,
     bindPlayers: function(players) {
       this.stopListening();
       this.playersCollection = players;
@@ -308,8 +312,10 @@
     onPlayerSelect: function(e) {
       var id = $(e.currentTarget).val();
       id = id ? parseInt(id, 10) : null;
-      var key = $(e.currentTarget).attr('name');
-      this.model.set(key + '_id', id);
+      var key = $(e.currentTarget).attr('name'),
+          attributes = {};
+      attributes[key + '_id'] = id;
+      this.model.save(attributes, {wait: true});
     },
     onChange: function(model, options) {
       if (options && options.renderAll)
@@ -320,7 +326,7 @@
     onClickException: function(e) {
       e.preventDefault();
       var exception = $(e.currentTarget).data('exception');
-      this.model.set('exception', exception);
+      this.model.save({exception: exception}, {wait: true});
     },
     onClickDelete: function(e) {
       e.preventDefault();
@@ -344,7 +350,7 @@
       var time = $(e.currentTarget).text();
       this.$('input[name=time]').val(time);
       var value = moment(this.$('input[name=date]').val() + ' ' + time).format('YYYY-MM-DD HH:mm:ss');
-      this.model.set('played_on', value);
+      this.model.save({played_on: value}, {wait: true});
     },
     onInputKeydown: function(e) {
       if (e.keyCode == 13) this.saveInputToModel.apply(this, arguments);
@@ -356,7 +362,8 @@
       var $input = $(e.currentTarget),
           attr = $input.attr('name'),
           type = $input.attr('type'),
-          value = $input.val();
+          value = $input.val(),
+          attributes = {};
       if (type == 'number') {
         value = parseFloat(value, 10);
         if (isNaN(value)) value = null;
@@ -369,7 +376,8 @@
         attr = 'played_on';
         value = moment(this.$('input[name=date]').val() + ' ' + value).format('YYYY-MM-DD HH:mm:ss');
       }
-      this.model.set(attr, value);
+      attributes[attr] = value;
+      this.model.save(attributes, {wait: true});
     },
     focus: function() {
       this.$el.find('input').first().focus();

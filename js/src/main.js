@@ -38,34 +38,56 @@ $(document).ready(function() {
         model: this.model
       });
 
-      this.players = new Backbone.PlayerCollection(window._players);
-      this.matches = new Backbone.MatchCollection(window._matches);
-      this.programs = new Backbone.ProgramCollection(window._programs);
-      this.matches.bindPlayers(this.players);
-      this.players.bindMatches(this.matches);
+      this.players = new Backbone.PlayerCollection();
+      this.matches = new Backbone.MatchCollection();
+      this.programs = new Backbone.ProgramCollection();
 
-      this.views = {
-        home: new Backbone.HomeView({
-          el: $('#home'),
-          model: this.model
-        }),
-        program: new Backbone.ProgramView({
-          el: $('#program'),
-          model: this.programs.first(),
-          collection: this.programs,
-          stateModel: this.model
-        }),
-        players: new Backbone.PlayersView({
-          el: $('#players'),
-          model: this.model,
-          collection: this.players
-        }),
-        matches: new Backbone.MatchesView({
-          el: $('#matches'),
-          model: this.model,
-          collection: this.matches
-        })
-      };
+      var p1 = this.players.fetch(),
+          p2 = this.matches.fetch(),
+          p3 = this.programs.fetch();
+
+      var loadCollectionDataIfEmpty = function (name, promise, data) {
+        promise.always(function() {
+          if (this[name].size()) return;
+          console.log(name + ' dataStore is empty. Setting up default data.');
+          this[name].reset(data);
+          this[name].each(function(model) {model.save();});
+        }.bind(this));
+      }.bind(this);
+      loadCollectionDataIfEmpty('players', p1, window._players);
+      loadCollectionDataIfEmpty('matches', p2, window._matches);
+      loadCollectionDataIfEmpty('programs', p3, window._programs);
+
+      $.when(p1, p2, p3).done(function() {
+        this.matches.bindPlayers(this.players);
+        this.players.bindMatches(this.matches);
+
+        this.views = {
+          home: new Backbone.HomeView({
+            el: $('#home'),
+            model: this.model
+          }),
+          program: new Backbone.ProgramView({
+            el: $('#program'),
+            model: this.programs.first(),
+            collection: this.programs,
+            stateModel: this.model
+          }),
+          players: new Backbone.PlayersView({
+            el: $('#players'),
+            model: this.model,
+            collection: this.players
+          }),
+          matches: new Backbone.MatchesView({
+            el: $('#matches'),
+            model: this.model,
+            collection: this.matches
+          })
+        };
+
+        this.render();
+
+      }.bind(this));
 
     },
     events: {
@@ -169,6 +191,6 @@ $(document).ready(function() {
   window.app = new Backbone.TennisApp({
     model: new Backbone.TennisAppState(),
     el: $('#side-menu')
-  }).render();
+  });
 
 });
