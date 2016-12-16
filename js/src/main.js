@@ -3,17 +3,7 @@ $(document).ready(function() {
   Backbone.TennisAppState = Backbone.Model.extend({
     defaults: {
       view: undefined,
-      programs: _.map(window._programs, function(o) {
-        return {
-          id: o.id,
-          name: o.name
-        };
-      }),
-      program_id: window._programs[0].id,
-      program: {
-        id: window._programs[0].id,
-        name: window._programs[0].name
-      }
+      program_id: undefined
     }
   });
 
@@ -46,6 +36,7 @@ $(document).ready(function() {
           p2 = this.matches.fetch(),
           p3 = this.programs.fetch();
 
+      // DEV: The first time, bootstrap in fictional data from data.js.
       var loadCollectionDataIfEmpty = function (name, promise, data) {
         promise.always(function() {
           if (this[name].size()) return;
@@ -69,7 +60,7 @@ $(document).ready(function() {
           }),
           program: new Backbone.ProgramView({
             el: $('#program'),
-            model: this.programs.first(),
+            model: undefined,
             collection: this.programs,
             stateModel: this.model
           }),
@@ -141,9 +132,7 @@ $(document).ready(function() {
       this.hide();
       var viewName = name || 'home',
           view = this.views[viewName];
-      var program = null;
-      if (state && state.program_id) program = this.programs.get(state.program_id);
-      this.model.set(_.extend({view: viewName, program_id: program ? program.id : null, program: program ? program.pick('id', 'name') : null}, state));
+      this.model.set(_.extend({view: viewName}, state));
 
       view.show();
       this.topMenuView.render();
@@ -166,7 +155,10 @@ $(document).ready(function() {
       this.topMenuView.render();
     },
     render: function() {
-      this.$el.html(this.sideMenuTemplate(this.model.toJSON()));
+      var data = _.extend(this.model.toJSON(), {
+        programs: this.programs.map(function(model) {return model.pick('id', 'name')})
+      });
+      this.$el.html(this.sideMenuTemplate(data));
       _.each(this.views, function(view) {
         view.render();
         view.hide();

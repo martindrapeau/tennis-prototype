@@ -63,6 +63,7 @@
       exception: null,
       location: null,
       comment: null,
+      // The following is ignored by the back-end
       editable: false
     },
     initialize: function() {
@@ -74,6 +75,7 @@
       this.on('change:user_partner_id', _.partial(this.bindPlayer, 'user_partner'));
       this.on('change:other_id', _.partial(this.bindPlayer, 'other'));
       this.on('change:other_partner_id', _.partial(this.bindPlayer, 'other_partner'));
+      this.set({editable: false}, {silent: true});
     },
     setPlayer: function(key, player) {
       var attrs = {};
@@ -528,7 +530,7 @@
   Backbone.MatchesView = Backbone.View.extend({
     events: {
       'click .add-match': 'onAddMatch',
-      'click .match tbody': 'onFocusMatch',
+      'click .match': 'onFocusMatch',
       'focus .match': 'onFocusMatch'
     },
     initialize: function(options) {

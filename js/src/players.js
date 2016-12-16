@@ -10,11 +10,13 @@
       email: null,
       phone: null,
       image: null,
+      // The following are ignored by the back-end
       match_ids: [],
       editable: false
     },
     initialize: function() {
       this.matches = [];
+      this.set({editable: false}, {silent: true});
     },
     bindMatches: function(matches) {
       this.matches = matches || this.collection.matchesCollection.getMatchesForPlayer(this.id);
@@ -178,7 +180,7 @@
     className: 'player',
     events: {
       'click .add-player': 'onAddPlayer',
-      'click .player tbody': 'onFocusPlayer',
+      'click .player': 'onFocusPlayer',
       'focus .player': 'onFocusPlayer'
     },
     initialize: function(options) {

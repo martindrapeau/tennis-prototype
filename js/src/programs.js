@@ -49,6 +49,7 @@
       if (this.model) this.render();
     },
     render: function() {
+      if (!this.model) return this;
       var data = this.model.toJSON();
       this.$el
         .html(this.template(data))
