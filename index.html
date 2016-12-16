@@ -60,11 +60,12 @@
 <script id="side-menu-template" type="text/template">
   <a class="navmenu-brand" href="#"><%=_lang('appName')%></a>
   <ul class="nav navmenu-nav">
+    <% var state = {program_id: null}; %>
     <li><a href="#"><i class="fa fa-fw fa-home"></i> <%=_lang('home')%></a></li>
-    <li><a href="#players"><i class="fa fa-fw fa-users"></i> <%=_lang('allPlayers')%></a></li>
+    <li><a href="#players" data-state='<%=JSON.stringify(state)%>'><i class="fa fa-fw fa-users"></i> <%=_lang('allPlayers')%></a></li>
     <% for (var i = 0; i < programs.length; i++) { %>
       <% var program = programs[i]; %>
-      <% var state = {program_id: program.id}; %>
+      <% state = {program_id: program.id}; %>
       <li><a href="#program" data-state='<%=JSON.stringify(state)%>'><i class="fa fa-fw fa-calendar-o"></i> <%=program.name%></a></li>
       <li><a href="#matches" data-state='<%=JSON.stringify(state)%>'><i class="fa fa-fw"></i> <i class="fa fa-fw fa-arrow-circle-right"></i> <%=_lang('matches')%></a></li>
       <li><a href="#players" data-state='<%=JSON.stringify(state)%>'><i class="fa fa-fw"></i> <i class="fa fa-fw fa-users"></i> <%=_lang('players')%></a></li>
@@ -229,7 +230,7 @@
   <tfoot>
     <tr>
       <th colspan="<%=editable ? 5 : 6 %>">
-        <input type="text" name="comment" value="<%=comment%>" placeholder="<%=_lang('comment')%>" tabindex="<%=tabindex+20%>" />
+        <input type="text" name="comment" value="<%=comment%>" placeholder="<%=editable ? _lang('comment') : ''%>" tabindex="<%=tabindex+20%>" />
       </th>
       <% if (editable) { %>
         <th colspan="1" class="dropdown more">

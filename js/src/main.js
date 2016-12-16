@@ -3,7 +3,7 @@ $(document).ready(function() {
   Backbone.TennisAppState = Backbone.Model.extend({
     defaults: {
       view: undefined,
-      program_id: undefined
+      program_id: null
     }
   });
 
@@ -132,7 +132,7 @@ $(document).ready(function() {
       this.hide();
       var viewName = name || 'home',
           view = this.views[viewName];
-      this.model.set(_.extend({view: viewName}, state));
+      this.model.set(_.extend({view: viewName, program_id: null}, state));
 
       view.show();
       this.topMenuView.render();

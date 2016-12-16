@@ -36,6 +36,12 @@
   Backbone.PlayerCollection = Backbone.Collection.extend({
     model: Backbone.PlayerModel,
     sync: dataStore.sync,
+    comparator: function(model) {
+      var words = (model.get('name') || '').split(/\s/),
+          result = [];
+      while (words.length) result.push(words.pop().toLowerCase());
+      return result;
+    },
     bindMatches: function(matches) {
       this.stopListening();
       this.matchesCollection = matches;
@@ -222,7 +228,7 @@
     },
     onAddPlayer: function(e) {
       var model = new Backbone.PlayerModel({editable:true});
-      this.collection.add(model);
+      this.collection.add(model, {sort: false});
       var view = this.views[this.views.length-1];
       view.$el.css({
         backgroundColor: '#ddffdd'
