@@ -6,6 +6,14 @@ $(document).ready(function() {
       program_id: null
     }
   });
+  
+  if ('ontouchstart' in window) {
+    $(document).on('focus', 'textarea,input,select', function() {
+        $('.navbar.navbar-fixed-top').css('position', 'absolute');
+    }).on('blur', 'textarea,input,select', function() {
+        $('.navbar.navbar-fixed-top').css('position', '');
+    });
+  }
 
   _.extend(Backbone.View.prototype, {
     show: function() {
