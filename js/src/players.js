@@ -154,14 +154,14 @@
       this.$el.animate({backgroundColor: '#ffdddd'}, 100);
       setTimeout(function() {
         if (!confirm(_lang('areYouSure'))) {
-          view.$el.animate({backgroundColor: 'transparent'}, 100);
+          view.$el.animate({backgroundColor: 'transparent'}, 100, function() {$(this).css({backgroundColor:''});});
           return;
         }
         view.$el.animate({
           opacity: 0
         }, 750, function() {
           view.model.collection.remove(view.model);
-          //view.model.destroy();
+          view.model.destroy();
         });
       }, 100);
     },
@@ -238,7 +238,10 @@
       }, 500);
       view.$el.animate({
         backgroundColor: 'transparent'
-      }, 750, view.focus.bind(view));
+      }, 750, function() {
+        this.$el.css({backgroundColor:''});
+        this.focus();
+      }.bind(view));
     },
     remove: function() {
       $(window).off('resize', this.onResize);

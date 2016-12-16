@@ -409,3 +409,15 @@ body.canvas-slid {
 .add-match {
   width: 320px;
 }
+
+.program {
+
+}
+
+.program .category,
+.program .round {
+  text-align: center;
+  width: 50%;
+  vertical-align: top;
+  padding: 10px;
+}

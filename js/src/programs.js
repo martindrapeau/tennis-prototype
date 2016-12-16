@@ -40,6 +40,7 @@
 
   Backbone.ProgramView = Backbone.View.extend({
     className: 'program',
+    tagName: 'table',
     initialize: function(options) {
       this.stateModel = options.stateModel;
       this.listenTo(this.stateModel, 'change:program_id', this.onChangeProgram);
@@ -53,7 +54,7 @@
       var data = this.model.toJSON();
       this.$el
         .html(this.template(data))
-        .data('id', data.id)
+        .data('id', data.id);
       return this;
     }
   });

@@ -51,7 +51,7 @@
       <div id="top-menu" class="navbar navbar-default navbar-fixed-top"></div>
       <div class="contents">
         <div id="home" class="content"></div>
-        <div id="program" class="content program"></div>
+        <table id="program" class="content program"></table>
         <div id="players" class="content players"></div>
         <div id="matches" class="content matches"></div>
       </div>
@@ -103,7 +103,33 @@
 </script>
 
 <script id="program-template" type="text/template">
-  <h1 class="text-center"><%=name%></h1>
+  <thead>
+    <tr>
+      <th colspan="2">
+        <h1 class="text-center"><%=name%></h1>
+      </th>
+    </tr>
+    <tr>
+      <th class="category">Categories</th>
+      <th class="round">Rounds</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="category">
+        <% for (var i = 0; i < categories.length; i++) { %>
+          <% var category = categories[i]; %>
+          <a href="#"><%=category.name%></a>
+        <% } %>
+      </td>
+      <td class="round">
+        <% for (var i = 0; i < rounds.length; i++) { %>
+          <% var round = rounds[i]; %>
+          <a href="#"><%=round.name%></a>
+        <% } %>
+      </td>
+    </tr>
+  </tbody>
 </script>
 
 <script id="player-template" type="text/template">
