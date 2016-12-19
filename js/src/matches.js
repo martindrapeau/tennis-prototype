@@ -534,6 +534,7 @@
       'focus .match': 'onFocusMatch'
     },
     initialize: function(options) {
+      this.programCollection = options.programCollection;
       this.modelInEdit = null;
       this.listenTo(this.collection, 'add remove', this.render);
       this.onResize = _.debounce(this.onResize.bind(this), 100);
@@ -602,6 +603,8 @@
       this.views = [];
       this.$el.empty();
 
+      this.renderSelects();
+
       var state = this.model.toJSON(),
           options = {players: this.collection.playersCollection.toJSON()};
       options.players.unshift({id: null, name: '--'});
@@ -623,7 +626,46 @@
       this.$el.append('<div class="spacer">&nbsp;</div>');
       
       return this;
+    },
+    renderSelects: function() {
+      var program = this.programCollection.get(this.model.get('program_id'));
+      if (!program) return this;
+
+      var data = program.toJSON();
+      this.category_id || (this.category_id = null);
+      if (!_.findWhere(data.categories, {id: this.category_id})) this.category_id = null;
+      data.category_id = this.category_id;
+
+      this.round_id || (this.round_id = null);
+      if (!_.findWhere(data.rounds, {id: this.round_id})) this.round_id = null;
+      data.round_id = this.round_id;
+
+      var $div = $('<div class="text-center"></div>');
+      this.$categorySelect = $(this.categorySelectTemplate(data));
+      this.$roundSelect = $(this.roundSelectTemplate(data));
+      $div.append(this.$categorySelect).append(this.$roundSelect);
+      this.$el.append($div);
+
+      this.$categorySelect
+        .selectpicker({
+          iconBase: 'fa',
+          showTick: true,
+          tickIcon: "fa-user"
+        });
+
+      this.$roundSelect
+        .selectpicker({
+          iconBase: 'fa',
+          showTick: true,
+          tickIcon: "fa-user"
+        });
+
+      return this;
     }
+  });
+  $('document').ready(function() {
+    Backbone.MatchesView.prototype.categorySelectTemplate = _.template($('#category-select-template').html());
+    Backbone.MatchesView.prototype.roundSelectTemplate = _.template($('#round-select-template').html());
   });
 
 }.call(this));

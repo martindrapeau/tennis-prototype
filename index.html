@@ -178,6 +178,26 @@
   </select>
 </script>
 
+<script id="category-select-template" type="text/template">
+  <select name="category" class="selectpicker" data-width="150px">
+    <option value="<%=null%>" <%=null == category_id ? "selected" : ""%>><%=_lang('all')%></option>
+    <% for (var i = 0; i < categories.length; i++) { %>
+      <% var category = categories[i]; %>
+      <option value="<%=category.id%>" <%=category.id == category_id ? "selected" : ""%>><%=category.name%></option>
+    <% } %>
+  </select>
+</script>
+
+<script id="round-select-template" type="text/template">
+  <select name="round" class="selectpicker" data-width="150px">
+    <option value="<%=null%>" <%=null == round_id ? "selected" : ""%>><%=_lang('all')%></option>
+    <% for (var i = 0; i < rounds.length; i++) { %>
+      <% var round = rounds[i]; %>
+      <option value="<%=round.id%>" <%=round.id == round_id ? "selected" : ""%>><%=round.name%></option>
+    <% } %>
+  </select>
+</script>
+
 <script id="match-template" type="text/template">
   <thead>
     <tr>

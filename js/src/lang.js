@@ -12,6 +12,7 @@
     },
     dict: {
       appName: ['Tennis App', 'Tennis App'],
+      all: ['All', 'Tous'],
       account: ['Account', 'Compte'],
       email: ['Email', 'Courriel'],
       name: ['Name', 'Nom'],

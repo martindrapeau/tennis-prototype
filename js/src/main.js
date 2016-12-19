@@ -72,7 +72,8 @@ $(document).ready(function() {
           matches: new Backbone.MatchesView({
             el: $('#matches'),
             model: this.model,
-            collection: this.matches
+            collection: this.matches,
+            programCollection: this.programs
           })
         };
 
