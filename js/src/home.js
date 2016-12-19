@@ -4,10 +4,15 @@
     className: 'home',
     template: undefined,
     events: {
-      'click a.change-account': 'onChangeAccount'
+      'click a.change-account': 'onChangeAccount',
+      'click .clear': 'onClickClear'
     },
     onChangeAccount: function(e) {
       e.preventDefault();
+    },
+    onClickClear: function(e) {
+      localStorage.clear();
+      window.location.reload();
     },
     render: function() {
       this.$el.html(this.template());
