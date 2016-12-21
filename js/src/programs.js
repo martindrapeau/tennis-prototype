@@ -6,6 +6,7 @@
     defaults: {
       id: undefined,
       name: null,
+      description: '',
       player_ids: []
     }
   });
@@ -17,6 +18,7 @@
     defaults: {
       id: undefined,
       name: null,
+      description: '',
       date: null
     }
   });
@@ -29,6 +31,7 @@
     defaults: {
       id: undefined,
       name: null,
+      description: '',
       categories: [],
       rounds: []
     }
@@ -43,14 +46,11 @@
     tagName: 'table',
     initialize: function(options) {
       this.stateModel = options.stateModel;
-      this.listenTo(this.stateModel, 'change:program_id', this.onChangeProgram);
-    },
-    onChangeProgram: function() {
-      this.model = this.collection.get(this.stateModel.get('program_id'));
-      if (this.model) this.render();
     },
     render: function() {
+      this.model = this.collection.get(this.stateModel.get('program_id'));
       if (!this.model) return this;
+
       var data = this.model.toJSON();
       this.$el
         .html(this.template(data))

@@ -36,6 +36,7 @@
       clearException: ['Clear exception', "Effacer l'exception"],
       delete: ['Delete', 'Effacer'],
       areYouSure: ['Are you sure?', 'Veuillez confirmer'],
+      add: ['Add', 'Ajouter'],
       addAMatch: ['Add a match', 'Ajouter un match'],
       addAPlayer: ['Add a player', 'Ajouter un joueur']
     }

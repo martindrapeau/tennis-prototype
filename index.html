@@ -113,23 +113,31 @@
       </th>
     </tr>
     <tr>
-      <th class="category">Categories</th>
-      <th class="round">Rounds</th>
+      <th class="tags categories">Categories</th>
+      <th class="tags rounds">Rounds</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td class="category">
+      <td class="tags categories">
         <% for (var i = 0; i < categories.length; i++) { %>
           <% var category = categories[i]; %>
-          <a href="#"><%=category.name%></a>
+          <div class="tag category btn btn-default">
+            <div class="name"><%=category.name%></div>
+            <div class="description"><%=category.description%></div>
+          </div>
         <% } %>
+        <button class="tag category add btn btn-default"><%=_lang('add')%></button>
       </td>
-      <td class="round">
+      <td class="tags rounds">
         <% for (var i = 0; i < rounds.length; i++) { %>
           <% var round = rounds[i]; %>
-          <a href="#"><%=round.name%></a>
+          <div class="tag round btn btn-default">
+            <div class="name"><%=round.name%></div>
+            <div class="description"><%=round.description%></div>
+          </div>
         <% } %>
+        <button class="tag round add btn btn-default"><%=_lang('add')%></button>
       </td>
     </tr>
   </tbody>

@@ -439,10 +439,31 @@ body.canvas-slid {
 
 }
 
-.program .category,
-.program .round {
+.program .tags {
   text-align: center;
   width: 50%;
   vertical-align: top;
   padding: 10px;
+  font-size: 16px;
+}
+
+.program .tags .tag {
+  display: block;
+  text-align: left;
+  margin-bottom: 5px;
+  width: 100%;
+}
+
+.program .tags .tag .name {
+  font-weight: bold;
+}
+
+.program .tags .tag .description {
+  color: #666;
+  font-size: 14px;
+}
+
+.program .tags .tag.add {
+  text-align: center;
+  font-size: 14px;
 }
