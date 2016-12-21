@@ -263,9 +263,34 @@ body.canvas-slid {
   padding: 15px;
 }
 
+#matches .selects {
+  display: table;
+  margin-bottom: 15px;
+  max-width: 320px;
+}
+
+#matches .selects .category-select {
+  display: table-cell;
+  padding-right: 10px;
+  text-align: left;
+  width: 50%;
+}
+
+#matches .selects .round-select {
+  display: table-cell;
+  padding-left: 10px;
+  text-align: right;
+  width: 50%;
+}
+
 .match {
   margin-bottom: 15px;
   max-width: 320px;
+}
+
+.match.empty {
+  text-align: center;
+  font-style: italic;
 }
 
 .match>tbody {

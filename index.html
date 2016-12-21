@@ -61,7 +61,7 @@
   <a class="navmenu-brand" href="#"><%=_lang('appName')%></a>
   <ul class="nav navmenu-nav">
     <% var state = {program_id: null}; %>
-    <li><a href="#"><i class="fa fa-fw fa-home"></i> <%=_lang('home')%></a></li>
+    <li><a href="#" data-state='<%=JSON.stringify(state)%>'><i class="fa fa-fw fa-home"></i> <%=_lang('home')%></a></li>
     <li><a href="#players" data-state='<%=JSON.stringify(state)%>'><i class="fa fa-fw fa-users"></i> <%=_lang('allPlayers')%></a></li>
     <% for (var i = 0; i < programs.length; i++) { %>
       <% var program = programs[i]; %>
@@ -169,31 +169,32 @@
   </tfoot>
 </script>
 
+<script id="matches-selects-template" type="text/template">
+  <div class="selects">
+    <div class="category-select">
+      <select name="category" class="selectpicker" data-width="100%">
+        <% for (var i = 0; i < categories.length; i++) { %>
+          <% var category = categories[i]; %>
+          <option value="<%=category.id%>" <%=category.id == category_id ? "selected" : ""%>><%=category.name%></option>
+        <% } %>
+      </select>
+    </div>
+    <div class="round-select">
+      <select name="round" class="selectpicker" data-width="100%">
+        <% for (var i = 0; i < rounds.length; i++) { %>
+          <% var round = rounds[i]; %>
+          <option value="<%=round.id%>" <%=round.id == round_id ? "selected" : ""%>><%=round.name%></option>
+        <% } %>
+      </select>
+    </div>
+  </div>
+</script>
+
 <script id="match-player-select-template" type="text/template">
   <select name="<%=key%>" class="selectpicker" data-width="120px">
     <% for (var i = 0; i < players.length; i++) { %>
       <% var player = players[i]; %>
       <option value="<%=player.id%>" <%=player.id == id ? "selected" : ""%>><%=player.name%></option>
-    <% } %>
-  </select>
-</script>
-
-<script id="category-select-template" type="text/template">
-  <select name="category" class="selectpicker" data-width="150px">
-    <option value="<%=null%>" <%=null == category_id ? "selected" : ""%>><%=_lang('all')%></option>
-    <% for (var i = 0; i < categories.length; i++) { %>
-      <% var category = categories[i]; %>
-      <option value="<%=category.id%>" <%=category.id == category_id ? "selected" : ""%>><%=category.name%></option>
-    <% } %>
-  </select>
-</script>
-
-<script id="round-select-template" type="text/template">
-  <select name="round" class="selectpicker" data-width="150px">
-    <option value="<%=null%>" <%=null == round_id ? "selected" : ""%>><%=_lang('all')%></option>
-    <% for (var i = 0; i < rounds.length; i++) { %>
-      <% var round = rounds[i]; %>
-      <option value="<%=round.id%>" <%=round.id == round_id ? "selected" : ""%>><%=round.name%></option>
     <% } %>
   </select>
 </script>

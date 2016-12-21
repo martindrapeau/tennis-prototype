@@ -25,6 +25,7 @@
       allPlayers: ['All players', 'Tous les joueurs'],
       match: ['Match', 'Match'],
       matches: ['Matches', 'Matches'],
+      noMatches: ['No matches', 'Aucun match'],
       home: ['Home', 'Accueil'],
       matchTime: ['Match time', 'Heure du match'],
       more: ['More', 'Plus'],

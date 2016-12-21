@@ -294,6 +294,13 @@
     }
   });
 
+  Backbone.EmptyMatchView = Backbone.View.extend({
+    className: 'match empty',
+    render: function() {
+      this.$el.html(_lang("noMatches"));
+      return this;
+    }
+  });
 
   Backbone.MatchView = Backbone.View.extend({
     template: undefined,
@@ -531,7 +538,8 @@
     events: {
       'click .add-match': 'onAddMatch',
       'click .match': 'onFocusMatch',
-      'focus .match': 'onFocusMatch'
+      'focus .match': 'onFocusMatch',
+      'changed.bs.select .selects select.selectpicker': 'onCategoryOrRoundSelect'
     },
     initialize: function(options) {
       this.programCollection = options.programCollection;
@@ -550,6 +558,14 @@
       this.modelInEdit = null;
       $(window).off('resize.matches');
       $('body').off('click.matches');
+    },
+    onCategoryOrRoundSelect: function(e) {
+      var id = $(e.currentTarget).val();
+      id = id ? parseInt(id, 10) : null;
+      var key = $(e.currentTarget).attr('name');
+          attributes = {};
+      attributes[key + '_id'] = id;
+      this.model.set(attributes, {pushState: true});
     },
     onFocusMatch: function(e) {
       var $el = $(e.currentTarget);
@@ -573,7 +589,12 @@
     },
     onAddMatch: function(e) {
       var last = this.collection.lastInProgram(this.model.get('program_id')),
-          model = new Backbone.MatchModel(_.extend({editable:true}, last ? last.pick(['location', 'played_on', 'program_id']) : undefined));
+          model = new Backbone.MatchModel(_.extend({
+            editable: true,
+            program_id: this.model.get('program_id'),
+            category_id: this.model.get('category_id'),
+            round_id: this.model.get('round_id')
+          }, last ? last.pick(['location', 'played_on', 'program_id']) : undefined));
       this.collection.add(model);
       model.bindPlayers();
       var view = this.views[this.views.length-1];
@@ -597,25 +618,37 @@
     onResize: function() {
       this.render();
     },
-    render: function() {
+    render: function(options) {
+      options || (options = {});
+
       this.views || (this.views = []);
       for (var i = 0; i < this.views.length; i++) this.views[i].remove();
       this.views = [];
       this.$el.empty();
 
-      this.renderSelects();
+      this.renderSelects(options);
 
-      var state = this.model.toJSON(),
-          options = {players: this.collection.playersCollection.toJSON()};
+      var state = this.model.toJSON();
+
+      var options = {players: this.collection.playersCollection.toJSON()};
       options.players.unshift({id: null, name: '--'});
+
       this.collection.each(function(model) {
-        if (model.get('program_id') != state.program_id) return true;
+        if (model.get('program_id') != state.program_id ||
+            (state.category_id && model.get('category_id') != state.category_id) ||
+            (state.round_id && model.get('round_id') != state.round_id)) return true;
         var view = new Backbone.MatchView({
           model: model
         });
         this.$el.append(view.render(options).$el);
         this.views.push(view);
       }.bind(this));
+
+      if (this.views.length == 0) {
+        var view = new Backbone.EmptyMatchView();
+        this.$el.append(view.render().$el);
+        this.views.push(view);
+      }
 
       this.$add = $('<button class="btn btn-default add-match">' + _lang('addAMatch') + '...</button>');
       this.$el.append(this.$add);
@@ -627,45 +660,51 @@
       
       return this;
     },
-    renderSelects: function() {
+    renderSelects: function(options) {
       var program = this.programCollection.get(this.model.get('program_id'));
       if (!program) return this;
 
-      var data = program.toJSON();
-      this.category_id || (this.category_id = null);
-      if (!_.findWhere(data.categories, {id: this.category_id})) this.category_id = null;
-      data.category_id = this.category_id;
+      var data = _.extend(program.toJSON(), this.model.pick('category_id', 'round_id')),
+          firstCategory = data.categories[0],
+          firstRound = data.rounds[0];
+      if (!_.findWhere(data.categories, {id: data.category_id})) data.category_id = firstCategory ? firstCategory.id : null;
+      if (!_.findWhere(data.rounds, {id: data.round_id})) data.round_id = firstRound ? firstRound.id : null;
 
-      this.round_id || (this.round_id = null);
-      if (!_.findWhere(data.rounds, {id: this.round_id})) this.round_id = null;
-      data.round_id = this.round_id;
+      if (data.category_id != this.model.get('category_id') || data.round_id != this.model.get('round_id')) {
+        options.pushState = undefined;
+        options.replaceState = true;
+        this.model.set({
+          category_id: data.category_id,
+          round_id: data.round_id
+        }, {quiet: true});
+      }
 
-      var $div = $('<div class="text-center"></div>');
-      this.$categorySelect = $(this.categorySelectTemplate(data));
-      this.$roundSelect = $(this.roundSelectTemplate(data));
-      $div.append(this.$categorySelect).append(this.$roundSelect);
-      this.$el.append($div);
+      this.$selects = $(this.selectsTemplate(data));
+      this.$el.append(this.$selects);
 
-      this.$categorySelect
+      this.$('.selects select[name=category]')
         .selectpicker({
           iconBase: 'fa',
           showTick: true,
-          tickIcon: "fa-user"
+          tickIcon: "fa-arrow-circle-right"
         });
 
-      this.$roundSelect
+      this.$('.selects select[name=round]')
         .selectpicker({
           iconBase: 'fa',
           showTick: true,
-          tickIcon: "fa-user"
+          tickIcon: "fa-arrow-circle-right"
         });
+
+      _.defer(function() {
+        if (this.views.length) this.$selects.css('width', this.views[0].$el.css('width'));
+      }.bind(this));
 
       return this;
     }
   });
   $('document').ready(function() {
-    Backbone.MatchesView.prototype.categorySelectTemplate = _.template($('#category-select-template').html());
-    Backbone.MatchesView.prototype.roundSelectTemplate = _.template($('#round-select-template').html());
+    Backbone.MatchesView.prototype.selectsTemplate = _.template($('#matches-selects-template').html());
   });
 
 }.call(this));
