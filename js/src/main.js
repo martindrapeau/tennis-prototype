@@ -64,7 +64,8 @@ $(document).ready(function() {
             el: $('#program'),
             model: undefined,
             collection: this.programs,
-            stateModel: this.model
+            stateModel: this.model,
+            matchesCollection: this.matches
           }),
           players: new Backbone.PlayersView({
             el: $('#players'),

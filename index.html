@@ -113,8 +113,8 @@
       </th>
     </tr>
     <tr>
-      <th class="tags categories">Categories</th>
-      <th class="tags rounds">Rounds</th>
+      <th class="tags categories"><%=_lang('categories')%></th>
+      <th class="tags rounds"><%=_lang('rounds')%></th>
     </tr>
   </thead>
   <tbody>
@@ -124,7 +124,14 @@
           <% var category = categories[i]; %>
           <div class="tag category btn btn-default">
             <div class="name"><%=category.name%></div>
-            <div class="description"><%=category.description%></div>
+            <div class="description">
+              <div class="left"><%=category.description%></div>
+              <div class="right">
+                <% if (categoryStats[category.id]) { %>
+                  <%=categoryStats[category.id].completed%>/<%=categoryStats[category.id].total%>
+                <% } %>
+              </div>
+            </div>
           </div>
         <% } %>
         <button class="tag category add btn btn-default"><%=_lang('add')%></button>
@@ -134,7 +141,14 @@
           <% var round = rounds[i]; %>
           <div class="tag round btn btn-default">
             <div class="name"><%=round.name%></div>
-            <div class="description"><%=round.description%></div>
+            <div class="description">
+              <div class="left"><%=round.description%></div>
+              <div class="right">
+                <% if (roundStats[round.id]) { %>
+                  <%=roundStats[round.id].completed%>/<%=roundStats[round.id].total%>
+                <% } %>
+              </div>
+            </div>
           </div>
         <% } %>
         <button class="tag round add btn btn-default"><%=_lang('add')%></button>

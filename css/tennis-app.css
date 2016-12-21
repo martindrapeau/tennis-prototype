@@ -459,8 +459,21 @@ body.canvas-slid {
 }
 
 .program .tags .tag .description {
+  display: table;
+  width: 100%;
   color: #666;
   font-size: 14px;
+}
+
+.program .tags .tag .description .left {
+  display: table-cell;
+  width: 75%;
+}
+
+.program .tags .tag .description .right {
+  display: table-cell;
+  width: 25%;
+  text-align: right;
 }
 
 .program .tags .tag.add {

@@ -46,12 +46,15 @@
     tagName: 'table',
     initialize: function(options) {
       this.stateModel = options.stateModel;
+      this.matchesCollection = options.matchesCollection;
     },
     render: function() {
       this.model = this.collection.get(this.stateModel.get('program_id'));
       if (!this.model) return this;
 
       var data = this.model.toJSON();
+      data.categoryStats = this.matchesCollection.getMatchStatsForCategories();
+      data.roundStats = this.matchesCollection.getMatchStatsForRounds();
       this.$el
         .html(this.template(data))
         .data('id', data.id);

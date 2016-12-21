@@ -211,6 +211,9 @@
       
       return null;
     },
+    isComplete: function() {
+      return this.getWinner() != null;
+    },
     // Returns the stats on sets played and won.
     getSetStats: function() {
       var match = this.toJSON(),
@@ -285,6 +288,26 @@
             map[id].push(model.id);
           }
         });
+      });
+      return map;
+    },
+    getMatchStatsForCategories: function() {
+      var map = {};
+      this.each(function(model) {
+        var id = model.get('category_id');
+        if (!map[id]) map[id] = {total: 0, completed: 0};
+        map[id].total += 1;
+        if (model.isComplete()) map[id].completed += 1;
+      });
+      return map;
+    },
+    getMatchStatsForRounds: function() {
+      var map = {};
+      this.each(function(model) {
+        var id = model.get('round_id');
+        if (!map[id]) map[id] = {total: 0, completed: 0};
+        map[id].total += 1;
+        if (model.isComplete()) map[id].completed += 1;
       });
       return map;
     },

@@ -38,7 +38,11 @@
       areYouSure: ['Are you sure?', 'Veuillez confirmer'],
       add: ['Add', 'Ajouter'],
       addAMatch: ['Add a match', 'Ajouter un match'],
-      addAPlayer: ['Add a player', 'Ajouter un joueur']
+      addAPlayer: ['Add a player', 'Ajouter un joueur'],
+      category: ['Category', 'Catégorie'],
+      categories: ['Categories', 'Catégories'],
+      round: ['Round', 'Ronde'],
+      rounds: ['Rounds', 'Rondes']
     }
   };
 
