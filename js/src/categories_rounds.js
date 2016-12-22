@@ -76,7 +76,7 @@
   });
 
   Backbone.CategoryView = Backbone.View.extend({
-    className: 'tag category btn btn-default',
+    className: 'tag category',
     initialize: function(options) {
 
     },
@@ -89,6 +89,12 @@
         .data('cid', this.model.cid)
         .find('input').prop('readonly', !data.editable);
 
+      this.renderStats(data);
+
+      return this;
+    },
+    renderStats: function(data) {
+      this.$('.stats').text(data.stats.completed + '/' + data.stats.total + ' ' + _lang(data.stats.total == 1 ? 'match' : 'matches').toLowerCase());
       return this;
     }
   });
@@ -112,7 +118,7 @@
   });
 
   Backbone.RoundView = Backbone.CategoryView.extend({
-    className: 'tag round btn btn-default'
+    className: 'tag round'
   });
 
 }.call(this));

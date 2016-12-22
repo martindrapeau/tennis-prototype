@@ -21,7 +21,6 @@
 
   Backbone.ProgramView = Backbone.View.extend({
     className: 'program',
-    tagName: 'table',
     initialize: function(options) {
       this.stateModel = options.stateModel;
       this.matchCollection = options.matchCollection;
@@ -41,7 +40,7 @@
         .html(this.template(data))
         .data('id', data.id);
 
-      this.$categories = this.$('tbody .categories');
+      this.$categories = this.$('.categories');
       this.categoryCollection.each(function(model) {
         if (model.get('program_id') != data.id) return true;
         var view = new Backbone.CategoryView({
@@ -52,7 +51,7 @@
       }.bind(this));
       this.$categories.append('<button class="tag category add btn btn-default">' + _lang('add') + '</button>');
 
-      this.$rounds = this.$('tbody .rounds');
+      this.$rounds = this.$('.rounds');
       this.roundCollection.each(function(model) {
         if (model.get('program_id') != data.id) return true;
         var view = new Backbone.RoundView({

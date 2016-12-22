@@ -107,31 +107,21 @@
 </script>
 
 <script id="program-template" type="text/template">
-  <thead>
-    <tr>
-      <th colspan="2">
-        <h1 class="text-center"><%=name%></h1>
-      </th>
-    </tr>
-    <tr>
-      <th class="tags categories"><%=_lang('categories')%></th>
-      <th class="tags rounds"><%=_lang('rounds')%></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td class="tags categories"></td>
-      <td class="tags rounds"></td>
-    </tr>
-  </tbody>
+  <h1><%=name%></h1>
+  <h3><%=_lang('categories')%></h3>
+  <div class="categories"></div>
+  <h3><%=_lang('rounds')%></h3>
+  <div class="rounds"></div>
 </script>
 
 <script id="tag-template" type="text/template">
-  <div class="name"><%=name%></div>
-  <div class="description">
-    <div class="left"><%=description%></div>
-    <div class="right" title="<%=_lang('matchesCompleted')%>">
-      <%=stats.completed%>/<%=stats.total%>
+  <div class="title">
+    <input type="text" name="name" value="<%=name%>" tabindex="<%=tabindex+1%>" />
+    <input type="text" name="description" value="<%=description%>" tabindex="<%=tabindex+2%>" />
+  </div>
+  <div class="info">
+    <div class="stats"></div>
+    <div class="buttons">
     </div>
   </div>
 </script>
