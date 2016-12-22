@@ -53,7 +53,7 @@
       this.listenTo(matches, 'add', function(match) {
         _.each(match.getPlayerIds(), function(id) {
           var player = this.get(id);
-          if (player) player.bindMatches([match]);
+          if (player) player.bindMatches(model.matches.concat([match]));
         }.bind(this));
       });
 

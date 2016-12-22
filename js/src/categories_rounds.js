@@ -51,17 +51,13 @@
       });
 
       this.listenTo(matches, 'add', function(match) {
-        _.each(match.getmodelIds(), function(id) {
-          var model = this.get(id);
-          if (model) model.bindMatches([match]);
-        }.bind(this));
+        var model = this.get(match.get(this.matchIdAttribute));
+        if (model) model.bindMatches(model.matches.concat([match]));
       });
 
       this.listenTo(matches, 'remove', function(match) {
-        _.each(match.getmodelIds(), function(id) {
-          var model = this.get(id);
-          if (model) model.bindMatches(_.filter(model.matches, function(o) {return o.id != match.id;}));
-        }.bind(this));
+        var model = this.get(match.get(this.matchIdAttribute));
+        if (model) model.bindMatches(_.filter(model.matches, function(o) {return o.id != match.id;}));
       });
 
       this.listenTo(matches, 'change', function(match) {
