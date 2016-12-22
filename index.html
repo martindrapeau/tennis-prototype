@@ -31,6 +31,7 @@
     <script src="js/src/home.js" type="text/javascript"></script>
     <script src="js/src/matches.js" type="text/javascript"></script>
     <script src="js/src/players.js" type="text/javascript"></script>
+    <script src="js/src/categories_rounds.js" type="text/javascript"></script>
     <script src="js/src/programs.js" type="text/javascript"></script>
     <script src="js/src/events.js" type="text/javascript"></script>
     <script src="js/src/data.js" type="text/javascript"></script>
@@ -119,42 +120,20 @@
   </thead>
   <tbody>
     <tr>
-      <td class="tags categories">
-        <% for (var i = 0; i < categories.length; i++) { %>
-          <% var category = categories[i]; %>
-          <div class="tag category btn btn-default">
-            <div class="name"><%=category.name%></div>
-            <div class="description">
-              <div class="left"><%=category.description%></div>
-              <div class="right">
-                <% if (categoryStats[category.id]) { %>
-                  <%=categoryStats[category.id].completed%>/<%=categoryStats[category.id].total%>
-                <% } %>
-              </div>
-            </div>
-          </div>
-        <% } %>
-        <button class="tag category add btn btn-default"><%=_lang('add')%></button>
-      </td>
-      <td class="tags rounds">
-        <% for (var i = 0; i < rounds.length; i++) { %>
-          <% var round = rounds[i]; %>
-          <div class="tag round btn btn-default">
-            <div class="name"><%=round.name%></div>
-            <div class="description">
-              <div class="left"><%=round.description%></div>
-              <div class="right">
-                <% if (roundStats[round.id]) { %>
-                  <%=roundStats[round.id].completed%>/<%=roundStats[round.id].total%>
-                <% } %>
-              </div>
-            </div>
-          </div>
-        <% } %>
-        <button class="tag round add btn btn-default"><%=_lang('add')%></button>
-      </td>
+      <td class="tags categories"></td>
+      <td class="tags rounds"></td>
     </tr>
   </tbody>
+</script>
+
+<script id="tag-template" type="text/template">
+  <div class="name"><%=name%></div>
+  <div class="description">
+    <div class="left"><%=description%></div>
+    <div class="right" title="<%=_lang('matchesCompleted')%>">
+      <%=stats.completed%>/<%=stats.total%>
+    </div>
+  </div>
 </script>
 
 <script id="player-template" type="text/template">

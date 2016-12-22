@@ -33,10 +33,14 @@ $(document).ready(function() {
       this.players = new Backbone.PlayerCollection();
       this.matches = new Backbone.MatchCollection();
       this.programs = new Backbone.ProgramCollection();
+      this.categories = new Backbone.CategoryCollection();
+      this.rounds = new Backbone.RoundCollection();
 
       var p1 = this.players.fetch(),
           p2 = this.matches.fetch(),
-          p3 = this.programs.fetch();
+          p3 = this.programs.fetch(),
+          p4 = this.categories.fetch(),
+          p5 = this.rounds.fetch();
 
       // DEV: The first time, bootstrap in fictional data from data.js.
       var loadCollectionDataIfEmpty = function (name, promise, data) {
@@ -50,10 +54,14 @@ $(document).ready(function() {
       loadCollectionDataIfEmpty('players', p1, window._players);
       loadCollectionDataIfEmpty('matches', p2, window._matches);
       loadCollectionDataIfEmpty('programs', p3, window._programs);
+      loadCollectionDataIfEmpty('categories', p4, window._categories);
+      loadCollectionDataIfEmpty('rounds', p5, window._rounds);
 
-      $.when(p1, p2, p3).done(function() {
+      $.when(p1, p2, p3, p4, p5).done(function() {
         this.matches.bindPlayers(this.players);
         this.players.bindMatches(this.matches);
+        this.categories.bindMatches(this.matches);
+        this.rounds.bindMatches(this.matches);
 
         this.views = {
           home: new Backbone.HomeView({
@@ -65,7 +73,9 @@ $(document).ready(function() {
             model: undefined,
             collection: this.programs,
             stateModel: this.model,
-            matchesCollection: this.matches
+            matchCollection: this.matches,
+            categoryCollection: this.categories,
+            roundCollection: this.rounds
           }),
           players: new Backbone.PlayersView({
             el: $('#players'),

@@ -30,6 +30,7 @@
       matchTime: ['Match time', 'Heure du match'],
       more: ['More', 'Plus'],
       matchIncomplete: ['Match incomplete', 'Match incomplet'],
+      matchesCompleted: ['Matches completed', 'Matches completés'],
       forfeit: ['forfeit', 'abandon'],
       forfeitShort: ['-', '-'],
       forfeited: ['forfeited', 'a abandonné'],

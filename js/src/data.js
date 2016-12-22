@@ -2,55 +2,75 @@
 
   window._programs = [{
     id: 1000,
-    name: "Saison 2016",
-    categories: [{
-      id: 3001,
-      name: "A1",
-      player_ids: []
-    }, {
-      id: 3002,
-      name: "A2",
-      player_ids: []
-    }, {
-      id: 3003,
-      name: "A3",
-      player_ids: []
-    }],
-    rounds: [{
-      id: 4001,
-      name: "Semaine 1",
-      date: "2016-05-01"
-    }, {
-      id: 4002,
-      name: "Semaine 2",
-      date: "2016-05-07"
-    }, {
-      id: 4003,
-      name: "Semaine 3",
-      date: "2016-05-14"
-    }, {
-      id: 4004,
-      name: "Semaine 4",
-      date: "2016-05-21"
-    }, {
-      id: 4005,
-      name: "Semaine 5",
-      date: "2016-05-28"
-    }]
+    name: "Saison 2016"
   }, {
     id: 1100,
-    name: "Saison 2015",
-    categories: [{
-      id: 3100,
-      name: "Double A",
-      player_ids: []
-    }],
-    rounds: [{
-      id: 4100,
-      name: "Semaine 1",
-      date: "2015-05-01"
-    }]
+    name: "Saison 2015"
   }];
+
+  window._categories = [{
+    id: 3001,
+    program_id: 1000,
+    name: "A1",
+    description: "lundi",
+    player_ids: []
+  }, {
+    id: 3002,
+    program_id: 1000,
+    name: "A2",
+    description: "lundi",
+    player_ids: []
+  }, {
+    id: 3003,
+    program_id: 1000,
+    name: "A3",
+    description: "lundi",
+    player_ids: []
+  }, {
+    id: 3100,
+    program_id: 1100,
+    name: "Double A",
+    description: "mardi",
+    player_ids: []
+  }];
+
+  window._rounds = [{
+    id: 4001,
+    program_id: 1000,
+    name: "Semaine 1",
+    description: "1 au 4 mai",
+    date: "2016-05-01"
+  }, {
+    id: 4002,
+    program_id: 1000,
+    name: "Semaine 2",
+    description: "7 au 10 mai",
+    date: "2016-05-07"
+  }, {
+    id: 4003,
+    program_id: 1000,
+    name: "Semaine 3",
+    description: "14 au 17 mai",
+    date: "2016-05-14"
+  }, {
+    id: 4004,
+    program_id: 1000,
+    name: "Semaine 4",
+    description: "21 au 24 mai",
+    date: "2016-05-21"
+  }, {
+    id: 4005,
+    program_id: 1000,
+    name: "Semaine 5",
+    description: "28 au 31 mai",
+    date: "2016-05-28"
+  }, {
+    id: 4100,
+    program_id: 1100,
+    name: "Semaine 1",
+    description: "1 au 4 mai",
+    date: "2015-05-01"
+  }]
 
   window._players = [{
     id: 2314,
