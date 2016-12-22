@@ -9,7 +9,8 @@
       id: undefined,
       name: null,
       description: '',
-      match_ids: []
+      match_ids: [],
+      editable: false
     },
     initialize: function() {
       this.matches = [];
@@ -77,8 +78,24 @@
 
   Backbone.CategoryView = Backbone.View.extend({
     className: 'tag category',
+    events: {
+      'keydown input': 'onInputKeydown',
+      'blur input': 'saveInputToModel',
+      'click .dropdown-menu a.delete': 'onClickDelete'
+    },
     initialize: function(options) {
-
+      this.listenTo(this.model, 'change', this.onChange);
+    },
+    onChange: function(model, options) {
+      var data = this.model.toRender();
+      if (options && options.renderAll) {
+        this.render();
+      } else {
+        this.renderStats(data);
+      }
+    },
+    focus: function() {
+      this.$el.find('input').first().focus();
     },
     render: function() {
       var data = this.model.toRender();
@@ -96,6 +113,34 @@
     renderStats: function(data) {
       this.$('.stats').text(data.stats.completed + '/' + data.stats.total + ' ' + _lang(data.stats.total == 1 ? 'match' : 'matches').toLowerCase());
       return this;
+    },
+    onClickDelete: function(e) {
+      e.preventDefault();
+      var view = this;
+      this.$el.animate({backgroundColor: '#ffdddd'}, 100);
+      setTimeout(function() {
+        if (!confirm(_lang('areYouSure'))) {
+          view.$el.animate({backgroundColor: 'transparent'}, 100, function() {$(this).css({backgroundColor:''});});
+          return;
+        }
+        view.$el.animate({
+          opacity: 0
+        }, 750, function() {
+          view.model.collection.remove(view.model);
+          view.model.destroy();
+        });
+      }, 100);
+    },
+    onInputKeydown: function(e) {
+      if (e.keyCode == 13) this.saveInputToModel.apply(this, arguments);
+    },
+    saveInputToModel: function(e) {
+      var $input = $(e.currentTarget),
+          attr = $input.attr('name'),
+          value = $input.val(),
+          attributes = {};
+      attributes[attr] = value;
+      this.model.save(attributes, {wait: true});
     }
   });
   $('document').ready(function() {

@@ -546,6 +546,8 @@
     },
     initialize: function(options) {
       this.programCollection = options.programCollection;
+      this.categoryCollection = options.categoryCollection;
+      this.roundCollection = options.roundCollection;
       this.modelInEdit = null;
       this.listenTo(this.collection, 'add remove', this.render);
       this.onResize = _.debounce(this.onResize.bind(this), 100);
@@ -667,8 +669,23 @@
       var program = this.programCollection.get(this.model.get('program_id'));
       if (!program) return this;
 
-      var data = _.extend(program.toJSON(), this.model.pick('category_id', 'round_id')),
-          firstCategory = data.categories[0],
+      var categories = this.categoryCollection.where({program_id: program.id}),
+          rounds = this.roundCollection.where({program_id: program.id});
+
+      var data = _.extend(
+        program.toJSON(),
+        this.model.pick('category_id', 'round_id'), {
+          categories: this.categoryCollection.reduce(function(list, model) {
+              if (model.get('program_id') == program.id) list.push(model.pick('id', 'name'));
+              return list;
+            }, []),
+          rounds: this.roundCollection.reduce(function(list, model) {
+              if (model.get('program_id') == program.id) list.push(model.pick('id', 'name'));
+              return list;
+            }, [])
+        });
+
+      var firstCategory = data.categories[0],
           firstRound = data.rounds[0];
       if (!_.findWhere(data.categories, {id: data.category_id})) data.category_id = firstCategory ? firstCategory.id : null;
       if (!_.findWhere(data.rounds, {id: data.round_id})) data.round_id = firstRound ? firstRound.id : null;

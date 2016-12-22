@@ -171,7 +171,6 @@
     saveInputToModel: function(e) {
       var $input = $(e.currentTarget),
           attr = $input.attr('name'),
-          type = $input.attr('type'),
           value = $input.val(),
           attributes = {};
       attributes[attr] = value;

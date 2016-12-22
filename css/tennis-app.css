@@ -508,7 +508,8 @@ body.canvas-slid {
   text-align: right;
 }
 
-.tag.add {
+.tag.add-category,
+.tag.add-round {
   text-align: center;
   font-size: 14px;
   padding: 6px 12px;

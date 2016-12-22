@@ -86,7 +86,9 @@ $(document).ready(function() {
             el: $('#matches'),
             model: this.model,
             collection: this.matches,
-            programCollection: this.programs
+            programCollection: this.programs,
+            categoryCollection: this.categories,
+            roundCollection: this.rounds
           })
         };
 

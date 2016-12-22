@@ -16,6 +16,7 @@
       account: ['Account', 'Compte'],
       email: ['Email', 'Courriel'],
       name: ['Name', 'Nom'],
+      description: ['Description', 'Description'],
       telephone: ['Telephone', 'Telephone'],
       comment: ['Comment', 'Commentaire'],
       court: ['Court', 'Terrain'],
