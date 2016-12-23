@@ -98,6 +98,7 @@ $(document).ready(function() {
       }.bind(this));
 
       this.listenTo(this.model, 'change', this.show);
+      this.listenTo(this.programs, 'change', this.renderMenu);
 
       $(window).on('popstate', this.onPopState.bind(this));
     },
@@ -170,13 +171,22 @@ $(document).ready(function() {
       if (options && (options.pushState || options.replaceState)) this.pushState(options);
     },
     render: function() {
+      this.renderMenu();
+      this.renderViews();
+      return this;
+    },
+    renderMenu: function() {
       var data = _.extend(this.model.toJSON(), {
         programs: this.programs.map(function(model) {return model.pick('id', 'name')})
       });
       this.$el.html(this.sideMenuTemplate(data));
+      return this;
+    },
+    renderViews: function() {
+      var currentViewName = this.model.get('view');
       _.each(this.views, function(view, viewName) {
         view.render();
-        if (viewName != data.view) view.hide();
+        if (viewName != currentViewName) view.hide();
       });
       return this;
     },

@@ -9,7 +9,11 @@
       name: null,
       description: '',
       categories: [],
-      rounds: []
+      rounds: [],
+      editable: false
+    },
+    initialize: function() {
+      this.set({editable: false}, {silent: true});
     }
   });
 
@@ -22,6 +26,11 @@
   Backbone.ProgramView = Backbone.View.extend({
     className: 'program',
     events: {
+      'click .program-info': 'onFocusProgram',
+      'focus .program-info': 'onFocusProgram',
+      'keydown .program-info input': 'onProgramInputKeydown',
+      'blur .program-info input': 'saveProgramInputToModel',
+      'keyup input': 'onInputKeyup',
       'click button.goto-matches': 'onClickGotoMatches',
       'click .add-category': 'onAddCategory',
       'click .category>.info': 'onFocusCategory',
@@ -48,6 +57,29 @@
       if (this.modelInEdit) this.modelInEdit.set('editable', false);
       this.modelInEdit = null;
       $('body').off('click.tag');
+    },
+    onFocusProgram: function(e) {
+      if (this.modelInEdit && this.model.cid == this.modelInEdit.cid) return;
+      if (this.modelInEdit) this.modelInEdit.set({editable: false}, {renderAll: true});
+      this.model.set({editable: true});
+      this.modelInEdit = this.model;
+      e.stopPropagation();
+    },
+    onProgramInputKeydown: function(e) {
+      if (e.keyCode == 13) {
+        e.exitEditMode = true;
+        this.saveProgramInputToModel.apply(this, arguments);
+      }
+    },
+    saveProgramInputToModel: function(e) {
+      var $input = $(e.currentTarget),
+          attr = $input.attr('name'),
+          value = $input.val(),
+          attributes = {};
+      attributes[attr] = value;
+      if (e.exitEditMode) attributes.editable = false;
+      var xhr = this.model.save(attributes, {wait: true});
+      if (e.exitEditMode) xhr.done(function() {this.modelInEdit = null;}.bind(this));
     },
     onClickGotoMatches: function(e) {
       var $tag = $(e.currentTarget).closest('.tag'),
@@ -79,7 +111,7 @@
     onClickBody: function(e) {
       var $el = $(e.target);
       if (this.stateModel.get('view') != 'program' || $el.closest('.bootstrap-select').length) return;
-      if (this.modelInEdit && !$el.is('.tag') && !$el.closest('.tag').is('.tag')) {
+      if (this.modelInEdit && !$el.is('.tag') && !$el.closest('.tag').is('.tag') && !$el.is('.program-info') && !$el.closest('.program-info').is('.program-info')) {
         this.modelInEdit.set({editable: false}, {renderAll: true});
         this.modelInEdit = null;
       }
@@ -113,8 +145,10 @@
       }.bind(view));
     },
     render: function() {
+      if (this.model) this.stopListening(this.model);
       this.model = this.collection.get(this.stateModel.get('program_id'));
       if (!this.model) return this;
+      this.listenTo(this.model, 'change', this.render);
 
       this.views || (this.views = []);
       for (var i = 0; i < this.views.length; i++) this.views[i].remove();
@@ -123,7 +157,9 @@
       var data = this.model.toJSON();
       this.$el
         .html(this.template(data))
-        .data('id', data.id);
+        .data('id', data.id)
+        .data('cid', this.model.cid)
+        .find('input').prop('readonly', !data.editable);
 
       this.$categories = this.$('.categories');
       this.categoryCollection.each(function(model) {

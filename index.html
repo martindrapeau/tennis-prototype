@@ -107,7 +107,12 @@
 </script>
 
 <script id="program-template" type="text/template">
-  <h1><%=name%></h1>
+  <div class="program-info">
+    <input type="text" name="name" value="<%=name%>" tabindex="10" />
+    <% if (editable) { %>
+      <button class="btn btn-danger btn-sm delete-program" title="<%=_lang('delete')%>"><i class="fa fa-fw fa-times"></i></button>
+    <% } %>
+  </div>
   <h3><%=_lang('categories')%></h3>
   <div class="categories"></div>
   <h3><%=_lang('rounds')%></h3>

@@ -436,9 +436,37 @@ body.canvas-slid {
 
 .program .categories,
 .program .rounds,
-.program h1,
 .program h3 {
   padding: 0 15px;
+}
+
+.program-info {
+  padding: 15px 15px 0 15px;
+  max-width: 350px;
+}
+
+.program-info input {
+  font-size: 28px;
+  width: 80%;
+  padding: 5px;
+  border: 1px dotted #9999FF;
+  border-radius: 0;
+  background-color: transparent;
+  text-shadow: none;
+  box-shadow: none;
+  background-color: #fff;
+}
+
+.program-info input[readonly] {
+  border: 1px solid transparent;
+  background-color: transparent;
+  margin: 0;
+  padding: 0;
+  color: #000;
+}
+
+.program-info .btn {
+  margin-top: -10px;
 }
 
 .tag {
@@ -465,7 +493,6 @@ body.canvas-slid {
 
 .tag .info .title input {
   display: table-cell;
-  border: none;
   width: 50%;
   padding: 5px;
   border: 1px dotted #9999FF;
@@ -505,7 +532,7 @@ body.canvas-slid {
   width: 20%;
   text-align: center;
   vertical-align: middle;
-  border-left: 1px solid #adadad;
+  border-left: 1px solid #ddd;
 }
 
 .tag.add-category,
