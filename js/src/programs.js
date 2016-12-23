@@ -56,6 +56,7 @@
       var attributes = {view: 'matches'};
       attributes[matchIdAttribute] = id;
       this.stateModel.set(attributes, {pushState: true});
+      $(e.target).blur();
     },
     onFocusCategory: function(e) {
       return this._onFocusTag('category', e);
