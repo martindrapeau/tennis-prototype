@@ -38,6 +38,7 @@
       clearException: ['Clear exception', "Effacer l'exception"],
       delete: ['Delete', 'Effacer'],
       areYouSure: ['Are you sure?', 'Veuillez confirmer'],
+      cannotDeleteWhenMatchesExist: ['You cannot delete this when matches exist. Please delete all matches first.', "Impossible d'effacer car il y a des matches. Veuillez les effacer en premier."],
       add: ['Add', 'Ajouter'],
       addAMatch: ['Add a match', 'Ajouter un match'],
       addAPlayer: ['Add a player', 'Ajouter un joueur'],

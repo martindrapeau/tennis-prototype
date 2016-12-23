@@ -706,14 +706,14 @@
         .selectpicker({
           iconBase: 'fa',
           showTick: true,
-          tickIcon: "fa-arrow-circle-right"
+          tickIcon: "fa-check-circle"
         });
 
       this.$('.selects select[name=round]')
         .selectpicker({
           iconBase: 'fa',
           showTick: true,
-          tickIcon: "fa-arrow-circle-right"
+          tickIcon: "fa-check-circle"
         });
 
       _.defer(function() {

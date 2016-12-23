@@ -25,6 +25,7 @@
     toRender: function() {
       var data = this.toJSON();
       data.tabindex = this.cid.replace('c', '') * 100;
+      data.matchIdAttribute = this.matchIdAttribute;
 
       data.stats = {
         completed: 0,
@@ -81,7 +82,7 @@
     events: {
       'keydown input': 'onInputKeydown',
       'blur input': 'saveInputToModel',
-      'click .dropdown-menu a.delete': 'onClickDelete'
+      'click button.delete': 'onClickDelete'
     },
     initialize: function(options) {
       this.listenTo(this.model, 'change', this.onChange);
@@ -104,6 +105,7 @@
         .html(this.template(data))
         .data('id', this.model.id)
         .data('cid', this.model.cid)
+        .data('matchIdAttribute', this.model.matchIdAttribute)
         .find('input').prop('readonly', !data.editable);
 
       this.renderStats(data);
@@ -115,21 +117,24 @@
       return this;
     },
     onClickDelete: function(e) {
-      e.preventDefault();
-      var view = this;
       this.$el.animate({backgroundColor: '#ffdddd'}, 100);
       setTimeout(function() {
-        if (!confirm(_lang('areYouSure'))) {
-          view.$el.animate({backgroundColor: 'transparent'}, 100, function() {$(this).css({backgroundColor:''});});
+        if (this.model.get('match_ids').length) {
+          alert(_lang('cannotDeleteWhenMatchesExist'));
+          this.$el.animate({backgroundColor: 'transparent'}, 100, function() {$(this).css({backgroundColor:''});});
           return;
         }
-        view.$el.animate({
+        if (!confirm(_lang('areYouSure'))) {
+          this.$el.animate({backgroundColor: 'transparent'}, 100, function() {$(this).css({backgroundColor:''});});
+          return;
+        }
+        this.$el.animate({
           opacity: 0
         }, 750, function() {
-          view.model.collection.remove(view.model);
-          view.model.destroy();
-        });
-      }, 100);
+          this.model.collection.remove(this.model);
+          this.model.destroy();
+        }.bind(this));
+      }.bind(this), 100);
     },
     onInputKeydown: function(e) {
       if (e.keyCode == 13) this.saveInputToModel.apply(this, arguments);

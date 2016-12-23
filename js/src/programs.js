@@ -22,12 +22,13 @@
   Backbone.ProgramView = Backbone.View.extend({
     className: 'program',
     events: {
+      'click button.goto-matches': 'onClickGotoMatches',
       'click .add-category': 'onAddCategory',
-      'click .category': 'onFocusCategory',
-      'focus .category': 'onFocusCategory',
+      'click .category>.info': 'onFocusCategory',
+      'focus .category>.info': 'onFocusCategory',
       'click .add-round': 'onAddRound',
-      'click .round': 'onFocusRound',
-      'focus .round': 'onFocusRound'
+      'click .round>.info': 'onFocusRound',
+      'focus .round>.info': 'onFocusRound'
     },
     initialize: function(options) {
       this.modelInEdit = null;
@@ -48,6 +49,14 @@
       this.modelInEdit = null;
       $('body').off('click.tag');
     },
+    onClickGotoMatches: function(e) {
+      var $tag = $(e.currentTarget).closest('.tag'),
+          matchIdAttribute = $tag.data('matchIdAttribute'),
+          id = $tag.data('id');
+      var attributes = {view: 'matches'};
+      attributes[matchIdAttribute] = id;
+      this.stateModel.set(attributes, {pushState: true});
+    },
     onFocusCategory: function(e) {
       return this._onFocusTag('category', e);
     },
@@ -55,7 +64,7 @@
       return this._onFocusTag('round', e);
     },
     _onFocusTag: function(type, e) {
-      var $el = $(e.currentTarget);
+      var $el = $(e.currentTarget).closest('.tag');
       if ($el.is('.' + type)) {
         var cid = $el.data('cid');
         if (this.modelInEdit && cid == this.modelInEdit.cid) return;
@@ -69,9 +78,7 @@
     onClickBody: function(e) {
       var $el = $(e.target);
       if (this.stateModel.get('view') != 'program' || $el.closest('.bootstrap-select').length) return;
-      if (this.modelInEdit &&
-          !$el.is('.category') && !$el.closest('.category').is('.category') &&
-          !$el.is('.round') && !$el.closest('.round').is('.round')) {
+      if (this.modelInEdit && !$el.is('.tag') && !$el.closest('.tag').is('.tag')) {
         this.modelInEdit.set({editable: false}, {renderAll: true});
         this.modelInEdit = null;
       }
