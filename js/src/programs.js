@@ -30,7 +30,6 @@
       'focus .program-info': 'onFocusProgram',
       'keydown .program-info input': 'onProgramInputKeydown',
       'blur .program-info input': 'saveProgramInputToModel',
-      'keyup input': 'onInputKeyup',
       'click button.goto-matches': 'onClickGotoMatches',
       'click .add-category': 'onAddCategory',
       'click .category>.info': 'onFocusCategory',
@@ -40,7 +39,6 @@
       'focus .round>.info': 'onFocusRound'
     },
     initialize: function(options) {
-      this.modelInEdit = null;
       this.stateModel = options.stateModel;
       this.matchCollection = options.matchCollection;
       this.categoryCollection = options.categoryCollection;
@@ -48,21 +46,28 @@
       this.listenTo(this.categoryCollection, 'add remove', this.render);
       this.listenTo(this.roundCollection, 'add remove', this.render);
     },
+    getModelInEdit: function() {
+      if (!this.model) return undefined;
+      if (this.model.get('editable')) return this.model;
+      return this.categoryCollection.findWhere({editable: true}) || this.roundCollection.findWhere({editable: true}) || undefined;
+    },
+    stopEditing: function(options) {
+      var model = this.getModelInEdit();
+      if (model) model.set({editable: false}, options);
+    },
     delegateEvents: function() {
       Backbone.View.prototype.delegateEvents.apply(this, arguments);
       $('body').on('click.tag', this.onClickBody.bind(this));
     },
     undelegateEvents: function() {
       Backbone.View.prototype.undelegateEvents.apply(this, arguments);
-      if (this.modelInEdit) this.modelInEdit.set('editable', false);
-      this.modelInEdit = null;
+      this.stopEditing();
       $('body').off('click.tag');
     },
     onFocusProgram: function(e) {
-      if (this.modelInEdit && this.model.cid == this.modelInEdit.cid) return;
-      if (this.modelInEdit) this.modelInEdit.set({editable: false}, {renderAll: true});
+      if (this.model.get('editable')) return;
+      this.stopEditing({renderAll: true});
       this.model.set({editable: true});
-      this.modelInEdit = this.model;
       e.stopPropagation();
     },
     onProgramInputKeydown: function(e) {
@@ -79,7 +84,6 @@
       attributes[attr] = value;
       if (e.exitEditMode) attributes.editable = false;
       var xhr = this.model.save(attributes, {wait: true});
-      if (e.exitEditMode) xhr.done(function() {this.modelInEdit = null;}.bind(this));
     },
     onClickGotoMatches: function(e) {
       var $tag = $(e.currentTarget).closest('.tag'),
@@ -99,21 +103,21 @@
     _onFocusTag: function(type, e) {
       var $el = $(e.currentTarget).closest('.tag');
       if ($el.is('.' + type)) {
-        var cid = $el.data('cid');
-        if (this.modelInEdit && cid == this.modelInEdit.cid) return;
-        if (this.modelInEdit) this.modelInEdit.set({editable: false}, {renderAll: true});
+        var cid = $el.data('cid'),
+            modelInEdit = this.getModelInEdit();
+        if (modelInEdit && cid == modelInEdit.cid) return;
+        if (modelInEdit) modelInEdit.set({editable: false}, {renderAll: true});
         var model = this[type + 'Collection'].get(cid);
         if (model) model.set({editable: true}, {renderAll: true});
-        this.modelInEdit = model;
         e.stopPropagation();
       }
     },
     onClickBody: function(e) {
       var $el = $(e.target);
       if (this.stateModel.get('view') != 'program' || $el.closest('.bootstrap-select').length) return;
-      if (this.modelInEdit && !$el.is('.tag') && !$el.closest('.tag').is('.tag') && !$el.is('.program-info') && !$el.closest('.program-info').is('.program-info')) {
-        this.modelInEdit.set({editable: false}, {renderAll: true});
-        this.modelInEdit = null;
+      var modelInEdit = this.getModelInEdit();
+      if (modelInEdit && !$el.is('.tag') && !$el.closest('.tag').is('.tag') && !$el.is('.program-info') && !$el.closest('.program-info').is('.program-info')) {
+        modelInEdit.set({editable: false}, {renderAll: true});
       }
     },
     onAddCategory: function(e) {

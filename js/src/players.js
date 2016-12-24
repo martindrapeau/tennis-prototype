@@ -166,15 +166,23 @@
       }, 100);
     },
     onInputKeydown: function(e) {
-      if (e.keyCode == 13) this.saveInputToModel.apply(this, arguments);
+      if (e.keyCode == 13) {
+        e.exitEditMode = true;
+        this.saveInputToModel.apply(this, arguments);
+      }
     },
     saveInputToModel: function(e) {
       var $input = $(e.currentTarget),
           attr = $input.attr('name'),
           value = $input.val(),
-          attributes = {};
+          attributes = {},
+          options = {wait: true};
       attributes[attr] = value;
-      this.model.save(attributes, {wait: true});
+      if (e.exitEditMode) {
+        attributes.editable = false;
+        options.renderAll = true;
+      }
+      this.model.save(attributes, options);
     }
   });
   $('document').ready(function() {
@@ -189,9 +197,15 @@
       'focus .player': 'onFocusPlayer'
     },
     initialize: function(options) {
-      this.modelInEdit = null;
       this.listenTo(this.collection, 'add remove', this.render);
       this.onResize = _.debounce(this.onResize.bind(this), 100);
+    },
+    getModelInEdit: function() {
+      return this.collection.findWhere({editable: true});
+    },
+    stopEditing: function(options) {
+      var model = this.getModelInEdit();
+      if (model) model.set({editable: false}, options);
     },
     delegateEvents: function() {
       Backbone.View.prototype.delegateEvents.apply(this, arguments);
@@ -200,29 +214,28 @@
     },
     undelegateEvents: function() {
       Backbone.View.prototype.undelegateEvents.apply(this, arguments);
-      if (this.modelInEdit) this.modelInEdit.set('editable', false);
-      this.modelInEdit = null;
+      this.stopEditing();
       $(window).off('resize.players');
       $('body').off('click.players');
     },
     onFocusPlayer: function(e) {
       var $el = $(e.currentTarget);
       if ($el.is('.player')) {
-        var cid = $el.data('cid');
-        if (this.modelInEdit && cid == this.modelInEdit.cid) return;
-        if (this.modelInEdit) this.modelInEdit.set({editable: false}, {renderAll: true});
+        var cid = $el.data('cid'),
+            modelInEdit = this.getModelInEdit();
+        if (modelInEdit && cid == modelInEdit.cid) return;
+        if (modelInEdit) modelInEdit.set({editable: false}, {renderAll: true});
         var model = this.collection.get(cid);
         if (model) model.set({editable: true}, {renderAll: true});
-        this.modelInEdit = model;
         e.stopPropagation();
       }
     },
     onClickBody: function(e) {
       var $el = $(e.target);
       if (this.model.get('view') != 'players' || $el.closest('.bootstrap-select').length) return;
-      if (this.modelInEdit && !$el.is('.player') && !$el.closest('.player').is('.player')) {
-        this.modelInEdit.set({editable: false}, {renderAll: true});
-        this.modelInEdit = null;
+      var modelInEdit = this.getModelInEdit();
+      if (modelInEdit && !$el.is('.player') && !$el.closest('.player').is('.player')) {
+        modelInEdit.set({editable: false}, {renderAll: true});
       }
     },
     onAddPlayer: function(e) {

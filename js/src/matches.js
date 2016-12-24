@@ -365,7 +365,10 @@
       this.model.save({played_on: value}, {wait: true});
     },
     onInputKeydown: function(e) {
-      if (e.keyCode == 13) this.saveInputToModel.apply(this, arguments);
+      if (e.keyCode == 13) {
+        e.exitEditMode = true;
+        this.saveInputToModel.apply(this, arguments);
+      }
     },
     onReadonlyInputFocus: function(e) {
       $(e.currentTarget).blur();
@@ -375,7 +378,8 @@
           attr = $input.attr('name'),
           type = $input.attr('type'),
           value = $input.val(),
-          attributes = {};
+          attributes = {},
+          options = {wait: true};
       if (type == 'number') {
         value = parseFloat(value, 10);
         if (isNaN(value)) value = null;
@@ -389,7 +393,11 @@
         value = moment(this.$('input[name=date]').val() + ' ' + value).format('YYYY-MM-DD HH:mm:ss');
       }
       attributes[attr] = value;
-      this.model.save(attributes, {wait: true});
+      if (e.exitEditMode) {
+        attributes.editable = false;
+        options.renderAll = true;
+      }
+      this.model.save(attributes, options);
     },
     focus: function() {
       this.$el.find('input').first().focus();
@@ -548,9 +556,15 @@
       this.programCollection = options.programCollection;
       this.categoryCollection = options.categoryCollection;
       this.roundCollection = options.roundCollection;
-      this.modelInEdit = null;
       this.listenTo(this.collection, 'add remove', this.render);
       this.onResize = _.debounce(this.onResize.bind(this), 100);
+    },
+    getModelInEdit: function() {
+      return this.collection.findWhere({editable: true});
+    },
+    stopEditing: function(options) {
+      var model = this.getModelInEdit();
+      if (model) model.set({editable: false}, options);
     },
     delegateEvents: function() {
       Backbone.View.prototype.delegateEvents.apply(this, arguments);
@@ -559,8 +573,7 @@
     },
     undelegateEvents: function() {
       Backbone.View.prototype.undelegateEvents.apply(this, arguments);
-      if (this.modelInEdit) this.modelInEdit.set('editable', false);
-      this.modelInEdit = null;
+      this.stopEditing();
       $(window).off('resize.matches');
       $('body').off('click.matches');
     },
@@ -575,21 +588,21 @@
     onFocusMatch: function(e) {
       var $el = $(e.currentTarget);
       if ($el.is('.match')) {
-        var cid = $el.data('cid');
-        if (this.modelInEdit && cid == this.modelInEdit.cid) return;
-        if (this.modelInEdit) this.modelInEdit.set({editable: false}, {renderAll: true});
+        var cid = $el.data('cid'),
+            modelInEdit = this.getModelInEdit();
+        if (modelInEdit && cid == modelInEdit.cid) return;
+        if (modelInEdit) modelInEdit.set({editable: false}, {renderAll: true});
         var model = this.collection.get(cid);
         if (model) model.set({editable: true}, {renderAll: true});
-        this.modelInEdit = model;
         e.stopPropagation();
       }
     },
     onClickBody: function(e) {
       var $el = $(e.target);
       if (this.model.get('view') != 'matches' || $el.closest('.bootstrap-select').length) return;
-      if (this.modelInEdit && !$el.is('.match') && !$el.closest('.match').is('.match')) {
-        this.modelInEdit.set({editable: false}, {renderAll: true});
-        this.modelInEdit = null;
+      var modelInEdit = this.getModelInEdit();
+      if (modelInEdit && !$el.is('.match') && !$el.closest('.match').is('.match')) {
+        modelInEdit.set({editable: false}, {renderAll: true});
       }
     },
     onAddMatch: function(e) {

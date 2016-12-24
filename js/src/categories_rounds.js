@@ -137,15 +137,23 @@
       }.bind(this), 100);
     },
     onInputKeydown: function(e) {
-      if (e.keyCode == 13) this.saveInputToModel.apply(this, arguments);
+      if (e.keyCode == 13) {
+        e.exitEditMode = true;
+        this.saveInputToModel.apply(this, arguments);
+      }
     },
     saveInputToModel: function(e) {
       var $input = $(e.currentTarget),
           attr = $input.attr('name'),
           value = $input.val(),
-          attributes = {};
+          attributes = {},
+          options = {wait: true};
       attributes[attr] = value;
-      this.model.save(attributes, {wait: true});
+      if (e.exitEditMode) {
+        attributes.editable = false;
+        options.renderAll = true;
+      }
+      this.model.save(attributes, options);
     }
   });
   $('document').ready(function() {
