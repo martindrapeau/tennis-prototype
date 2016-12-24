@@ -112,8 +112,7 @@ $(document).ready(function() {
       var $a = $(e.currentTarget),
           name = $a.attr('href').replace('#', '') || 'home',
           state = $a.data('state');
-      this.model.set(_.extend(Backbone.TennisAppState.prototype.defaults, {view: name}, state), {pushState: true});
-      this.$el.offcanvas('hide');
+      this.model.set(_.extend(Backbone.TennisAppState.prototype.defaults, {view: name}, state), {pushState: true, hideMenu: true});
       return false;
     },
     onShowMenu: function(e) {
@@ -169,6 +168,10 @@ $(document).ready(function() {
       this.topMenuView.render();
       this.updateLinks();
       if (options && (options.pushState || options.replaceState)) this.pushState(options);
+      if (options && (options.hideMenu))
+        _.defer(function() {
+          this.$el.offcanvas('hide');
+        }.bind(this));
     },
     render: function() {
       this.renderMenu();
