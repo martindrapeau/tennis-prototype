@@ -30,6 +30,7 @@
       'focus .program-info': 'onFocusProgram',
       'keydown .program-info input': 'onProgramInputKeydown',
       'blur .program-info input': 'saveProgramInputToModel',
+      'click .delete-program': 'onClickDeleteProgram',
       'click button.goto-matches': 'onClickGotoMatches',
       'click .add-category': 'onAddCategory',
       'click .category>.info': 'onFocusCategory',
@@ -84,6 +85,39 @@
       attributes[attr] = value;
       if (e.exitEditMode) attributes.editable = false;
       var xhr = this.model.save(attributes, {wait: true});
+    },
+    onClickDeleteProgram: function(e) {
+      this.$el.animate({backgroundColor: '#ffdddd'}, 100);
+      setTimeout(function() {
+        if (this.views.length) {
+          alert(_lang('cannotDeleteWhenCategoriesOrRoundsExist'));
+          this.$el.animate({backgroundColor: 'transparent'}, 100, function() {$(this).css({backgroundColor:''});});
+          return;
+        }
+        if (!confirm(_lang('areYouSure'))) {
+          this.$el.animate({backgroundColor: 'transparent'}, 100, function() {$(this).css({backgroundColor:''});});
+          return;
+        }
+        $('#side-menu').one('shown.bs.offcanvas', function(e) {
+          this.stopListening(this.model);
+          _.defer(function() {
+            this.model.collection.remove(this.model);
+            this.model.destroy({wait: true}).done(function() {
+              this.stateModel.set(
+                _.extend(Backbone.TennisAppState.prototype.defaults, {view: 'home', program_id: null}), {
+                  renderMenu: true,
+                  replaceState: true,
+                  hideMenu: true
+              });
+              this.model = undefined;
+            }.bind(this));
+            this.$el.css({backgroundColor: ''});
+          }.bind(this));
+        }.bind(this));
+        _.defer(function() {
+          $('#top-menu .navbar-toggle').click();
+        });
+      }.bind(this), 200);
     },
     onClickGotoMatches: function(e) {
       var $tag = $(e.currentTarget).closest('.tag'),
@@ -148,10 +182,26 @@
         this.focus();
       }.bind(view));
     },
-    render: function() {
+    render: function(options) {
       if (this.model) this.stopListening(this.model);
-      this.model = this.collection.get(this.stateModel.get('program_id'));
-      if (!this.model) return this;
+      var program_id = this.stateModel.get('program_id');
+      console.log('render', program_id, options);
+      if (program_id || !options) {
+        this.model = this.collection.get(program_id);
+        if (!this.model) return this;
+      } else {
+        this.model = new Backbone.ProgramModel({
+          name: _lang('newProgram')
+        });
+        this.model.save(null, {wait: true}).done(function() {
+          this.collection.add(this.model);
+          this.stateModel.set({program_id: this.model.id}, {replaceState: true, hideMenu: true, renderMenu: true, programIsNew: true});
+        }.bind(this));
+        options.replaceState = false;
+        options.pushState = false;
+        options.hideMenu = false;
+        return this;
+      }
       this.listenTo(this.model, 'change', this.render);
 
       this.views || (this.views = []);
@@ -188,6 +238,13 @@
       this.$rounds.append('<button class="tag add-round btn btn-default">' + _lang('add') + '</button>');
 
       this.$el.append('<div class="spacer">&nbsp;</div>');
+
+      if (options && options.programIsNew) {
+        this.$el.css({backgroundColor: '#ddffdd'});
+        setTimeout(function() {
+          this.$el.animate({backgroundColor: 'transparent'}, 500, function() {$(this).css({backgroundColor: ''});});
+        }.bind(this), 200);
+      }
 
       return this;
     }

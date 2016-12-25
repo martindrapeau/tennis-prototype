@@ -117,7 +117,7 @@ $(document).ready(function() {
     },
     onShowMenu: function(e) {
       $('html').css({overflow:'hidden'});
-      this.viewNeedsDelegateEvents= this.views[this.model.get('view')];
+      this.viewNeedsDelegateEvents = this.views[this.model.get('view')];
       if (this.viewNeedsDelegateEvents) this.viewNeedsDelegateEvents.undelegateEvents();
     },
     onHideMenu: function(e) {
@@ -166,8 +166,13 @@ $(document).ready(function() {
       view.show(options);
 
       this.topMenuView.render();
-      this.updateLinks();
       if (options && (options.pushState || options.replaceState)) this.pushState(options);
+
+      if (options && options.renderMenu)
+        this.renderMenu();
+      else
+        this.updateLinks();
+
       if (options && (options.hideMenu))
         _.defer(function() {
           this.$el.offcanvas('hide');
@@ -183,14 +188,7 @@ $(document).ready(function() {
         programs: this.programs.map(function(model) {return model.pick('id', 'name')})
       });
       this.$el.html(this.sideMenuTemplate(data));
-      return this;
-    },
-    renderViews: function() {
-      var currentViewName = this.model.get('view');
-      _.each(this.views, function(view, viewName) {
-        view.render();
-        if (viewName != currentViewName) view.hide();
-      });
+      this.updateLinks();
       return this;
     },
     updateLinks: function() {
@@ -205,6 +203,14 @@ $(document).ready(function() {
         else
           $a.closest('li').removeClass('active');
       });
+    },
+    renderViews: function() {
+      var currentViewName = this.model.get('view');
+      _.each(this.views, function(view, viewName) {
+        view.render();
+        if (viewName != currentViewName) view.hide();
+      });
+      return this;
     }
   });
 

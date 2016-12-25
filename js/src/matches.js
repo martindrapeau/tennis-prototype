@@ -515,7 +515,6 @@
     onShowUserSelectPicker: function(e) {
       var $select = $(e.target),
           key = $select.attr('name');
-      console.log('onShowUserSelectPicker', $select, key, this);
     },
     renderMarker: function(data) {
       this.$('.marker').removeClass('exception').prop('title', undefined).empty();

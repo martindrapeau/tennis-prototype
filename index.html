@@ -52,7 +52,7 @@
       <div id="top-menu" class="navbar navbar-default navbar-fixed-top"></div>
       <div class="contents">
         <div id="home" class="content"></div>
-        <table id="program" class="content program"></table>
+        <div id="program" class="content program"></div>
         <div id="players" class="content players"></div>
         <div id="matches" class="content matches"></div>
       </div>
@@ -71,6 +71,8 @@
       <li><a href="#matches" data-state='<%=JSON.stringify(state)%>'><i class="fa fa-fw"></i> <i class="fa fa-fw fa-check-circle"></i> <%=_lang('matches')%></a></li>
       <li><a href="#players" data-state='<%=JSON.stringify(state)%>'><i class="fa fa-fw"></i> <i class="fa fa-fw fa-users"></i> <%=_lang('players')%></a></li>
     <% } %>
+    <% state = {program_id: null}; %>
+    <li><a href="#program" data-state='<%=JSON.stringify(state)%>'><i class="fa fa-fw fa-plus"></i> <%=_lang('addAProgram')%></a></li>
   </ul>
 </script>
 
