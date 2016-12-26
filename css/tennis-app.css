@@ -76,11 +76,6 @@ a:focus, a:hover {
   background: #f5f5f5;
 }
 
-/* Fix nav scrolling: https://github.com/jasny/bootstrap/issues/467 */
-.canvas.canvas-slid {
-    position: fixed !important;
-}
-
 @media (min-width: 0) {
   .navbar-toggle {
     display: block; /* force showing the toggle */
