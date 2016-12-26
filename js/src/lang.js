@@ -40,6 +40,7 @@
       areYouSure: ['Are you sure?', 'Veuillez confirmer'],
       cannotDeleteWhenMatchesExist: ['You cannot delete this when matches exist. Please delete all matches first.', "Impossible d'effacer car il y a des matches. Veuillez les effacer en premier."],
       cannotDeleteWhenCategoriesOrRoundsExist: ['You cannot delete this when cateogries or rounds exist. Please delete all matches first.', "Impossible d'effacer car il y a des catégories ou des rondes. Veuillez les effacer en premier."],
+      cannotCreateMatchWithoutCategorieAndRound: ['A match cannot be added without a category and round. Make sure at least one of each exist.', "Aucun match ne peut être créé sans l'existence d'une catégorie et d'une ronde. Veuillez aller en créer."],
       add: ['Add', 'Ajouter'],
       addAMatch: ['Add a match', 'Ajouter un match'],
       addAPlayer: ['Add a player', 'Ajouter un joueur'],
@@ -48,7 +49,8 @@
       category: ['Category', 'Catégorie'],
       categories: ['Categories', 'Catégories'],
       round: ['Round', 'Ronde'],
-      rounds: ['Rounds', 'Rondes']
+      rounds: ['Rounds', 'Rondes'],
+      week: ['Week', 'Semaine']
     }
   };
 

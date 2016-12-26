@@ -59,9 +59,9 @@
     </div>
 
 <script id="side-menu-template" type="text/template">
-  <a class="navmenu-brand" href="#"><%=_lang('appName')%></a>
+  <% var state = {program_id: null}; %>
+  <a class="navmenu-brand" href="#" data-state='<%=JSON.stringify(state)%>'><%=_lang('appName')%></a>
   <ul class="nav navmenu-nav">
-    <% var state = {program_id: null}; %>
     <li><a href="#" data-state='<%=JSON.stringify(state)%>'><i class="fa fa-fw fa-home"></i> <%=_lang('home')%></a></li>
     <li><a href="#players" data-state='<%=JSON.stringify(state)%>'><i class="fa fa-fw fa-users"></i> <%=_lang('allPlayers')%></a></li>
     <% for (var i = 0; i < programs.length; i++) { %>

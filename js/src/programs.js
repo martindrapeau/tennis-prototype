@@ -89,8 +89,8 @@
     onClickDeleteProgram: function(e) {
       this.$el.animate({backgroundColor: '#ffdddd'}, 100);
       setTimeout(function() {
-        if (this.views.length) {
-          alert(_lang('cannotDeleteWhenCategoriesOrRoundsExist'));
+        if (this.matchCollection.findWhere({program_id: this.model.id})) {
+          alert(_lang('cannotDeleteWhenMatchesExist'));
           this.$el.animate({backgroundColor: 'transparent'}, 100, function() {$(this).css({backgroundColor:''});});
           return;
         }
@@ -98,18 +98,29 @@
           this.$el.animate({backgroundColor: 'transparent'}, 100, function() {$(this).css({backgroundColor:''});});
           return;
         }
+
         $('#side-menu').one('shown.bs.offcanvas', function(e) {
           this.stopListening(this.model);
           _.defer(function() {
+            var program_id = this.model.id;
             this.model.collection.remove(this.model);
             this.model.destroy({wait: true}).done(function() {
               this.stateModel.set(
                 _.extend(Backbone.TennisAppState.prototype.defaults, {view: 'home', program_id: null}), {
-                  renderMenu: true,
-                  replaceState: true,
-                  hideMenu: true
+                renderMenu: true,
+                replaceState: true,
+                hideMenu: true
               });
               this.model = undefined;
+
+              var categories = this.categoryCollection.where({program_id: program_id});
+              if (categories.length) this.categoryCollection.remove(categories, {silent: true});
+              _.each(categories, function(model) {model.destroy();});
+
+              var rounds = this.roundCollection.where({program_id: program_id});
+              if (rounds.length) this.roundCollection.remove(rounds, {silent: true});
+              _.each(rounds, function(model) {model.destroy();});
+
             }.bind(this));
             this.$el.css({backgroundColor: ''});
           }.bind(this));
@@ -185,17 +196,27 @@
     render: function(options) {
       if (this.model) this.stopListening(this.model);
       var program_id = this.stateModel.get('program_id');
-      console.log('render', program_id, options);
+
       if (program_id || !options) {
         this.model = this.collection.get(program_id);
         if (!this.model) return this;
       } else {
+        // Create a new program
         this.model = new Backbone.ProgramModel({
           name: _lang('newProgram')
         });
         this.model.save(null, {wait: true}).done(function() {
           this.collection.add(this.model);
-          this.stateModel.set({program_id: this.model.id}, {replaceState: true, hideMenu: true, renderMenu: true, programIsNew: true});
+          var category = new Backbone.CategoryModel({name: 'A1', program_id: this.model.id}),
+              round = new Backbone.RoundModel({name: _lang('week') + ' 1', program_id: this.model.id});
+          $.when(category.save(null, {wait: true}), round.save(null, {wait: true})).done(function() {
+            this.categoryCollection.add(category, {silent: true});
+            this.roundCollection.add(round, {silent: true});
+            this.stateModel.set({program_id: this.model.id}, {replaceState: true, hideMenu: true, renderMenu: true, programIsNew: true});
+            _.defer(function() {
+              this.model.set({editable: true});
+            }.bind(this));
+          }.bind(this));
         }.bind(this));
         options.replaceState = false;
         options.pushState = false;

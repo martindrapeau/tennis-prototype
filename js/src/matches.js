@@ -515,6 +515,7 @@
     onShowUserSelectPicker: function(e) {
       var $select = $(e.target),
           key = $select.attr('name');
+      console.log('onShowUserSelectPicker', $select, key, this);
     },
     renderMarker: function(data) {
       this.$('.marker').removeClass('exception').prop('title', undefined).empty();
@@ -667,11 +668,15 @@
         this.views.push(view);
       }
 
-      this.$add = $('<button class="btn btn-default add-match">' + _lang('addAMatch') + '...</button>');
-      this.$el.append(this.$add);
-      _.defer(function() {
-        if (this.views.length) this.$add.css('width', this.views[0].$el.css('width'));
-      }.bind(this));
+      if (this.categoryCollection.findWhere({program_id: state.program_id}) && this.roundCollection.findWhere({program_id: state.program_id})) {
+        this.$add = $('<button class="btn btn-default add-match">' + _lang('addAMatch') + '...</button>');
+        this.$el.append(this.$add);
+        _.defer(function() {
+          if (this.views.length) this.$add.css('width', this.views[0].$el.css('width'));
+        }.bind(this));
+      } else {
+        this.$('.match.empty').text(_lang('cannotCreateMatchWithoutCategorieAndRound'));
+      }
 
       this.$el.append('<div class="spacer">&nbsp;</div>');
       
