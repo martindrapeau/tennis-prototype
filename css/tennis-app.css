@@ -62,6 +62,8 @@ a:focus, a:hover {
 
 #side-menu {
   display: none;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
 }
 #side-menu.in {
   display: block;
@@ -69,6 +71,8 @@ a:focus, a:hover {
 
 .canvas {
   position: relative;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
   left: 0;
   z-index: 2;
   min-height: 100%;
