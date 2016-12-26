@@ -436,17 +436,23 @@ body.canvas-slid {
 
 .program .categories,
 .program .rounds,
-.program h5 {
+.program .tags-title {
   padding: 0 15px;
 }
 
+.program .tags-title {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
 .program-info {
-  padding: 15px 15px 0 15px;
+  padding: 0 15px;
   max-width: 350px;
 }
 
 .program-info input {
   font-size: 18px;
+  font-weight: bold;
   width: 80%;
   padding: 5px;
   border: 1px dotted #9999FF;
@@ -510,10 +516,6 @@ body.canvas-slid {
   padding: 0;
   font-size: 16px;
   color: #000;
-}
-
-.tag .info .title input[name=name] {
-  font-weight: bold;
 }
 
 .tag .info .title input[readonly][name=description] {
