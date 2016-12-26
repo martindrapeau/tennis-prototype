@@ -118,20 +118,18 @@ $(document).ready(function() {
     },
     onShowMenu: function(e) {
       console.log('onShowMenu');
-      //$('html').css({overflow:'hidden'});
       $("body").css("overflow", "hidden");
       $("body").on("touchmove.bs", function (e) {
-          if (!$(e.target).closest(".canvas")) {
-              e.preventDefault();
-              e.stopPropagation();
-          }
+        if (!$(e.target).closest(".canvas")) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
       });
       this.viewNeedsDelegateEvents = this.views[this.model.get('view')];
       if (this.viewNeedsDelegateEvents) this.viewNeedsDelegateEvents.undelegateEvents();
     },
     onHideMenu: function(e) {
       console.log('onHideMenu');
-      //$('html').css({overflow:''});
       if (this.viewNeedsDelegateEvents) this.viewNeedsDelegateEvents.delegateEvents();
       this.viewNeedsDelegateEvents = undefined;
     },

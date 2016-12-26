@@ -77,7 +77,7 @@ a:focus, a:hover {
 }
 
 /* Fix nav scrolling: https://github.com/jasny/bootstrap/issues/467 */
-body.canvas-slid {
+.canvas.canvas-slid {
     position: fixed !important;
 }
 
