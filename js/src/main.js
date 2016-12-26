@@ -105,7 +105,8 @@ $(document).ready(function() {
     events: {
       'click a': 'onClick',
       'show.bs.offcanvas': 'onShowMenu',
-      'hide.bs.offcanvas': 'onHideMenu'
+      'hide.bs.offcanvas': 'onHideMenu',
+      'hidden.bs.offcanvas': 'onHiddenMenu'
     },
     onClick: function(e) {
       e.preventDefault();
@@ -116,14 +117,28 @@ $(document).ready(function() {
       return false;
     },
     onShowMenu: function(e) {
-      $('html').css({overflow:'hidden'});
+      console.log('onShowMenu');
+      //$('html').css({overflow:'hidden'});
+      $("body").css("overflow", "hidden");
+      $("body").on("touchmove.bs", function (e) {
+          if (!$(e.target).closest(".canvas")) {
+              e.preventDefault();
+              e.stopPropagation();
+          }
+      });
       this.viewNeedsDelegateEvents = this.views[this.model.get('view')];
       if (this.viewNeedsDelegateEvents) this.viewNeedsDelegateEvents.undelegateEvents();
     },
     onHideMenu: function(e) {
-      $('html').css({overflow:''});
+      console.log('onHideMenu');
+      //$('html').css({overflow:''});
       if (this.viewNeedsDelegateEvents) this.viewNeedsDelegateEvents.delegateEvents();
       this.viewNeedsDelegateEvents = undefined;
+    },
+    onHiddenMenu: function(e) {
+      console.log('onHiddenMenu');
+      $("body").css("overflow", "auto");
+      $("body").off("touchmove.bs");
     },
     onPopState: function(e) {
       var state = this.getState();

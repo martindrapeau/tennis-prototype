@@ -65,7 +65,6 @@ a:focus, a:hover {
 }
 #side-menu.in {
   display: block;
-  overflow-y: scroll;
 }
 
 .canvas {
