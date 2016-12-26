@@ -436,7 +436,7 @@ body.canvas-slid {
 
 .program .categories,
 .program .rounds,
-.program h3 {
+.program h5 {
   padding: 0 15px;
 }
 
@@ -446,7 +446,7 @@ body.canvas-slid {
 }
 
 .program-info input {
-  font-size: 28px;
+  font-size: 18px;
   width: 80%;
   padding: 5px;
   border: 1px dotted #9999FF;
@@ -466,7 +466,7 @@ body.canvas-slid {
 }
 
 .program-info .btn {
-  margin-top: -10px;
+  margin-top: -4px;
 }
 
 .tag {
