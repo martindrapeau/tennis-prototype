@@ -193,36 +193,38 @@
         this.focus();
       }.bind(view));
     },
-    render: function(options) {
-      if (this.model) this.stopListening(this.model);
-      var program_id = this.stateModel.get('program_id');
-
-      if (program_id || !options) {
-        this.model = this.collection.get(program_id);
-        if (!this.model) return this;
-      } else {
-        // Create a new program
-        this.model = new Backbone.ProgramModel({
-          name: _lang('newProgram')
-        });
-        this.model.save(null, {wait: true}).done(function() {
-          this.collection.add(this.model);
-          var category = new Backbone.CategoryModel({name: 'A1', program_id: this.model.id}),
-              round = new Backbone.RoundModel({name: _lang('week') + ' 1', program_id: this.model.id});
-          $.when(category.save(null, {wait: true}), round.save(null, {wait: true})).done(function() {
-            this.categoryCollection.add(category, {silent: true});
-            this.roundCollection.add(round, {silent: true});
-            this.stateModel.set({program_id: this.model.id}, {replaceState: true, hideMenu: true, renderMenu: true, programIsNew: true});
-            _.defer(function() {
-              this.model.set({editable: true});
-            }.bind(this));
+    createNewProgram: function(options) {
+      console.log('program createNewProgram', options);
+      this.model = new Backbone.ProgramModel({
+        name: _lang('newProgram')
+      });
+      this.model.save(null, {wait: true}).done(function() {
+        this.collection.add(this.model);
+        var category = new Backbone.CategoryModel({name: 'A1', program_id: this.model.id}),
+            round = new Backbone.RoundModel({name: _lang('week') + ' 1', program_id: this.model.id});
+        $.when(category.save(null, {wait: true}), round.save(null, {wait: true})).done(function() {
+          this.categoryCollection.add(category, {silent: true});
+          this.roundCollection.add(round, {silent: true});
+          this.stateModel.set({program_id: this.model.id}, {replaceState: true, hideMenu: true, renderMenu: true, programIsNew: true});
+          _.defer(function() {
+            this.model.set({editable: true});
           }.bind(this));
         }.bind(this));
-        options.replaceState = false;
-        options.pushState = false;
-        options.hideMenu = false;
-        return this;
-      }
+      }.bind(this));
+      options.replaceState = false;
+      options.pushState = false;
+      options.hideMenu = false;
+      return this;
+    },
+    render: function(options) {
+      if (this.model) this.stopListening(this.model);
+
+      var program_id = this.stateModel.get('program_id');
+      if (!program_id && options) return this.createNewProgram(options);
+
+      this.model = this.collection.get(program_id);
+      if (!this.model) return this;
+
       this.listenTo(this.model, 'change', this.render);
 
       this.views || (this.views = []);
