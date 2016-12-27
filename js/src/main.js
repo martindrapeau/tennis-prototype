@@ -106,6 +106,7 @@ $(document).ready(function() {
       'click a': 'onClick',
       'show.bs.offcanvas': 'onShowMenu',
       'hide.bs.offcanvas': 'onHideMenu',
+      'shown.bs.offcanvas': 'onShownMenu',
       'hidden.bs.offcanvas': 'onHiddenMenu'
     },
     onClick: function(e) {
@@ -120,9 +121,11 @@ $(document).ready(function() {
       console.log('onShowMenu');
       $('html').css({overflow:'hidden'});
       $("body").css("overflow", "hidden");
-      $("body").off("touchmove.bs");
       this.viewNeedsDelegateEvents = this.views[this.model.get('view')];
       if (this.viewNeedsDelegateEvents) this.viewNeedsDelegateEvents.undelegateEvents();
+    },
+    onShownMenu: function(e) {
+      $("body").off("touchmove.bs");
     },
     onHideMenu: function(e) {
       console.log('onHideMenu');
@@ -132,7 +135,6 @@ $(document).ready(function() {
     onHiddenMenu: function(e) {
       $('html').css({overflow:''});
       $("body").css("overflow", "auto");
-      $("body").off("touchmove.bs");
     },
     onPopState: function(e) {
       var state = this.getState();
