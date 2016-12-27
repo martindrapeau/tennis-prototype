@@ -124,6 +124,7 @@ $(document).ready(function() {
     onHideMenu: function(e) {
       console.log('onHideMenu');
       //$('html').css({overflow:''});
+      $("body").off("touchmove.bs");
       if (this.viewNeedsDelegateEvents) this.viewNeedsDelegateEvents.delegateEvents();
       this.viewNeedsDelegateEvents = undefined;
     },
