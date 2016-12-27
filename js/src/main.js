@@ -126,9 +126,11 @@ $(document).ready(function() {
     },
     onShownMenu: function(e) {
       $("body").off("touchmove.bs");
+      $('.canvas').css({overflow: 'hidden'});
     },
     onHideMenu: function(e) {
       console.log('onHideMenu');
+      $('.canvas').css({overflow: ''});
       if (this.viewNeedsDelegateEvents) this.viewNeedsDelegateEvents.delegateEvents();
       this.viewNeedsDelegateEvents = undefined;
     },
