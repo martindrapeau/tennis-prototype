@@ -63,6 +63,11 @@ $(document).ready(function() {
         this.categories.bindMatches(this.matches);
         this.rounds.bindMatches(this.matches);
 
+        var program_id = this.model.get('program_id');
+        this.programs.each(function(model) {
+          model.set({expanded: model.id == program_id}, {silent: true});
+        });
+
         this.views = {
           home: new Backbone.HomeView({
             el: $('#home'),
@@ -123,7 +128,7 @@ $(document).ready(function() {
       if (!model || model.id == this.model.get('program_id')) return false;
 
       var expanded = !model.get('expanded');
-      model.set({expanded: expanded}).save();
+      model.set({expanded: expanded});
 
       return false;
     },
