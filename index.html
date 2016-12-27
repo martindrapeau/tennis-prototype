@@ -67,9 +67,16 @@
     <% for (var i = 0; i < programs.length; i++) { %>
       <% var program = programs[i]; %>
       <% state = {program_id: program.id}; %>
-      <li><a href="#program" data-state='<%=JSON.stringify(state)%>'><i class="fa fa-fw fa-calendar-o"></i> <%=program.name%></a></li>
-      <li><a href="#matches" data-state='<%=JSON.stringify(state)%>'><i class="fa fa-fw"></i> <i class="fa fa-fw fa-check-circle"></i> <%=_lang('matches')%></a></li>
-      <li><a href="#players" data-state='<%=JSON.stringify(state)%>'><i class="fa fa-fw"></i> <i class="fa fa-fw fa-users"></i> <%=_lang('players')%></a></li>
+      <li><a href="#program-toggle" data-state='<%=JSON.stringify(state)%>'><i class="fa fa-fw fa-calendar-o"></i> <%=program.name%></a></li>
+      <li data-program-id="<%=program.id%>" style="display: <%=program.expanded ? 'block' : 'none'%>;">
+        <a href="#program" data-state='<%=JSON.stringify(state)%>'><i class="fa fa-fw"></i> <i class="fa fa-fw fa-tags"></i> <%=_lang('categoriesAndRounds')%></a>
+      </li>
+      <li data-program-id="<%=program.id%>" style="display: <%=program.expanded ? 'block' : 'none'%>;">
+        <a href="#matches" data-state='<%=JSON.stringify(state)%>'><i class="fa fa-fw"></i> <i class="fa fa-fw fa-check-circle"></i> <%=_lang('matches')%></a>
+      </li>
+      <li data-program-id="<%=program.id%>" style="display: <%=program.expanded ? 'block' : 'none'%>;">
+        <a href="#players" data-state='<%=JSON.stringify(state)%>'><i class="fa fa-fw"></i> <i class="fa fa-fw fa-users"></i> <%=_lang('players')%></a>
+      </li>
     <% } %>
     <% state = {program_id: null}; %>
     <li><a href="#program" data-state='<%=JSON.stringify(state)%>'><i class="fa fa-fw fa-plus"></i> <%=_lang('addAProgram')%></a></li>
@@ -115,9 +122,9 @@
       <button class="btn btn-danger btn-sm delete-program" title="<%=_lang('delete')%>"><i class="fa fa-fw fa-times"></i></button>
     <% } %>
   </div>
-  <div class="tags-title"><%=_lang('categories')%></div>
+  <div class="tags-title"><i class="fa fa-fw fa-tag"></i> <%=_lang('categories')%></div>
   <div class="categories"></div>
-  <div class="tags-title"><%=_lang('rounds')%></div>
+  <div class="tags-title"><i class="fa fa-fw fa-tag"></i> <%=_lang('rounds')%></div>
   <div class="rounds"></div>
 </script>
 

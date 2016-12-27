@@ -114,11 +114,20 @@ $(document).ready(function() {
       var $a = $(e.currentTarget),
           name = $a.attr('href').replace('#', '') || 'home',
           state = $a.data('state');
+      if (name == 'program-toggle') return this.programToggle(state.program_id);
       this.model.set(_.extend(Backbone.TennisAppState.prototype.defaults, {view: name}, state), {pushState: true, hideMenu: true});
       return false;
     },
+    programToggle: function(program_id) {
+      var model = this.programs.get(program_id);
+      if (!model || model.id == this.model.get('program_id')) return false;
+
+      var expanded = !model.get('expanded');
+      model.set({expanded: expanded}).save();
+
+      return false;
+    },
     onShowMenu: function(e) {
-      console.log('onShowMenu');
       $('html').css({overflow:'hidden'});
       $("body").css("overflow", "hidden");
       this.viewNeedsDelegateEvents = this.views[this.model.get('view')];
@@ -134,7 +143,6 @@ $(document).ready(function() {
       });
     },
     onHideMenu: function(e) {
-      console.log('onHideMenu');
       $('.canvas').css({overflow: ''});
       $('.canvas').off('touchmove.tennis');
       if (this.viewNeedsDelegateEvents) this.viewNeedsDelegateEvents.delegateEvents();
@@ -204,7 +212,7 @@ $(document).ready(function() {
     },
     renderMenu: function() {
       var data = _.extend(this.model.toJSON(), {
-        programs: this.programs.map(function(model) {return model.pick('id', 'name')})
+        programs: this.programs.map(function(model) {return model.pick('id', 'name', 'expanded')})
       });
       this.$el.html(this.sideMenuTemplate(data));
       this.updateLinks();

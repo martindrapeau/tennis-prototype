@@ -441,7 +441,7 @@ body.canvas-slid {
 }
 
 .program .tags-title {
-  margin-top: 10px;
+  margin: 10px 0 5px 0;
   font-weight: bold;
 }
 
@@ -542,4 +542,5 @@ body.canvas-slid {
   text-align: center;
   font-size: 14px;
   padding: 6px 12px;
+  margin-bottom: 20px;
 }

@@ -50,6 +50,7 @@
       categories: ['Categories', 'Catégories'],
       round: ['Round', 'Ronde'],
       rounds: ['Rounds', 'Rondes'],
+      categoriesAndRounds: ['Categories & rounds', 'Catégories & rondes'],
       week: ['Week', 'Semaine']
     }
   };
