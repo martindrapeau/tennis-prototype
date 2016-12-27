@@ -146,9 +146,6 @@ $(document).ready(function() {
         e.stopPropagation();
         return false;
       });
-      _.defer(function() {
-        this.$('a.active').closest('li').click();
-      }.bind(this));
     },
     onHideMenu: function(e) {
       $('.canvas').css({overflow: ''});
