@@ -117,13 +117,13 @@ $(document).ready(function() {
     },
     onShowMenu: function(e) {
       console.log('onShowMenu');
-      $('html').css({overflow:'hidden'});
+      //$('html').css({overflow:'hidden'});
       this.viewNeedsDelegateEvents = this.views[this.model.get('view')];
       if (this.viewNeedsDelegateEvents) this.viewNeedsDelegateEvents.undelegateEvents();
     },
     onHideMenu: function(e) {
       console.log('onHideMenu');
-      $('html').css({overflow:''});
+      //$('html').css({overflow:''});
       if (this.viewNeedsDelegateEvents) this.viewNeedsDelegateEvents.delegateEvents();
       this.viewNeedsDelegateEvents = undefined;
     },
