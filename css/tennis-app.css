@@ -4,7 +4,7 @@ html {
 
 html, body {
   height: 100%;
-  -webkit-overflow-scrolling: auto;
+  -webkit-overflow-scrolling: auto!important;
 }
 
 body {
