@@ -146,6 +146,7 @@ $(document).ready(function() {
         e.stopPropagation();
         return false;
       });
+      this.$('a.active').closest('li').focus();
     },
     onHideMenu: function(e) {
       $('.canvas').css({overflow: ''});
