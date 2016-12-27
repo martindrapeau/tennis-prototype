@@ -120,12 +120,7 @@ $(document).ready(function() {
       console.log('onShowMenu');
       $('html').css({overflow:'hidden'});
       $("body").css("overflow", "hidden");
-      $("body").on("touchmove.bs", function (e) {
-          if (!$(e.target).closest(".canvas").length) {
-              e.preventDefault();
-              e.stopPropagation();
-          }
-      });
+      $("body").off("touchmove.bs");
       this.viewNeedsDelegateEvents = this.views[this.model.get('view')];
       if (this.viewNeedsDelegateEvents) this.viewNeedsDelegateEvents.undelegateEvents();
     },
