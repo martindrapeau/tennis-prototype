@@ -121,7 +121,7 @@ $(document).ready(function() {
       $('html').css({overflow:'hidden'});
       $("body").css("overflow", "hidden");
       $("body").on("touchmove.bs", function (e) {
-          if (!$(e.target).closest(".canvas")) {
+          if (!$(e.target).closest(".canvas").length) {
               e.preventDefault();
               e.stopPropagation();
           }
