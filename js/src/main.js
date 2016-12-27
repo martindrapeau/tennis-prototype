@@ -127,7 +127,7 @@ $(document).ready(function() {
     onShownMenu: function(e) {
       $("body").off("touchmove.bs");
       $('.canvas').css({overflow: 'hidden'});
-      $('.canvas').on('touchmove', function(e) {
+      $('.canvas').on('touchmove.tennis', function(e) {
         e.preventDefault();
         e.stopPropagation();
         return false;
@@ -136,6 +136,7 @@ $(document).ready(function() {
     onHideMenu: function(e) {
       console.log('onHideMenu');
       $('.canvas').css({overflow: ''});
+      $('.canvas').off('touchmove.tennis');
       if (this.viewNeedsDelegateEvents) this.viewNeedsDelegateEvents.delegateEvents();
       this.viewNeedsDelegateEvents = undefined;
     },
