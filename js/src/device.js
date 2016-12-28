@@ -8,6 +8,6 @@ $(document).ready(function() {
 	
   if (window.Keyboard && typeof window.Keyboard.hideFormAccessoryBar == 'function') Keyboard.hideFormAccessoryBar(true);
 
-  if (Backbone.WEBAPP || Backbone.COCOON || true) $('body').addClass('standalone');
+  if (Backbone.WEBAPP || Backbone.COCOON) $('body').addClass('standalone');
 
 });
