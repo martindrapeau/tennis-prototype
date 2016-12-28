@@ -30,25 +30,21 @@ a:focus, a:hover {
   border-color: #85a5b5;
 }
 .navbar-default .navbar-toggle {
-  border-color: #85a5b5;
-}
-.navbar-default .navbar-toggle .icon-bar {
-  background-color: #ddd;
+  border: none;
+  color: #fff;
+  font-size: 20px;
+  padding: 0;
+  margin: 10px 15px;
+  float: left;
 }
 .navbar-default .navbar-toggle:hover,
 .navbar-default .navbar-toggle:focus {
-  background-color: #578ba5;
+  background-color: inherit;
 }
 .navbar-default .navbar-brand,
 .navbar-default .navbar-brand:hover,
 .navbar-default .navbar-brand:focus {
   color: #fff;
-}
-
-
-.navbar-toggle {
-  float: left;
-  margin-left: 15px;
 }
 
 .navmenu {
@@ -61,11 +57,21 @@ a:focus, a:hover {
 }
 
 #side-menu {
-  padding-top: 15px;
   display: none;
+  overflow: hidden;
 }
 #side-menu.in {
   display: block;
+}
+
+#side-menu .navmenu-brand {
+  border-bottom: 1px solid #ddd;
+}
+
+#side-menu>ul.navmenu-nav {
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: 100%;
 }
 
 .canvas {
@@ -73,12 +79,8 @@ a:focus, a:hover {
   left: 0;
   z-index: 2;
   min-height: 100%;
-  padding: 65px 0 0 0;
+  padding: 50px 0 0 0;
   background: #f5f5f5;
-}
-
-#top-menu {
-  padding-top: 15px;
 }
 
 /* Fix nav scrolling: https://github.com/jasny/bootstrap/issues/467 */
@@ -95,7 +97,7 @@ body.canvas-slid {
 .contents {
   position: absolute;
   top: 0;
-  padding-top: 65px;
+  padding-top: 50px;
   width: 100%;
   height: 100%;
   background-color: #f5f5f5;
@@ -109,6 +111,16 @@ body.canvas-slid {
 .spacer {
   min-height: 200px;
   height: 200px;
+}
+
+body.standalone #side-menu,
+body.standalone #top-menu {
+  padding-top: 15px;
+}
+
+body.standalone .canvas,
+body.standalone .contents {
+  padding-top: 65px;
 }
 
 #home {
