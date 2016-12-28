@@ -113,8 +113,11 @@ body.canvas-slid {
   height: 200px;
 }
 
-body.standalone #side-menu,
+body.standalone #side-menu {
+  padding-top: 15px;
+}
 body.standalone #top-menu {
+  min-height: 65px;
   padding-top: 15px;
 }
 
