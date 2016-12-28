@@ -66,6 +66,7 @@ a:focus, a:hover {
 
 #side-menu .navmenu-brand {
   border-bottom: 1px solid #ddd;
+  margin: 10px 0 0 0;
 }
 
 #side-menu>ul.navmenu-nav {

@@ -89,47 +89,55 @@
     },
     onClickDeleteProgram: function(e) {
       this.$el.animate({backgroundColor: '#ffdddd'}, 100);
+      
       setTimeout(function() {
         if (this.matchCollection.findWhere({program_id: this.model.id})) {
-          alert(_lang('cannotDeleteWhenMatchesExist'));
-          this.$el.animate({backgroundColor: 'transparent'}, 100, function() {$(this).css({backgroundColor:''});});
-          return;
-        }
-        if (!confirm(_lang('areYouSure'))) {
-          this.$el.animate({backgroundColor: 'transparent'}, 100, function() {$(this).css({backgroundColor:''});});
-          return;
-        }
-
-        $('#side-menu').one('shown.bs.offcanvas', function(e) {
-          this.stopListening(this.model);
-          _.defer(function() {
-            var program_id = this.model.id;
-            this.model.collection.remove(this.model);
-            this.model.destroy({wait: true}).done(function() {
-              this.stateModel.set(
-                _.extend(Backbone.TennisAppState.prototype.defaults, {view: 'home', program_id: null}), {
-                renderMenu: true,
-                replaceState: true,
-                hideMenu: true
-              });
-              this.model = undefined;
-
-              var categories = this.categoryCollection.where({program_id: program_id});
-              if (categories.length) this.categoryCollection.remove(categories, {silent: true});
-              _.each(categories, function(model) {model.destroy();});
-
-              var rounds = this.roundCollection.where({program_id: program_id});
-              if (rounds.length) this.roundCollection.remove(rounds, {silent: true});
-              _.each(rounds, function(model) {model.destroy();});
-
-            }.bind(this));
-            this.$el.css({backgroundColor: ''});
+          bootbox.alert(_lang('cannotDeleteWhenMatchesExist'), function() {
+            this.$el.animate({backgroundColor: 'transparent'}, 100, function() {$(this).css({backgroundColor:''});});
           }.bind(this));
+          return;
+        }
+
+        bootbox.confirm(_lang('areYouSure'), function(result) {
+          if (!result) {
+            this.$el.animate({backgroundColor: 'transparent'}, 100, function() {$(this).css({backgroundColor:''});});
+            return;
+          }
+
+          $('#side-menu').one('shown.bs.offcanvas', function(e) {
+            this.stopListening(this.model);
+            _.defer(function() {
+              var program_id = this.model.id;
+              this.model.collection.remove(this.model);
+              this.model.destroy({wait: true}).done(function() {
+                this.stateModel.set(
+                  _.extend(Backbone.TennisAppState.prototype.defaults, {view: 'home', program_id: null}), {
+                  renderMenu: true,
+                  replaceState: true,
+                  hideMenu: true
+                });
+                this.model = undefined;
+
+                var categories = this.categoryCollection.where({program_id: program_id});
+                if (categories.length) this.categoryCollection.remove(categories, {silent: true});
+                _.each(categories, function(model) {model.destroy();});
+
+                var rounds = this.roundCollection.where({program_id: program_id});
+                if (rounds.length) this.roundCollection.remove(rounds, {silent: true});
+                _.each(rounds, function(model) {model.destroy();});
+
+              }.bind(this));
+              this.$el.css({backgroundColor: ''});
+            }.bind(this));
+          }.bind(this));
+          _.defer(function() {
+            $('#top-menu .navbar-toggle').click();
+          });
+
         }.bind(this));
-        _.defer(function() {
-          $('#top-menu .navbar-toggle').click();
-        });
+
       }.bind(this), 200);
+
     },
     onClickGotoMatches: function(e) {
       var $tag = $(e.currentTarget).closest('.tag'),

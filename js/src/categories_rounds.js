@@ -118,23 +118,30 @@
     },
     onClickDelete: function(e) {
       this.$el.animate({backgroundColor: '#ffdddd'}, 100);
+
       setTimeout(function() {
         if (this.model.get('match_ids').length) {
-          alert(_lang('cannotDeleteWhenMatchesExist'));
-          this.$el.animate({backgroundColor: 'transparent'}, 100, function() {$(this).css({backgroundColor:''});});
+          bootbox.alert(_lang('cannotDeleteWhenMatchesExist'), function() {
+            this.$el.animate({backgroundColor: 'transparent'}, 100, function() {$(this).css({backgroundColor:''});});
+          }.bind(this));
           return;
         }
-        if (!confirm(_lang('areYouSure'))) {
-          this.$el.animate({backgroundColor: 'transparent'}, 100, function() {$(this).css({backgroundColor:''});});
-          return;
-        }
-        this.$el.animate({
-          opacity: 0
-        }, 750, function() {
-          this.model.collection.remove(this.model);
-          this.model.destroy();
+
+        bootbox.confirm(_lang('areYouSure'), function(result) {
+          if (!result) {
+            this.$el.animate({backgroundColor: 'transparent'}, 100, function() {$(this).css({backgroundColor:''});});
+            return;
+          }
+          this.$el.animate({
+            opacity: 0
+          }, 750, function() {
+            this.model.collection.remove(this.model);
+            this.model.destroy();
+          }.bind(this));
         }.bind(this));
+
       }.bind(this), 100);
+
     },
     onInputKeydown: function(e) {
       if (e.keyCode == 13) {

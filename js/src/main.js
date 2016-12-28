@@ -25,11 +25,6 @@ $(document).ready(function() {
     sideMenuTemplate: _.template($('#side-menu-template').html()),
     initialize: function(options) {
 
-      this.topMenuView = new Backbone.TopMenuView({
-        el: $('#top-menu'),
-        model: this.model
-      });
-
       this.players = new Backbone.PlayerCollection();
       this.matches = new Backbone.MatchCollection();
       this.programs = new Backbone.ProgramCollection();
@@ -66,6 +61,12 @@ $(document).ready(function() {
         var program_id = this.model.get('program_id');
         this.programs.each(function(model) {
           model.set({expanded: model.id == program_id}, {silent: true});
+        });
+
+        this.topMenuView = new Backbone.TopMenuView({
+          el: $('#top-menu'),
+          model: this.model,
+          programCollection: this.programs
         });
 
         this.views = {

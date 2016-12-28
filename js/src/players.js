@@ -150,20 +150,22 @@
     },
     onClickDelete: function(e) {
       e.preventDefault();
-      var view = this;
       this.$el.animate({backgroundColor: '#ffdddd'}, 100);
+
       setTimeout(function() {
-        if (!confirm(_lang('areYouSure'))) {
-          view.$el.animate({backgroundColor: 'transparent'}, 100, function() {$(this).css({backgroundColor:''});});
-          return;
-        }
-        view.$el.animate({
-          opacity: 0
-        }, 750, function() {
-          view.model.collection.remove(view.model);
-          view.model.destroy();
-        });
-      }, 100);
+        bootbox.confirm(_lang('areYouSure'), function(result) {
+          if (!result) {
+            this.$el.animate({backgroundColor: 'transparent'}, 100, function() {$(this).css({backgroundColor:''});});
+            return;
+          }
+          this.$el.animate({
+            opacity: 0
+          }, 750, function() {
+            this.model.collection.remove(this.model);
+            this.model.destroy();
+          }.bind(this));
+        }.bind(this));
+      }.bind(this), 100);
     },
     onInputKeydown: function(e) {
       if (e.keyCode == 13) {
