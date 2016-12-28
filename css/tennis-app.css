@@ -73,6 +73,9 @@ a:focus, a:hover {
   overflow-x: hidden;
   height: 100%;
 }
+#side-menu>ul.navmenu-nav>li.spacer {
+  height: 100px;
+}
 
 .canvas {
   position: relative;
@@ -108,7 +111,7 @@ body.canvas-slid {
   height: 100%;
 }
 
-.spacer {
+.content .spacer {
   min-height: 200px;
   height: 200px;
 }
