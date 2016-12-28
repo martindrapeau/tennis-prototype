@@ -152,6 +152,7 @@
       if (e.exitEditMode) {
         attributes.editable = false;
         options.renderAll = true;
+        document.activeElement.blur();
       }
       this.model.save(attributes, options);
     }

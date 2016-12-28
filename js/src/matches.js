@@ -396,6 +396,7 @@
       if (e.exitEditMode) {
         attributes.editable = false;
         options.renderAll = true;
+        document.activeElement.blur();
       }
       this.model.save(attributes, options);
     },
@@ -565,6 +566,7 @@
     stopEditing: function(options) {
       var model = this.getModelInEdit();
       if (model) model.set({editable: false}, options);
+      document.activeElement.blur();
     },
     delegateEvents: function() {
       Backbone.View.prototype.delegateEvents.apply(this, arguments);

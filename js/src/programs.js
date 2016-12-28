@@ -55,6 +55,7 @@
     stopEditing: function(options) {
       var model = this.getModelInEdit();
       if (model) model.set({editable: false}, options);
+      document.activeElement.blur();
     },
     delegateEvents: function() {
       Backbone.View.prototype.delegateEvents.apply(this, arguments);
