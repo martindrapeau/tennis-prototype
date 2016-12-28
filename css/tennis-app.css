@@ -61,6 +61,7 @@ a:focus, a:hover {
 }
 
 #side-menu {
+  padding-top: 15px;
   display: none;
 }
 #side-menu.in {
@@ -72,8 +73,12 @@ a:focus, a:hover {
   left: 0;
   z-index: 2;
   min-height: 100%;
-  padding: 50px 0 0 0;
+  padding: 65px 0 0 0;
   background: #f5f5f5;
+}
+
+#top-menu {
+  padding-top: 15px;
 }
 
 /* Fix nav scrolling: https://github.com/jasny/bootstrap/issues/467 */
