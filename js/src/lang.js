@@ -46,6 +46,7 @@
       addAPlayer: ['Add a player', 'Ajouter un joueur'],
       addAProgram: ['Add a season', 'Ajouter une saison'],
       newProgram: ['New season', 'Nouvelle saison'],
+      specifyTheName: ['Specify the name', 'Spécifier le nom'],
       changeTheName: ['Change the name', 'Changer le nom'],
       category: ['Category', 'Catégorie'],
       categories: ['Categories', 'Catégories'],

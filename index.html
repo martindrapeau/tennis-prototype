@@ -95,7 +95,11 @@
     <% if (program) { %>
       <div class="navbar-brand"><%=program.name%></div>
       <% if (view == 'program') { %>
-        <button class="btn edit-program pull-right" href="#"><i class="fa fa-fw fa-pencil"></i></button>
+        <button id="#program-menu" type="button" class="btn pull-right dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"><i class="fa fa-fw fa-ellipsis-h"></i></button>
+        <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="program-menu">
+          <li><a href="#" class="edit-program"><i class="fa fa-fw fa-pencil"></i> <%=_lang('changeTheName')%></a></li>
+          <li><a href="#" class="delete-program"><i class="fa fa-fw fa-trash"></i> <%=_lang('delete')%></a></li>
+        </ul>
       <% } %>
     <% } else { %>
       <% if (view == 'players') { %>
@@ -123,15 +127,9 @@
 </script>
 
 <script id="program-template" type="text/template">
-  <div class="program-info">
-    <input type="text" name="name" value="<%=name%>" tabindex="10" />
-    <% if (editable) { %>
-      <button class="btn btn-danger btn-sm delete-program" title="<%=_lang('delete')%>"><i class="fa fa-fw fa-times"></i></button>
-    <% } %>
-  </div>
-  <div class="tags-title"><i class="fa fa-fw fa-tag"></i> <%=_lang('categories')%></div>
+  <h4><%=_lang('categories')%></h4>
   <div class="categories"></div>
-  <div class="tags-title"><i class="fa fa-fw fa-tag"></i> <%=_lang('rounds')%></div>
+  <h4><%=_lang('rounds')%></h4>
   <div class="rounds"></div>
 </script>
 

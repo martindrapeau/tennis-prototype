@@ -459,43 +459,8 @@ body.standalone .contents {
 
 .program .categories,
 .program .rounds,
-.program .tags-title {
+.program h4 {
   padding: 0 15px;
-}
-
-.program .tags-title {
-  margin: 10px 0 5px 0;
-  font-weight: bold;
-}
-
-.program-info {
-  padding: 0 15px;
-  max-width: 350px;
-}
-
-.program-info input {
-  font-size: 18px;
-  font-weight: bold;
-  width: 80%;
-  padding: 5px;
-  border: 1px dotted #9999FF;
-  border-radius: 0;
-  background-color: transparent;
-  text-shadow: none;
-  box-shadow: none;
-  background-color: #fff;
-}
-
-.program-info input[readonly] {
-  border: 1px solid transparent;
-  background-color: transparent;
-  margin: 0;
-  padding: 0;
-  color: #000;
-}
-
-.program-info .btn {
-  margin-top: -4px;
 }
 
 .tag {
