@@ -57,7 +57,7 @@
     onEditProgram: function(e) {
       if (e) e.preventDefault();
       bootbox.prompt({
-        title: _lang('nameOfTheProgram'),
+        title: _lang('programName'),
         value: this.model.get('name'),
         callback: function(result) {
           if (!result) return;
