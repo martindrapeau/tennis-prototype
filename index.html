@@ -89,11 +89,14 @@
 </script>
 
 <script id="top-menu-template" type="text/template">
-  <button type="button" class="navbar-toggle" data-toggle="offcanvas" data-recalc="false" data-target=".navmenu" data-canvas=".canvas">
+  <button type="button" class="btn navbar-toggle pull-left" data-toggle="offcanvas" data-recalc="false" data-target=".navmenu" data-canvas=".canvas">
     <i class="fa fa-fw fa-bars"></i>
   </button>
     <% if (program) { %>
       <div class="navbar-brand"><%=program.name%></div>
+      <% if (view == 'program') { %>
+        <button class="btn edit-program pull-right" href="#"><i class="fa fa-fw fa-pencil"></i></button>
+      <% } %>
     <% } else { %>
       <% if (view == 'players') { %>
         <div class="navbar-brand"><%=_lang('players')%></div>

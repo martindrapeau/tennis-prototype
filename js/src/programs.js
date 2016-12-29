@@ -60,11 +60,25 @@
     delegateEvents: function() {
       Backbone.View.prototype.delegateEvents.apply(this, arguments);
       $('body').on('click.tag', this.onClickBody.bind(this));
+      $('#top-menu .edit-program').on('click', this.onEditProgram.bind(this));
     },
     undelegateEvents: function() {
       Backbone.View.prototype.undelegateEvents.apply(this, arguments);
       this.stopEditing();
       $('body').off('click.tag');
+      $('#top-menu .edit-program').off('click');
+    },
+    onEditProgram: function(e) {
+      bootbox.prompt({
+        title: _lang('changeTheName'),
+        value: this.model.get('name'),
+        callback: function(result) {
+          if (!result) return;
+          this.model.save({name: result}, {wait: true}).done(function() {
+            $('#top-menu .navbar-brand').text(result);
+          });
+        }.bind(this)
+      });
     },
     onFocusProgram: function(e) {
       if (this.model.get('editable')) return;
@@ -85,11 +99,11 @@
           attributes = {};
       attributes[attr] = value;
       if (e.exitEditMode) attributes.editable = false;
-      var xhr = this.model.save(attributes, {wait: true});
+      this.model.save(attributes, {wait: true});
     },
     onClickDeleteProgram: function(e) {
       this.$el.animate({backgroundColor: '#ffdddd'}, 100);
-      
+
       setTimeout(function() {
         if (this.matchCollection.findWhere({program_id: this.model.id})) {
           bootbox.alert(_lang('cannotDeleteWhenMatchesExist'), function() {

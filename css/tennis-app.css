@@ -29,17 +29,17 @@ a:focus, a:hover {
   background-color: #31708f;
   border-color: #85a5b5;
 }
-.navbar-default .navbar-toggle {
+.navbar-default .btn {
   border: none;
   color: #fff;
   font-size: 20px;
   padding: 0;
   margin: 10px 15px;
-  float: left;
+  background-color: transparent;
 }
-.navbar-default .navbar-toggle:hover,
-.navbar-default .navbar-toggle:focus {
-  background-color: inherit;
+.navbar-default .btn:hover,
+.navbar-default .btn:focus {
+  background-color: transparent;
 }
 .navbar-default .navbar-brand,
 .navbar-default .navbar-brand:hover,

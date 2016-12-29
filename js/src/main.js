@@ -190,22 +190,27 @@ $(document).ready(function() {
       options || (options = {});
       this.viewNeedsDelegateEvents = undefined;
 
+      // Hide old view
       var oldViewName = this.model.previous('view'),
           oldView = this.views[oldViewName];
       if (oldView) oldView.hide();
 
-      var viewName = this.model.get('view'),
-          view = this.views[viewName];
-      view.show(options);
-
-      this.topMenuView.render();
+      // Update URL
       if (options && (options.pushState || options.replaceState)) this.pushState(options);
 
+      // Update/render menus
+      this.topMenuView.render();
       if (options && options.renderMenu)
         this.renderMenu();
       else
         this.updateLinks();
 
+      // Show new view
+      var viewName = this.model.get('view'),
+          view = this.views[viewName];
+      view.show(options);
+
+      // Hide menu maybe
       if (options && (options.hideMenu))
         _.defer(function() {
           this.$el.offcanvas('hide');
