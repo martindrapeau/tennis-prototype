@@ -25,10 +25,8 @@
     toRender: function() {
       var data = this.toJSON();
       data.tabindex = this.cid.replace('c', '') * 100;
-
       data.title = data.name ? _.shortName(data.name) : null;
       data.initials = data.name ? _.initials(data.name) : null;
-
       return data;
     }
   });

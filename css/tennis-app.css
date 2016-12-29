@@ -532,3 +532,45 @@ body.standalone .contents {
   padding: 6px 12px;
   margin-bottom: 20px;
 }
+
+
+#rankings {
+  padding: 15px;
+}
+
+#rankings .selects {
+  display: table;
+  margin-bottom: 15px;
+  max-width: 320px;
+}
+
+#rankings .player {
+  font-size: 16px;
+  margin-bottom: 10px;
+  border: 1px solid #adadad;
+  background-color: #fff;
+  display: table;
+  max-width: 320px;
+}
+
+#rankings .player .picture {
+  padding: 10px;
+  display: table-cell;
+  width: 70px;
+}
+
+#rankings .player .picture .wrapper {
+  display: table-cell;
+  width: 50px;
+  min-width: 50px;
+  height: 50px;
+  vertical-align: middle;
+  text-align: center;
+  background-color: #ddd;
+  border-radius: 50%;
+}
+
+#rankings .player .info {
+  display: table-cell;
+  width: 250px;
+}

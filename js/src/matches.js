@@ -211,6 +211,11 @@
       
       return null;
     },
+    isPlayerWinner: function(player_id) {
+      var key = this.getWinner();
+      if (!key) return false;
+      return this.get(key + '_id') == player_id || this.get(key + '_partner_id' == player_id);
+    },
     isComplete: function() {
       return this.getWinner() != null;
     },
@@ -692,9 +697,6 @@
     renderSelects: function(options) {
       var program = this.programCollection.get(this.model.get('program_id'));
       if (!program) return this;
-
-      var categories = this.categoryCollection.where({program_id: program.id}),
-          rounds = this.roundCollection.where({program_id: program.id});
 
       var data = _.extend(
         program.toJSON(),

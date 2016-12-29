@@ -95,6 +95,16 @@ $(document).ready(function() {
             programCollection: this.programs,
             categoryCollection: this.categories,
             roundCollection: this.rounds
+          }),
+          rankings: new Backbone.RankingsView({
+            el: $('#rankings'),
+            model: this.model,
+            collection: undefined,
+            playerCollection: this.players,
+            matchCollection: this.matches,
+            programCollection: this.programs,
+            categoryCollection: this.categories,
+            roundCollection: this.rounds
           })
         };
 
@@ -195,6 +205,11 @@ $(document).ready(function() {
           oldView = this.views[oldViewName];
       if (oldView) oldView.hide();
 
+      // Show new view
+      var viewName = this.model.get('view'),
+          view = this.views[viewName];
+      view.show(options);
+
       // Update URL
       if (options && (options.pushState || options.replaceState)) this.pushState(options);
 
@@ -205,11 +220,6 @@ $(document).ready(function() {
       else
         this.updateLinks();
 
-      // Show new view
-      var viewName = this.model.get('view'),
-          view = this.views[viewName];
-      view.show(options);
-
       // Hide menu maybe
       if (options && (options.hideMenu))
         _.defer(function() {
@@ -218,7 +228,6 @@ $(document).ready(function() {
     },
     render: function() {
       this.renderMenu();
-      this.renderViews();
       return this;
     },
     renderMenu: function() {
@@ -241,14 +250,6 @@ $(document).ready(function() {
         else
           $a.closest('li').removeClass('active');
       });
-    },
-    renderViews: function() {
-      var currentViewName = this.model.get('view');
-      _.each(this.views, function(view, viewName) {
-        view.render();
-        if (viewName != currentViewName) view.hide();
-      });
-      return this;
     }
   });
 

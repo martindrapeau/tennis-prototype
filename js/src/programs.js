@@ -45,14 +45,14 @@
     delegateEvents: function() {
       Backbone.View.prototype.delegateEvents.apply(this, arguments);
       $('body').on('click.tag', this.onClickBody.bind(this));
-      $('#top-menu .edit-program').on('click', this.onEditProgram.bind(this));
-      $('#top-menu .delete-program').on('click', this.onClickDeleteProgram.bind(this));
+      $('#top-menu').on('click', '.edit-program', this.onEditProgram.bind(this));
+      $('#top-menu').on('click', '.delete-program', this.onClickDeleteProgram.bind(this));
     },
     undelegateEvents: function() {
       Backbone.View.prototype.undelegateEvents.apply(this, arguments);
       $('body').off('click.tag');
-      $('#top-menu .edit-program').off('click');
-      $('#top-menu .delete-program').off('click');
+      $('#top-menu').off('click', '.edit-program');
+      $('#top-menu').off('click', '.delete-program');
     },
     onEditProgram: function(e) {
       if (e) e.preventDefault();

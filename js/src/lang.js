@@ -53,7 +53,9 @@
       round: ['Round', 'Ronde'],
       rounds: ['Rounds', 'Rondes'],
       categoriesAndRounds: ['Categories & rounds', 'Catégories & rondes'],
-      week: ['Week', 'Semaine']
+      week: ['Week', 'Semaine'],
+      rankings: ['Rankings', 'Meneurs'],
+      rankingsPerCategory: ['Category Rankings', 'Meneurs par catégories']
     }
   };
 
