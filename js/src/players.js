@@ -199,7 +199,7 @@
     },
     initialize: function(options) {
       this.listenTo(this.collection, 'add remove', this.render);
-      this.onResize = _.debounce(this.onResize.bind(this), 100);
+      this.onResize = _.debounce(this._onResize.bind(this), 100);
     },
     getModelInEdit: function() {
       return this.collection.findWhere({editable: true});
@@ -261,7 +261,7 @@
       $(window).off('resize', this.onResize);
       return Backbone.View.prototype.remove.apply(this, arguments);
     },
-    onResize: function() {
+    _onResize: function() {
       this.render();
     },
     render: function() {

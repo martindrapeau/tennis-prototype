@@ -54,8 +54,11 @@
       rounds: ['Rounds', 'Rondes'],
       categoriesAndRounds: ['Categories & rounds', 'Catégories & rondes'],
       week: ['Week', 'Semaine'],
-      rankings: ['Rankings', 'Meneurs'],
-      rankingsPerCategory: ['Category Rankings', 'Meneurs par catégories']
+      rank: ['Rank', 'Classements'],
+      rankings: ['Rankings', 'Classements'],
+      rankingsPerCategory: ['Category Rankings', 'Classement par catégories'],
+      wins: ['Wins', 'Victoires'],
+      played: ['Played', 'Joués']
     }
   };
 

@@ -544,33 +544,41 @@ body.standalone .contents {
   max-width: 320px;
 }
 
-#rankings .player {
-  font-size: 16px;
-  margin-bottom: 10px;
-  border: 1px solid #adadad;
+#rankings table {
   background-color: #fff;
-  display: table;
   max-width: 320px;
 }
 
-#rankings .player .picture {
-  padding: 10px;
-  display: table-cell;
-  width: 70px;
+#rankings td.player {
+  padding: 0;
 }
 
-#rankings .player .picture .wrapper {
-  display: table-cell;
+#rankings .player-wrapper {
+  font-size: 16px;
+  display: table;
+  max-width: 200px;
+}
+
+#rankings .player-wrapper .picture {
+  padding: 10px;
   width: 50px;
-  min-width: 50px;
-  height: 50px;
+}
+
+#rankings .player-wrapper .picture .wrapper {
+  display: table-cell;
+  width: 30px;
+  min-width: 30px;
+  height: 30px;
   vertical-align: middle;
   text-align: center;
   background-color: #ddd;
   border-radius: 50%;
+  font-size: 11px;
 }
 
-#rankings .player .info {
+#rankings .player-wrapper .info {
   display: table-cell;
   width: 250px;
+  margin: 0;
+  vertical-align: middle;
 }

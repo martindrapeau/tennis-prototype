@@ -13,13 +13,20 @@
 
   Backbone.RankingCollection = Backbone.Collection.extend({
     model: Backbone.RankingModel,
-    comparator: 'won'
+    comparator: function(m1, m2) {
+      if (m1.attributes.won == m2.attributes.won) {
+        if (m1.attributes.total == m2.attributes.total) return 0;
+        return m1.attributes.total < m2.attributes.total ? 1 : -1;
+      }
+      return m1.attributes.won < m2.attributes.won ? 1 : -1;
+    }
   });
 
   Backbone.RankingView = Backbone.View.extend({
-    className: 'player',
+    tagName: 'tr',
     render: function() {
       var data = this.model.toJSON();
+      data.rank = this.model.collection.indexOf(this.model) + 1;
       this.$el
         .html(this.template(data))
         .data('id', this.model.id)
@@ -85,12 +92,13 @@
       for (var i = 0; i < this.views.length; i++) this.views[i].remove();
       this.views = [];
 
-      this.$players = this.$('.players');
+      this.$players = this.$('table');
       this.collection.reset(this.build(data.program_id, data.category_id));
 
+      var $tbody = this.$players.find('tbody');
       this.collection.each(function(model) {
         var view = new Backbone.RankingView({model: model});
-        this.$players.append(view.render().$el);
+        $tbody.append(view.render().$el);
         this.views.push(view);
       }.bind(this));
 
@@ -99,7 +107,7 @@
     build: function(program_id, category_id) {
       return this.playerCollection.reduce(function(list, player) {
 
-        var json = player.toJSON(),
+        var json = player.toRender(),
             ranking = {
               id: json.id,
               name: json.name,
@@ -113,7 +121,7 @@
         _.each(player.matches, function(match) {
           if (match.get('program_id') != program_id || match.get('category_id') != category_id) return true;
           ranking.total += 1;
-          ranking.completed = match.isComplete();
+          ranking.completed += match.isComplete() ? 1 : 0;
           var won = match.isPlayerWinner(player.id);
           if (won)
             ranking.won += 1

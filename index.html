@@ -330,18 +330,35 @@
       </select>
     </div>
   </div>
-  <div class="players"></div>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th></th>
+        <th><%=_lang('player')%></th>
+        <th><%=_lang('wins')%></th>
+        <th><%=_lang('played')%></th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
 </script>
 
 <script id="rankings-player-template" type="text/template">
-  <div class="picture">
-    <div class="wrapper">
-      <div class="initials"><%=initials%></div>
+  <td class="rank"><%=rank%></td>
+  <td class="player">
+    <div class="player-wrapper">
+      <div class="picture">
+        <div class="wrapper">
+          <div class="initials"><%=initials%></div>
+        </div>
+      </div>
+      <div class="info">
+        <div class="name"><%=title%></div>
+      </div>
     </div>
-  </div>
-  <div class="info">
-    <div class="name"><%=name%></div>
-  </div>
+  </td>
+  <td class="wins"><%=won%></td>
+  <td class="played"><%=completed%></td>
 </script>
 
 <script id="event-template" type="text/template">
