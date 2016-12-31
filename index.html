@@ -75,7 +75,7 @@
       <% state = {program_id: program.id}; %>
       <li><a href="#program-toggle" data-state='<%=JSON.stringify(state)%>'><i class="fa fa-fw fa-calendar-o"></i> <%=program.name%></a></li>
       <li data-program-id="<%=program.id%>" style="display: <%=program.expanded ? 'block' : 'none'%>;">
-        <a href="#program" data-state='<%=JSON.stringify(state)%>'><i class="fa fa-fw"></i> <i class="fa fa-fw fa-tags"></i> <%=_lang('categoriesAndRounds')%></a>
+        <a href="#program" data-state='<%=JSON.stringify(state)%>'><i class="fa fa-fw"></i> <i class="fa fa-fw fa-cog"></i> <%=_lang('settings')%></a>
       </li>
       <li data-program-id="<%=program.id%>" style="display: <%=program.expanded ? 'block' : 'none'%>;">
         <a href="#matches" data-state='<%=JSON.stringify(state)%>'><i class="fa fa-fw"></i> <i class="fa fa-fw fa-check-circle"></i> <%=_lang('matches')%></a>
