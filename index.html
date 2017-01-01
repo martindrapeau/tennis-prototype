@@ -303,14 +303,15 @@
         <th colspan="1" class="dropdown more">
           <button class="btn btn-default btn-sm more dropdown-toggle" type="button" id="match-more-<%=id%>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"><%=_lang('more')%> <span class="caret"></span></button>
           <ul class="dropdown-menu dropdown-menu-right more" aria-labelledby="match-more-<%=id%>">
-            <li><a href="#" class="exception incomplete" data-exception="incomplete"><%=_lang('matchIncomplete')%></a></li>
-            <li><a href="#" class="exception user-forfeited" data-exception="user_won_because_forfeit"><%=user_title_inline%> <%=_lang('forfeited')%></a></li>
-            <li><a href="#" class="exception other-forfeited" data-exception="other_won_because_forfeit"><%=other_title_inline%> <%=_lang('forfeited')%></a></li>
+            <li><a href="#" class="type singles" data-type="singles"><i class="fa fa-fw"></i> <%=_lang('singles')%></a></li>
+            <li><a href="#" class="type doubles" data-type="doubles"><i class="fa fa-fw"></i> <%=_lang('doubles')%></a></li>
             <li role="separator" class="divider"></li>
-            <li>
-              <a href="#" class="exception inline pull-left clear-exception" data-exception="null"><%=_lang('clearException')%></a>
-              <a href="#" class="inline pull-right delete"><i class="fa fa-fw fa-trash"></i> <%=_lang('delete')%></a>
-            </li>
+            <li><a href="#" class="exception incomplete" data-exception="incomplete"><i class="fa fa-fw"></i> <%=_lang('matchIncomplete')%></a></li>
+            <li><a href="#" class="exception user-forfeited" data-exception="user_won_because_forfeit"><i class="fa fa-fw"></i> <%=user_title_inline%> <%=_lang('forfeited')%></a></li>
+            <li><a href="#" class="exception other-forfeited" data-exception="other_won_because_forfeit"><i class="fa fa-fw"></i> <%=other_title_inline%> <%=_lang('forfeited')%></a></li>
+            <li><a href="#" class="exception clear-exception" data-exception="null"><i class="fa fa-fw"></i> <%=_lang('noException')%></a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="#" class="delete"><i class="fa fa-fw fa-trash"></i> <%=_lang('delete')%></a></li>
           </ul>
         </th>
       <% } %>

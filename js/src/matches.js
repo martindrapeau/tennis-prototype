@@ -318,6 +318,7 @@
       'keydown input': 'onInputKeydown',
       'blur input:not([name=date])': 'saveInputToModel',
       'focus input[readonly]:not(.editing)': 'onReadonlyInputFocus',
+      'click .dropdown-menu a.type': 'onClickType',
       'click .dropdown-menu a.exception': 'onClickException',
       'click .dropdown-menu a.delete': 'onClickDelete',
       'click .dropdown-menu.time a': 'onClickTime',
@@ -339,6 +340,17 @@
         this.render();
       else
         this.renderMarker(this.model.toRender());
+    },
+    onClickType: function(e) {
+      e.preventDefault();
+      var type = $(e.currentTarget).data('type'),
+          attributes = {type: type};
+      if (type == SINGLES) _.extend(attributes, {user_partner_id: null, other_partner_id: null});
+      this.model.save(attributes, {wait: true, renderAll: true}).done(function() {
+        _.delay(function() {
+          this.model.set({editable: true}, {renderAll: true});
+        }.bind(this), 100);
+      }.bind(this));
     },
     onClickException: function(e) {
       e.preventDefault();
@@ -530,24 +542,32 @@
     },
     renderMarker: function(data) {
       this.$('.marker').removeClass('exception').prop('title', undefined).empty();
-      this.$('.dropdown-menu .exception').removeClass('strong');
+      this.$('.dropdown-menu .exception>i').removeClass('fa-check');
 
       if (data.winner != null) this.$('.'+data.winner+' .marker').text('✓');
 
       if (data.exception == INCOMPLETE) {
         this.$('.marker').addClass('exception').text('?').attr('title', 'Match incomplete');
-        this.$('.dropdown-menu .incomplete').addClass('strong');
+        this.$('.dropdown-menu .incomplete>i').addClass('fa-check');
       }
 
       if (data.exception == USER_WON_BECAUSE_FORFEIT) {
         this.$('.other .marker').addClass('exception').text(_lang('forfeitShort')).attr('title', _lang('forfeit'));
-        this.$('.dropdown-menu .user-forfeited').addClass('strong');
+        this.$('.dropdown-menu .user-forfeited>i').addClass('fa-check');
       }
 
       if (data.exception == OTHER_WON_BECAUSE_FORFEIT) {
         this.$('.user .marker').addClass('exception').text(_lang('forfeitShort')).attr('title', _lang('forfeit'));
-        this.$('.dropdown-menu .other-forfeited').addClass('strong');
+        this.$('.dropdown-menu .other-forfeited>i').addClass('fa-check');
       }
+
+      if (!data.exception) {
+        this.$('.dropdown-menu .clear-exception>i').addClass('fa-check');
+      }
+
+      this.$('.dropdown-menu .type>i').removeClass('fa-check');
+      this.$('.dropdown-menu .type[data-type=' + data.type + ']>i').addClass('fa-check');
+
       return this;
     }
   });
@@ -624,7 +644,7 @@
             program_id: this.model.get('program_id'),
             category_id: this.model.get('category_id'),
             round_id: this.model.get('round_id')
-          }, last ? last.pick(['location', 'played_on', 'program_id']) : undefined));
+          }, last ? last.pick(['type', 'location', 'played_on', 'program_id']) : undefined));
       this.collection.add(model);
       model.bindPlayers();
       var view = this.views[this.views.length-1];
@@ -638,7 +658,7 @@
         backgroundColor: 'transparent'
       }, 750, function() {
         this.$el.css({backgroundColor:''});
-        this.focus();
+        model.set({editable: true}, {renderAll: true});
       }.bind(view));
     },
     remove: function() {
