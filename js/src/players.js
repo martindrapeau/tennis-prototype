@@ -102,6 +102,39 @@
   });
 
   Backbone.PlayerView = Backbone.View.extend({
+    template: _.template(`
+      <tbody>
+        <tr>
+          <td class="picture">
+            <div class="wrapper">
+              <div class="initials"><%=initials%></div>
+            </div>
+          </td>
+          <td class="info">
+            <input type="text" name="name" value="<%=name%>" placeholder="<%=_lang('name')%>" tabindex="<%=tabindex+1%>" />
+            <input type="text" name="email" value="<%=email%>" placeholder="<%=_lang('email')%>" tabindex="<%=tabindex+2%>" />
+            <input type="text" name="phone" value="<%=phone%>" placeholder="<%=_lang('telephone')%>" tabindex="<%=tabindex+3%>" />
+          </td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <th colspan="2">
+            <div class="matches pull-left"></div>
+            <% if (editable) { %>
+              <div class="dropdown more pull-right">
+                <button class="btn btn-default btn-sm more dropdown-toggle" type="button" id="match-more-<%=id%>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"><%=_lang('more')%> <span class="caret"></span></button>
+                <ul class="dropdown-menu dropdown-menu-right more" aria-labelledby="match-more-<%=id%>">
+                  <li>
+                    <a href="#" class="delete"><i class="fa fa-fw fa-trash"></i> <%=_lang('delete')%></a>
+                  </li>
+                </ul>
+              </div>
+            <% } %>
+          </th>
+        </tr>
+      </tfoot>
+    `),
     className: 'player',
     tagName: 'table',
     events: {
@@ -186,20 +219,54 @@
       this.model.save(attributes, options);
     }
   });
-  $('document').ready(function() {
-    Backbone.PlayerView.prototype.template = _.template($('#player-template').html());
+
+  Backbone.EditPlayersView = Backbone.View.extend({
+    formTemplate: _.template(`
+      <form class="bootbox-form">
+        <input name="name" placeholder="<%=_lang('name')%>" value="<%=name%>" class="bootbox-input bootbox-input-text form-control" autocomplete="off" type="text">
+        <input name="email" placeholder="<%=_lang('email')%>" value="<%=email%>" class="bootbox-input bootbox-input-text form-control" autocomplete="off" type="email">
+        <input name="phone" placeholder="<%=_lang('telephone')%>" value="<%=phone%>" class="bootbox-input bootbox-input-text form-control" autocomplete="off" type="text">
+      </form>
+    `),
+    render: function() {
+      bootbox.dialog({
+        title: _lang('playerInformation'),
+        message: this.formTemplate(this.model.toJSON()),
+        buttons: {
+          cancel: {
+            label: _lang('cancel')
+          },
+          confirm: {
+            label: _lang('save'),
+            callback: function() {
+              model.save($(this).find('form').serializeObject(), {wait: true, renderAll: true}).done(function() {
+                bootbox.hideAll();
+              });
+            }
+          }
+        }
+      });
+      return this;
+    }
   });
 
   Backbone.PlayersView = Backbone.View.extend({
     className: 'player',
     events: {
       'click .add-player': 'onAddPlayer',
-      'click .player': 'onFocusPlayer',
-      'focus .player': 'onFocusPlayer'
+      'click .player': 'onClickPlayer'
     },
     initialize: function(options) {
       this.listenTo(this.collection, 'add remove', this.render);
       this.onResize = _.debounce(this._onResize.bind(this), 100);
+    },
+    onClickPlayer: function(e) {
+      var $el = $(e.currentTarget),
+          cid = $el.data('cid'),
+          model = this.collection.get(cid);
+      new Backbone.EditPlayersView({
+        model: model
+      }).render();
     },
     getModelInEdit: function() {
       return this.collection.findWhere({editable: true});

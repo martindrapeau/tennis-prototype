@@ -152,40 +152,6 @@
   </div>
 </script>
 
-<script id="player-template" type="text/template">
-  <tbody>
-    <tr>
-      <td class="picture">
-        <div class="wrapper">
-          <div class="initials"><%=initials%></div>
-        </div>
-      </td>
-      <td class="info">
-        <input type="text" name="name" value="<%=name%>" placeholder="<%=_lang('name')%>" tabindex="<%=tabindex+1%>" />
-        <input type="text" name="email" value="<%=email%>" placeholder="<%=_lang('email')%>" tabindex="<%=tabindex+2%>" />
-        <input type="text" name="phone" value="<%=phone%>" placeholder="<%=_lang('telephone')%>" tabindex="<%=tabindex+3%>" />
-      </td>
-    </tr>
-  </tbody>
-  <tfoot>
-    <tr>
-      <th colspan="2">
-        <div class="matches pull-left"></div>
-        <% if (editable) { %>
-          <div class="dropdown more pull-right">
-            <button class="btn btn-default btn-sm more dropdown-toggle" type="button" id="match-more-<%=id%>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"><%=_lang('more')%> <span class="caret"></span></button>
-            <ul class="dropdown-menu dropdown-menu-right more" aria-labelledby="match-more-<%=id%>">
-              <li>
-                <a href="#" class="delete"><i class="fa fa-fw fa-trash"></i> <%=_lang('delete')%></a>
-              </li>
-            </ul>
-          </div>
-        <% } %>
-      </th>
-    </tr>
-  </tfoot>
-</script>
-
 <script id="matches-selects-template" type="text/template">
   <div class="selects">
     <div class="category-select">
