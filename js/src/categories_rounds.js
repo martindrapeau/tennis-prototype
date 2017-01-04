@@ -78,6 +78,22 @@
   });
 
   Backbone.CategoryView = Backbone.View.extend({
+    template: _.template(`
+      <div class="info">
+        <div class="title">
+          <input type="text" name="name" value="<%=name%>" placeholder="<%=_lang('name')%>" tabindex="<%=tabindex+1%>" />
+          <input type="text" name="description" value="<%=description%>" placeholder="<%=editable ? _lang('description') : ''%>" tabindex="<%=tabindex+2%>" />
+        </div>
+        <div class="stats"></div>
+      </div>
+      <div class="buttons">
+        <% if (!editable) { %>
+          <button class="btn btn-default btn-sm goto-matches" data-id="<%=id%>" data-attr="<%=matchIdAttribute%>" title="<%=_lang('matches')%>"><i class="fa fa-fw fa-check-circle"></i></button>
+        <% } else { %>
+          <button class="btn btn-danger btn-sm delete" title="<%=_lang('delete')%>"><i class="fa fa-fw fa-times"></i></button>
+        <% } %>
+      </div>
+    `),
     className: 'tag category',
     events: {
       'keydown input': 'onInputKeydown',
@@ -163,9 +179,6 @@
       }
       this.model.save(attributes, options);
     }
-  });
-  $('document').ready(function() {
-    Backbone.CategoryView.prototype.template = _.template($('#tag-template').html());
   });
 
 

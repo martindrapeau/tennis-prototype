@@ -20,6 +20,12 @@
 
 
   Backbone.ProgramView = Backbone.View.extend({
+    template: _.template(`
+      <h4><%=_lang('categories')%></h4>
+      <div class="categories"></div>
+      <h4><%=_lang('rounds')%></h4>
+      <div class="rounds"></div>
+    `),
     className: 'program',
     events: {
       'click button.goto-matches': 'onClickGotoMatches',
@@ -260,9 +266,6 @@
 
       return this;
     }
-  });
-  $('document').ready(function() {
-    Backbone.ProgramView.prototype.template = _.template($('#program-template').html());
   });
 
 

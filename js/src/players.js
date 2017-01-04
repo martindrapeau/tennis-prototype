@@ -11,12 +11,10 @@
       phone: null,
       image: null,
       // The following are ignored by the back-end
-      match_ids: [],
-      editable: false
+      match_ids: []
     },
     initialize: function() {
       this.matches = [];
-      this.set({editable: false}, {silent: true});
     },
     bindMatches: function(matches) {
       this.matches = matches || this.collection.matchesCollection.getMatchesForPlayer(this.id);
@@ -111,9 +109,9 @@
             </div>
           </td>
           <td class="info">
-            <input type="text" name="name" value="<%=name%>" placeholder="<%=_lang('name')%>" tabindex="<%=tabindex+1%>" />
-            <input type="text" name="email" value="<%=email%>" placeholder="<%=_lang('email')%>" tabindex="<%=tabindex+2%>" />
-            <input type="text" name="phone" value="<%=phone%>" placeholder="<%=_lang('telephone')%>" tabindex="<%=tabindex+3%>" />
+            <div class="name"><%=name%></div>
+            <div class="email"><%=email%></div>
+            <div class="phone"><%=phone%></div>
           </td>
         </tr>
       </tbody>
@@ -121,16 +119,6 @@
         <tr>
           <th colspan="2">
             <div class="matches pull-left"></div>
-            <% if (editable) { %>
-              <div class="dropdown more pull-right">
-                <button class="btn btn-default btn-sm more dropdown-toggle" type="button" id="match-more-<%=id%>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"><%=_lang('more')%> <span class="caret"></span></button>
-                <ul class="dropdown-menu dropdown-menu-right more" aria-labelledby="match-more-<%=id%>">
-                  <li>
-                    <a href="#" class="delete"><i class="fa fa-fw fa-trash"></i> <%=_lang('delete')%></a>
-                  </li>
-                </ul>
-              </div>
-            <% } %>
           </th>
         </tr>
       </tfoot>
@@ -138,24 +126,10 @@
     className: 'player',
     tagName: 'table',
     events: {
-      'keydown input': 'onInputKeydown',
-      'blur input': 'saveInputToModel',
-      'click .dropdown-menu a.delete': 'onClickDelete'
+      'click ': 'onPlayerClick'
     },
     initialize: function(options) {
-      this.listenTo(this.model, 'change', this.onChange);
-    },
-    onChange: function(model, options) {
-      var data = this.model.toRender();
-      if (options && options.renderAll) {
-        this.render();
-      } else {
-        this.renderPicture(data);
-        this.renderMatches(data);
-      }
-    },
-    focus: function() {
-      this.$el.find('input').first().focus();
+      this.listenTo(this.model, 'change', this.render);
     },
     render: function() {
       var data = this.model.toRender();
@@ -163,21 +137,17 @@
       this.$el
         .html(this.template(data))
         .data('id', this.model.id)
-        .data('cid', this.model.cid)
-        .find('input').prop('readonly', !data.editable);
+        .data('cid', this.model.cid);
 
-      this.renderPicture(data);
-      this.renderMatches(data);
-
-      return this;
-    },
-    renderPicture: function(data) {
       this.$('.initials').text(data.initials);
+      this.$('.matches').text(data.match_ids.length + ' ' + _lang(data.match_ids.length == 1 ? 'match' : 'matches').toLowerCase());
+
       return this;
     },
-    renderMatches: function(data) {
-      this.$('.matches').text(data.match_ids.length + ' ' + _lang(data.match_ids.length == 1 ? 'match' : 'matches').toLowerCase());
-      return this;
+    onPlayerClick: function(e) {
+      new Backbone.EditPlayersView({
+        model: this.model
+      }).render();
     },
     onClickDelete: function(e) {
       e.preventDefault();
@@ -197,118 +167,130 @@
           }.bind(this));
         }.bind(this));
       }.bind(this), 100);
+    }
+  });
+
+  Backbone.ConfirmDeleteInlineFormControl = Backbone.View.extend({
+    template: _.template(`
+      <div class="form-group action">
+        <button type="button" class="btn btn-danger action"><%=actionLabel%></button>
+      </div>
+      <div class="inline-form confirm">
+        <div class="form-group">
+          <label><%=message%></label>
+          <button type="button" class="btn btn-primary confirm"><%=confirmLabel%></button>
+          <button type="button" class="btn btn-primary cancel"><%=cancelLabel%></button>
+        </div>
+      </div>
+    `),
+    events: {
+      'click button.action': 'onAction',
+      'click button.confirm': 'onConfirm',
+      'click button.cancel': 'onCancel'
     },
-    onInputKeydown: function(e) {
-      if (e.keyCode == 13) {
-        e.exitEditMode = true;
-        this.saveInputToModel.apply(this, arguments);
-      }
+    initialize: function(options) {
+      this.message = options.message || 'Are you sure?';
+      this.callback = options.callback || function() {};
+      this.actionLabel = options.actionLabel || 'Action';
+      this.confirmLabel = options.confirmLabel || 'Confirm';
+      this.cancelLabel = options.cancelLabel || 'Cancel';
     },
-    saveInputToModel: function(e) {
-      var $input = $(e.currentTarget),
-          attr = $input.attr('name'),
-          value = $input.val(),
-          attributes = {},
-          options = {wait: true};
-      attributes[attr] = value;
-      if (e.exitEditMode) {
-        attributes.editable = false;
-        options.renderAll = true;
-        document.activeElement.blur();
-      }
-      this.model.save(attributes, options);
+    render: function() {
+      this.$el.html(this.template({
+        message: this.message,
+        actionLabel: this.actionLabel,
+        confirmLabel: this.confirmLabel,
+        cancelLabel: this.cancelLabel
+      }));
+      this.$actionGroup = this.$('.form-group.action');
+      this.$confirmGroup = this.$('.inline-form.confirm');
+      this.$confirmGroup.hide();
+      return this;
+    },
+    onAction: function() {
+      this.$actionGroup.hide();
+      this.$confirmGroup.show();
+    },
+    onConfirm: function() {
+      this.callback();
+    },
+    onCancel: function() {
+      this.$confirmGroup.hide();
+      this.$actionGroup.show();
     }
   });
 
   Backbone.EditPlayersView = Backbone.View.extend({
     formTemplate: _.template(`
       <form class="bootbox-form">
-        <input name="name" placeholder="<%=_lang('name')%>" value="<%=name%>" class="bootbox-input bootbox-input-text form-control" autocomplete="off" type="text">
-        <input name="email" placeholder="<%=_lang('email')%>" value="<%=email%>" class="bootbox-input bootbox-input-text form-control" autocomplete="off" type="email">
-        <input name="phone" placeholder="<%=_lang('telephone')%>" value="<%=phone%>" class="bootbox-input bootbox-input-text form-control" autocomplete="off" type="text">
+        <div class="form-group">
+          <input name="name" placeholder="<%=_lang('name')%>" value="<%=name%>" class="bootbox-input bootbox-input-text form-control" autocomplete="off" type="text">
+        </div>
+        <div class="form-group">
+          <input name="email" placeholder="<%=_lang('email')%>" value="<%=email%>" class="bootbox-input bootbox-input-text form-control" autocomplete="off" type="email">
+        </div>
+        <div class="form-group">
+          <input name="phone" placeholder="<%=_lang('telephone')%>" value="<%=phone%>" class="bootbox-input bootbox-input-text form-control" autocomplete="off" type="text">
+        </div>
       </form>
     `),
     render: function() {
       bootbox.dialog({
         title: _lang('playerInformation'),
         message: this.formTemplate(this.model.toJSON()),
+        size: 'small',
         buttons: {
           cancel: {
             label: _lang('cancel')
           },
           confirm: {
             label: _lang('save'),
-            callback: function() {
-              model.save($(this).find('form').serializeObject(), {wait: true, renderAll: true}).done(function() {
-                bootbox.hideAll();
-              });
-            }
+            callback: this.onSave.bind(this)
           }
         }
       });
+      this.$el = $('.bootbox.modal');
+      this.$form = this.$('form');
+      this.$form.append(new Backbone.ConfirmDeleteInlineFormControl({
+        message: _lang('areYouSure'),
+        callback: this.onDelete.bind(this),
+        actionLabel: _lang('delete'),
+        confirmLabel: _lang('yes'),
+        cancelLabel: _lang('no')
+      }).render().$el);
       return this;
+    },
+    onDelete: function() {
+      bootbox.hideAll();
+      console.log('Need to delete now...');
+    },
+    onSave: function() {
+      var data = this.$form.serializeObject();
+      this.model.save(data, {wait: true, renderAll: true}).done(function() {
+        bootbox.hideAll();
+      });
     }
   });
 
   Backbone.PlayersView = Backbone.View.extend({
     className: 'player',
     events: {
-      'click .add-player': 'onAddPlayer',
-      'click .player': 'onClickPlayer'
+      'click .add-player': 'onAddPlayer'
     },
     initialize: function(options) {
       this.listenTo(this.collection, 'add remove', this.render);
       this.onResize = _.debounce(this._onResize.bind(this), 100);
     },
-    onClickPlayer: function(e) {
-      var $el = $(e.currentTarget),
-          cid = $el.data('cid'),
-          model = this.collection.get(cid);
-      new Backbone.EditPlayersView({
-        model: model
-      }).render();
-    },
-    getModelInEdit: function() {
-      return this.collection.findWhere({editable: true});
-    },
-    stopEditing: function(options) {
-      var model = this.getModelInEdit();
-      if (model) model.set({editable: false}, options);
-      document.activeElement.blur();
-    },
     delegateEvents: function() {
       Backbone.View.prototype.delegateEvents.apply(this, arguments);
       $(window).on('resize.players', this.onResize);
-      $('body').on('click.players', this.onClickBody.bind(this));
     },
     undelegateEvents: function() {
       Backbone.View.prototype.undelegateEvents.apply(this, arguments);
-      this.stopEditing();
       $(window).off('resize.players');
-      $('body').off('click.players');
-    },
-    onFocusPlayer: function(e) {
-      var $el = $(e.currentTarget);
-      if ($el.is('.player')) {
-        var cid = $el.data('cid'),
-            modelInEdit = this.getModelInEdit();
-        if (modelInEdit && cid == modelInEdit.cid) return;
-        if (modelInEdit) modelInEdit.set({editable: false}, {renderAll: true});
-        var model = this.collection.get(cid);
-        if (model) model.set({editable: true}, {renderAll: true});
-        e.stopPropagation();
-      }
-    },
-    onClickBody: function(e) {
-      var $el = $(e.target);
-      if (this.model.get('view') != 'players' || $el.closest('.bootstrap-select').length) return;
-      var modelInEdit = this.getModelInEdit();
-      if (modelInEdit && !$el.is('.player') && !$el.closest('.player').is('.player')) {
-        modelInEdit.set({editable: false}, {renderAll: true});
-      }
     },
     onAddPlayer: function(e) {
-      var model = new Backbone.PlayerModel({editable:true});
+      var model = new Backbone.PlayerModel();
       this.collection.add(model, {sort: false});
       var view = this.views[this.views.length-1];
       view.$el.css({
@@ -321,7 +303,9 @@
         backgroundColor: 'transparent'
       }, 750, function() {
         this.$el.css({backgroundColor:''});
-        this.focus();
+        new Backbone.EditPlayersView({
+          model: model
+        }).render();
       }.bind(view));
     },
     remove: function() {

@@ -43,6 +43,8 @@
       clearException: ['Clear exception', "Supprimer l'exception"],
       delete: ['Delete', 'Supprimer'],
       areYouSure: ['Are you sure?', 'Veuillez confirmer'],
+      yes: ['Yes', 'Oui'],
+      no: ['No', 'Non'],
       cannotDeleteWhenMatchesExist: ['You cannot delete this when matches exist. Please delete all matches first.', "Impossible de supprimer car il y a des matches. Veuillez les supprimer en premier."],
       cannotDeleteWhenCategoriesOrRoundsExist: ['You cannot delete this when cateogries or rounds exist. Please delete all matches first.', "Impossible de supprimer car il y a des catégories ou des rondes. Veuillez les supprimer en premier."],
       cannotCreateMatchWithoutCategorieAndRound: ['A match cannot be added without a category and round. Make sure at least one of each exist.', "Aucun match ne peut être créé sans l'existence d'une catégorie et d'une ronde. Veuillez aller en créer."],

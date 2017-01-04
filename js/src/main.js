@@ -38,7 +38,31 @@ $(document).ready(function() {
   });
 
   Backbone.TennisApp = Backbone.View.extend({
-    sideMenuTemplate: _.template($('#side-menu-template').html()),
+    sideMenuTemplate: _.template(`
+      <% var state = {program_id: null}; %>
+      <a class="navmenu-brand" href="#" data-state='<%=JSON.stringify(state)%>'><%=_lang('appName')%></a>
+      <ul class="nav navmenu-nav">
+        <li><a href="#" data-state='<%=JSON.stringify(state)%>'><i class="fa fa-fw fa-home"></i> <%=_lang('home')%></a></li>
+        <li><a href="#players" data-state='<%=JSON.stringify(state)%>'><i class="fa fa-fw fa-users"></i> <%=_lang('allPlayers')%></a></li>
+        <% for (var i = 0; i < programs.length; i++) { %>
+          <% var program = programs[i]; %>
+          <% state = {program_id: program.id}; %>
+          <li><a href="#program-toggle" data-state='<%=JSON.stringify(state)%>'><i class="fa fa-fw fa-calendar-o"></i> <%=program.name%></a></li>
+          <li data-program-id="<%=program.id%>" style="display: <%=program.expanded ? 'block' : 'none'%>;">
+            <a href="#program" data-state='<%=JSON.stringify(state)%>'><i class="fa fa-fw"></i> <i class="fa fa-fw fa-cog"></i> <%=_lang('settings')%></a>
+          </li>
+          <li data-program-id="<%=program.id%>" style="display: <%=program.expanded ? 'block' : 'none'%>;">
+            <a href="#matches" data-state='<%=JSON.stringify(state)%>'><i class="fa fa-fw"></i> <i class="fa fa-fw fa-check-circle"></i> <%=_lang('matches')%></a>
+          </li>
+          <li data-program-id="<%=program.id%>" style="display: <%=program.expanded ? 'block' : 'none'%>;">
+            <a href="#rankings" data-state='<%=JSON.stringify(state)%>'><i class="fa fa-fw"></i> <i class="fa fa-fw fa-list-ol"></i> <%=_lang('rankings')%></a>
+          </li>
+        <% } %>
+        <% state = {program_id: null}; %>
+        <li><a href="#program" data-state='<%=JSON.stringify(state)%>'><i class="fa fa-fw fa-plus"></i> <%=_lang('addAProgram')%></a></li>
+        <li class="spacer">&nbsp;</li>
+      </ul>
+    `),
     initialize: function(options) {
 
       this.players = new Backbone.PlayerCollection();

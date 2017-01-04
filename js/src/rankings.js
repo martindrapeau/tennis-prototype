@@ -23,6 +23,23 @@
   });
 
   Backbone.RankingView = Backbone.View.extend({
+    template: _.template(`
+      <td class="rank"><%=rank%></td>
+      <td class="player">
+        <div class="player-wrapper">
+          <div class="picture">
+            <div class="wrapper">
+              <div class="initials"><%=initials%></div>
+            </div>
+          </div>
+          <div class="info">
+            <div class="name"><%=title%></div>
+          </div>
+        </div>
+      </td>
+      <td class="wins"><%=won%></td>
+      <td class="played"><%=completed%></td>
+    `),
     tagName: 'tr',
     render: function() {
       var data = this.model.toJSON();
@@ -34,11 +51,32 @@
       return this;
     }
   });
-  $('document').ready(function() {
-    Backbone.RankingView.prototype.template = _.template($('#rankings-player-template').html());
-  });
 
   Backbone.RankingsView = Backbone.View.extend({
+    template: _.template(`
+      <h4><%=_lang('rankingsPerCategory')%></h4>
+      <div class="selects">
+        <div class="category-select">
+          <select name="category" class="selectpicker">
+            <% for (var i = 0; i < categories.length; i++) { %>
+              <% var category = categories[i]; %>
+              <option value="<%=category.id%>" <%=category.id == category_id ? "selected" : ""%>><%=category.name%></option>
+            <% } %>
+          </select>
+        </div>
+      </div>
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th></th>
+            <th><%=_lang('player')%></th>
+            <th><%=_lang('wins')%></th>
+            <th><%=_lang('played')%></th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    `),
     className: 'rankings',
     events: {
       'changed.bs.select .selects select.selectpicker': 'onCategorySelect'
@@ -132,9 +170,6 @@
         return list;
       }, []);
     }
-  });
-  $('document').ready(function() {
-    Backbone.RankingsView.prototype.template = _.template($('#rankings-template').html());
   });
 
 }.call(this));

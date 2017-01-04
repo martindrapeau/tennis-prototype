@@ -153,55 +153,6 @@ body.standalone .contents {
   font-size: 60px;
 }
 
-.events {
-  padding-bottom: 15px;
-}
-
-.event {
-  display: table;
-  table-layout: fixed;
-  background-color: #fff;
-  margin-top: 2px;
-  padding: 5px;
-}
-
-.event-date {
-  margin-top: 10px;
-  font-size: 20px;
-  font-weight: bold;
-}
-
-.event .col {
-  display: table-cell;
-  padding: 5px;
-}
-
-.event .col.when {
-  vertical-align: top;
-  width: 20%;
-  border-right: 2px solid #009900;
-  text-align: right;
-  padding-right: 15px;
-}
-
-.event .col.when.past {
-  border-right: 2px solid #666;
-}
-
-.event .col.when .end {
-  color: #999;
-}
-
-.event .col.title {
-  vertical-align: top;
-  width: 60%;
-  padding-left: 15px;
-}
-
-.event .col.invoice {
-  vertical-align: middle;
-  text-align: right;
-}
 
 #program {
   padding: 15px;
@@ -240,33 +191,8 @@ body.standalone .contents {
   width: 250px;
 }
 
-#players .player tbody .info .name {
-}
-
-#players .player input {
-  display: inline-block;
-  border: none;
-  width: 100%;
-  padding: 5px;
-  border: 1px dotted #9999FF;
-  border-radius: 0;
-  background-color: transparent;
-  text-shadow: none;
-  box-shadow: none;
-  background-color: #fff;
-}
-
-#players .player input[readonly] {
-  border: 1px solid transparent;
-  background-color: transparent;
-  margin: 0;
-  padding: 0;
-  font-size: 16px;
-  color: #000;
-}
-
-#players .player input[readonly][name=email],
-#players .player input[readonly][name=phone] {
+#players .player tbody .info .email,
+#players .player tbody .info .phone {
   font-size: 14px;
   color: #666;
 }
