@@ -87,6 +87,7 @@
       </form>
     `),
     title: _lang('categoryInformation'),
+    deleteConfirmMessage: _lang('deleteThisCategory'),
     initialize: function(options) {
       this.onSave = options.onSave;
       this.onDelete = options.onDelete;
@@ -111,7 +112,7 @@
 
       if (typeof this.onDelete == 'function')
         this.$form.append(new Backbone.ConfirmDeleteInlineFormControl({
-          message: _lang('deleteThisPlayer'),
+          message: this.deleteConfirmMessage,
           onValidate: this.validateBeforeDelete.bind(this),
           callback: this.onClickDelete.bind(this),
           actionLabel: _lang('delete'),
@@ -210,7 +211,8 @@
   });
 
   Backbone.EditRoundView = Backbone.EditCategoryView.extend({
-    title: _lang('roundInformation')
+    title: _lang('roundInformation'),
+    deleteConfirmMessage: _lang('deleteThisRound'),
   });
 
   Backbone.RoundView = Backbone.CategoryView.extend({

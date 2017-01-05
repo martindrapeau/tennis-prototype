@@ -46,6 +46,8 @@
       delete: ['Delete', 'Supprimer'],
       areYouSure: ['Are you sure?', 'Veuillez confirmer'],
       deleteThisPlayer: ['Delete this player?', 'Supprimer ce joueur?'],
+      deleteThisCategory: ['Delete this category?', 'Supprimer cette catégorie?'],
+      deleteThisRound: ['Delete this round?', 'Supprimer cette ronde?'],
       yes: ['Yes', 'Oui'],
       no: ['No', 'Non'],
       cannotDeleteWhenMatchesExist: ['You cannot delete this when matches exist. Please delete all matches first.', "Impossible de supprimer car il y a des matches. Veuillez les supprimer en premier."],
