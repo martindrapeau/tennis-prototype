@@ -53,12 +53,16 @@
       $('body').on('click.tag', this.onClickBody.bind(this));
       $('#top-menu').on('click', '.edit-program', this.onEditProgram.bind(this));
       $('#top-menu').on('click', '.delete-program', this.onClickDeleteProgram.bind(this));
+      $('#top-menu').on('click', '.add-category', this.onAddCategory.bind(this));
+      $('#top-menu').on('click', '.add-round', this.onAddRound.bind(this));
     },
     undelegateEvents: function() {
       Backbone.View.prototype.undelegateEvents.apply(this, arguments);
       $('body').off('click.tag');
       $('#top-menu').off('click', '.edit-program');
       $('#top-menu').off('click', '.delete-program');
+      $('#top-menu').off('click', '.add-category');
+      $('#top-menu').off('click', '.add-round');
     },
     onEditProgram: function(e) {
       if (e) e.preventDefault();
@@ -168,6 +172,7 @@
       return this._onAddTag('round', e);
     },
     _onAddTag: function(type, e) {
+      e.preventDefault();
       var model = new Backbone[type == 'category' ? 'CategoryModel' : 'RoundModel']({
         program_id: this.model.id,
         editable: true
@@ -242,7 +247,6 @@
         this.$categories.append(view.render().$el);
         this.views.push(view);
       }.bind(this));
-      this.$categories.append('<button class="tag add-category btn btn-default">' + _lang('add') + '</button>');
 
       this.$rounds = this.$('.rounds');
       this.roundCollection.each(function(model) {
@@ -253,7 +257,6 @@
         this.$rounds.append(view.render().$el);
         this.views.push(view);
       }.bind(this));
-      this.$rounds.append('<button class="tag add-round btn btn-default">' + _lang('add') + '</button>');
 
       this.$el.append('<div class="spacer">&nbsp;</div>');
 

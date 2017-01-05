@@ -238,12 +238,19 @@
     delegateEvents: function() {
       Backbone.View.prototype.delegateEvents.apply(this, arguments);
       $(window).on('resize.players', this.onResize);
+      $('#top-menu').on('click', '.add-player', this.onAddPlayer.bind(this));
+      $('#top-menu').on('click', '.import-players', this.onImportPlayers.bind(this));
+      $('#top-menu').on('click', '.export-all-players', this.onExportAllPlayers.bind(this));
     },
     undelegateEvents: function() {
       Backbone.View.prototype.undelegateEvents.apply(this, arguments);
       $(window).off('resize.players');
+      $('#top-menu').off('click', '.add-player');
+      $('#top-menu').off('click', '.import-players');
+      $('#top-menu').off('click', '.export-all-players');
     },
     onAddPlayer: function(e) {
+      e.preventDefault();
       var model = new Backbone.PlayerModel();
 
       new Backbone.EditPlayersView({
@@ -268,6 +275,14 @@
           
         }.bind(this)
       }).render();
+    },
+    onImportPlayers: function(e) {
+      e.preventDefault();
+      bootbox.alert('Not yet implemented');
+    },
+    onExportAllPlayers: function(e) {
+      e.preventDefault();
+      bootbox.alert('Not yet implemented');
     },
     remove: function() {
       $(window).off('resize', this.onResize);
@@ -295,14 +310,6 @@
         this.$el.append(view.render().$el);
         this.views.push(view);
       }.bind(this));
-
-      if (!state.program_id) {
-        this.$add = $('<button class="btn btn-default add-player">' + _lang('addAPlayer') + '...</button>');
-        this.$el.append(this.$add);
-        _.defer(function() {
-          if (this.views.length) this.$add.css('width', this.views[0].$el.css('width'));
-        }.bind(this));
-      }
 
       this.$el.append('<div class="spacer">&nbsp;</div>');
       
