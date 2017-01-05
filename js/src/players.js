@@ -185,7 +185,7 @@
     className: 'player',
     tagName: 'table',
     events: {
-      'click ': 'onPlayerClick'
+      'click tbody': 'onPlayerClick'
     },
     initialize: function(options) {
       this.listenTo(this.model, 'change', this.render);
