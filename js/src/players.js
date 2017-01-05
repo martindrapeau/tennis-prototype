@@ -103,13 +103,13 @@
     formTemplate: _.template(`
       <form class="bootbox-form">
         <div class="form-group">
-          <input name="name" placeholder="<%=_lang('name')%>" value="<%=name%>" class="bootbox-input bootbox-input-text form-control" autocomplete="off" type="text">
+          <input name="name" type="text" placeholder="<%=_lang('name')%>" value="<%=name%>" class="form-control" autocomplete="off" />
         </div>
         <div class="form-group">
-          <input name="email" placeholder="<%=_lang('email')%>" value="<%=email%>" class="bootbox-input bootbox-input-text form-control" autocomplete="off" type="email">
+          <input name="email" type="email" placeholder="<%=_lang('email')%>" value="<%=email%>" class="form-control" autocomplete="off" />
         </div>
         <div class="form-group">
-          <input name="phone" placeholder="<%=_lang('telephone')%>" value="<%=phone%>" class="bootbox-input bootbox-input-text form-control" autocomplete="off" type="text">
+          <input name="phone" type="text" placeholder="<%=_lang('telephone')%>" value="<%=phone%>" class="form-control" autocomplete="off" />
         </div>
       </form>
     `),
