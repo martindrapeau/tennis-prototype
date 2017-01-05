@@ -48,11 +48,12 @@
       </div>
       <div class="inline-form confirm">
         <div class="form-group">
-          <label><%=message%></label>
+          <span><%=message%></span>
           <button type="button" class="btn btn-primary btn-sm confirm"><%=confirmLabel%></button>
           <button type="button" class="btn btn-primary btn-sm cancel"><%=cancelLabel%></button>
         </div>
       </div>
+      <div class="validation-failed-message text-danger"></div>
     `),
     events: {
       'click button.action': 'onAction',
@@ -61,7 +62,8 @@
     },
     initialize: function(options) {
       this.message = options.message || 'Are you sure?';
-      this.callback = options.callback || function() {};
+      this.onValidate = options.onValidate;
+      this.callback = options.callback;
       this.actionLabel = options.actionLabel || 'Action';
       this.confirmLabel = options.confirmLabel || 'Confirm';
       this.cancelLabel = options.cancelLabel || 'Cancel';
@@ -75,19 +77,33 @@
       }));
       this.$actionGroup = this.$('.form-group.action');
       this.$confirmGroup = this.$('.inline-form.confirm');
+      this.$validationFailedMessage = this.$('.validation-failed-message');
       this.$confirmGroup.hide();
+      this.$validationFailedMessage.hide();
       return this;
     },
     onAction: function() {
-      this.$actionGroup.hide();
-      this.$confirmGroup.show();
+      if (typeof this.onValidate == 'function') {
+        var result = this.onValidate();
+        if (result) {
+          this.$actionGroup.fadeOut(function() {
+            this.$validationFailedMessage.html(result).fadeIn();
+          }.bind(this));
+          return;
+        }
+      }
+      this.$actionGroup.fadeOut(function() {
+        this.$confirmGroup.fadeIn();
+      }.bind(this));
     },
     onConfirm: function() {
-      this.callback();
+      if (typeof this.callback == 'function') this.callback();
     },
     onCancel: function() {
-      this.$confirmGroup.hide();
-      this.$actionGroup.show();
+      this.$confirmGroup.fadeOut(function() {
+        this.$actionGroup.fadeIn();
+      }.bind(this));
     }
   });
+
 }.call(this));

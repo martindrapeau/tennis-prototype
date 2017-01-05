@@ -126,16 +126,16 @@ $(document).ready(function() {
       }.bind(this));
 
       this.listenTo(this.model, 'change', this.show);
-      this.listenTo(this.programs, 'change', this.renderMenu);
+      this.listenTo(this.programs, 'change', this.renderSideMenu);
 
       $(window).on('popstate', this.onPopState.bind(this));
     },
     events: {
-      'click a': 'onClick',
-      'show.bs.offcanvas': 'onShowMenu',
-      'hide.bs.offcanvas': 'onHideMenu',
-      'shown.bs.offcanvas': 'onShownMenu',
-      'hidden.bs.offcanvas': 'onHiddenMenu'
+      'click #side-menu a': 'onClick',
+      'show.bs.offcanvas #side-menu': 'onShowMenu',
+      'hide.bs.offcanvas #side-menu': 'onHideMenu',
+      'shown.bs.offcanvas #side-menu': 'onShownMenu',
+      'hidden.bs.offcanvas #side-menu': 'onHiddenMenu'
     },
     onClick: function(e) {
       e.preventDefault();
@@ -157,28 +157,28 @@ $(document).ready(function() {
     },
     onShowMenu: function(e) {
       $('html').css({overflow:'hidden'});
-      $("body").css("overflow", "hidden");
+      this.$el.css("overflow", "hidden");
       this.viewNeedsDelegateEvents = this.views[this.model.get('view')];
       if (this.viewNeedsDelegateEvents) this.viewNeedsDelegateEvents.undelegateEvents();
     },
     onShownMenu: function(e) {
-      $("body").off("touchmove.bs");
-      $('.canvas').css({overflow: 'hidden'});
-      $('.canvas').on('touchmove.tennis', function(e) {
+      this.$el.off("touchmove.bs");
+      this.$('.canvas').css({overflow: 'hidden'});
+      this.$('.canvas').on('touchmove.tennis', function(e) {
         e.preventDefault();
         e.stopPropagation();
         return false;
       });
     },
     onHideMenu: function(e) {
-      $('.canvas').css({overflow: ''});
-      $('.canvas').off('touchmove.tennis');
+      this.$('.canvas').css({overflow: ''});
+      this.$('.canvas').off('touchmove.tennis');
       if (this.viewNeedsDelegateEvents) this.viewNeedsDelegateEvents.delegateEvents();
       this.viewNeedsDelegateEvents = undefined;
     },
     onHiddenMenu: function(e) {
       $('html').css({overflow:''});
-      $("body").css("overflow", "auto");
+      this.$el.css("overflow", "auto");
     },
     onPopState: function(e) {
       var state = this.getState();
@@ -227,33 +227,34 @@ $(document).ready(function() {
 
       // Update/render menus
       this.topMenuView.render();
-      if (options && options.renderMenu)
-        this.renderMenu();
+      if (options && options.renderSideMenu)
+        this.renderSideMenu();
       else
-        this.updateLinks();
+        this.updateSideMenuLinks();
 
       // Hide menu maybe
       if (options && (options.hideMenu))
         _.defer(function() {
-          this.$el.offcanvas('hide');
+          this.$sideMenu.offcanvas('hide');
         }.bind(this));
     },
     render: function() {
-      this.renderMenu();
+      this.$sideMenu = this.$('#side-menu');
+      this.renderSideMenu();
       return this;
     },
-    renderMenu: function() {
+    renderSideMenu: function() {
       var data = _.extend(this.model.toJSON(), {
         programs: this.programs.map(function(model) {return model.pick('id', 'name', 'expanded')})
       });
-      this.$el.html(this.sideMenuTemplate(data));
-      this.updateLinks();
+      this.$sideMenu.html(this.sideMenuTemplate(data));
+      this.updateSideMenuLinks();
       return this;
     },
-    updateLinks: function() {
+    updateSideMenuLinks: function() {
       var name = this.model.get('view'),
           program_id = this.model.get('program_id');
-      this.$el.find('a').each(function() {
+      this.$sideMenu.find('a').each(function() {
         var $a = $(this),
             state = $a.data('state') || {};
         state.view = $a.attr('href').replace('#', '') || 'home';
@@ -269,7 +270,7 @@ $(document).ready(function() {
 
   window.app = new Backbone.TennisApp({
     model: new Backbone.TennisAppState(state),
-    el: $('#side-menu')
+    el: $('body')
   });
 
 });

@@ -99,7 +99,7 @@
     }
   });
 
-  Backbone.EditPlayersView = Backbone.View.extend({
+  Backbone.EditPlayerView = Backbone.View.extend({
     formTemplate: _.template(`
       <form class="bootbox-form">
         <div class="form-group">
@@ -204,7 +204,7 @@
       return this;
     },
     onPlayerClick: function(e) {
-      new Backbone.EditPlayersView({
+      new Backbone.EditPlayerView({
         model: this.model,
         onSave: this.onSave.bind(this),
         onDelete: this.onDelete.bind(this)
@@ -253,11 +253,13 @@
       e.preventDefault();
       var model = new Backbone.PlayerModel();
 
-      new Backbone.EditPlayersView({
+      new Backbone.EditPlayerView({
         model: model,
         onSave: function() {
           this.collection.add(model, {sort: false});
-          var view = this.views[this.views.length-1];
+          var view = _.find(this.views, function(view) {
+            if (view.model.cid == model.cid) return true;
+          });
           view.$('tbody').css({backgroundColor: '#ddffdd'});
 
           model.save(null, {wait: true}).done(function() {

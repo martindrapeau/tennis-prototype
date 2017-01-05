@@ -23,18 +23,13 @@
     template: _.template(`
       <h4><%=_lang('categories')%></h4>
       <div class="categories"></div>
+      <br/>
       <h4><%=_lang('rounds')%></h4>
       <div class="rounds"></div>
     `),
     className: 'program',
     events: {
-      'click button.goto-matches': 'onClickGotoMatches',
-      'click .add-category': 'onAddCategory',
-      'click .category>.info': 'onFocusCategory',
-      'focus .category>.info': 'onFocusCategory',
-      'click .add-round': 'onAddRound',
-      'click .round>.info': 'onFocusRound',
-      'focus .round>.info': 'onFocusRound'
+      'click button.goto-matches': 'onClickGotoMatches'
     },
     initialize: function(options) {
       this.stateModel = options.stateModel;
@@ -44,21 +39,15 @@
       this.listenTo(this.categoryCollection, 'add remove', this.render);
       this.listenTo(this.roundCollection, 'add remove', this.render);
     },
-    getModelInEdit: function() {
-      if (!this.model) return undefined;
-      return this.categoryCollection.findWhere({editable: true}) || this.roundCollection.findWhere({editable: true}) || undefined;
-    },
     delegateEvents: function() {
       Backbone.View.prototype.delegateEvents.apply(this, arguments);
-      $('body').on('click.tag', this.onClickBody.bind(this));
       $('#top-menu').on('click', '.edit-program', this.onEditProgram.bind(this));
       $('#top-menu').on('click', '.delete-program', this.onClickDeleteProgram.bind(this));
-      $('#top-menu').on('click', '.add-category', this.onAddCategory.bind(this));
-      $('#top-menu').on('click', '.add-round', this.onAddRound.bind(this));
+      $('#top-menu').on('click', '.add-category', _.partial(this.onAddCategoryOrRound.bind(this), 'category'));
+      $('#top-menu').on('click', '.add-round', _.partial(this.onAddCategoryOrRound.bind(this), 'round'));
     },
     undelegateEvents: function() {
       Backbone.View.prototype.undelegateEvents.apply(this, arguments);
-      $('body').off('click.tag');
       $('#top-menu').off('click', '.edit-program');
       $('#top-menu').off('click', '.delete-program');
       $('#top-menu').off('click', '.add-category');
@@ -139,60 +128,39 @@
       this.stateModel.set(attributes, {pushState: true});
       $(e.target).blur();
     },
-    onFocusCategory: function(e) {
-      return this._onFocusTag('category', e);
-    },
-    onFocusRound: function(e) {
-      return this._onFocusTag('round', e);
-    },
-    _onFocusTag: function(type, e) {
-      var $el = $(e.currentTarget).closest('.tag');
-      if ($el.is('.' + type)) {
-        var cid = $el.data('cid'),
-            modelInEdit = this.getModelInEdit();
-        if (modelInEdit && cid == modelInEdit.cid) return;
-        if (modelInEdit) modelInEdit.set({editable: false}, {renderAll: true});
-        var model = this[type + 'Collection'].get(cid);
-        if (model) model.set({editable: true}, {renderAll: true});
-        e.stopPropagation();
-      }
-    },
-    onClickBody: function(e) {
-      var $el = $(e.target);
-      if (this.stateModel.get('view') != 'program' || $el.closest('.bootstrap-select').length) return;
-      var modelInEdit = this.getModelInEdit();
-      if (modelInEdit && !$el.is('.tag') && !$el.closest('.tag').is('.tag') && !$el.is('.program-info') && !$el.closest('.program-info').is('.program-info')) {
-        modelInEdit.set({editable: false}, {renderAll: true});
-      }
-    },
-    onAddCategory: function(e) {
-      return this._onAddTag('category', e);
-    },
-    onAddRound: function(e) {
-      return this._onAddTag('round', e);
-    },
-    _onAddTag: function(type, e) {
+    onAddCategoryOrRound: function(type, e) {
       e.preventDefault();
-      var model = new Backbone[type == 'category' ? 'CategoryModel' : 'RoundModel']({
-        program_id: this.model.id,
-        editable: true
-      });
-      this[type + 'Collection'].add(model, {sort: false});
-      var view = _.find(this.views, function(view) {
-        if (view.model.cid == model.cid) return true;
-      });
-      view.$el.css({
-        backgroundColor: '#ddffdd'
-      });
-      $('html, body').animate({
-        scrollTop: view.$el.offset().top
-      }, 500);
-      view.$el.animate({
-        backgroundColor: 'transparent'
-      }, 750, function() {
-        this.$el.css({backgroundColor:''});
-        this.focus();
-      }.bind(view));
+      var modelClass = type == 'category' ? Backbone.CategoryModel : Backbone.RoundModel,
+          model = new modelClass({program_id: this.model.id}),
+          collection = type == 'category' ? this.categoryCollection : this.roundCollection,
+          viewClass = type == 'category' ? Backbone.CategoryView : Backbone.RoundView,
+          editViewClass = viewClass.prototype.editView;
+
+      new editViewClass({
+        model: model,
+        onSave: function() {
+          collection.add(model, {sort: false});
+
+          var view = _.find(this.views, function(view) {
+            if (view.model.cid == model.cid) return true;
+          });
+          view.$el.css({backgroundColor: '#ddffdd'});
+
+          model.save(null, {wait: true}).done(function() {
+            $('html, body').animate({
+              scrollTop: view.$el.offset().top
+            }, 500);
+
+            view.$el.animate({
+              backgroundColor: '#fff'
+            }, 750, function() {
+              view.$el.css({backgroundColor:''});
+            });
+            
+          }.bind(this));
+          
+        }.bind(this)
+      }).render();
     },
     createNewProgram: function(options) {
       console.log('program createNewProgram', options);

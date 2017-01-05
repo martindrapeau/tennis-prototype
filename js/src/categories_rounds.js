@@ -9,12 +9,10 @@
       id: undefined,
       name: null,
       description: '',
-      match_ids: [],
-      editable: false
+      match_ids: []
     },
     initialize: function() {
       this.matches = [];
-      this.set({editable: false}, {silent: true});
     },
     bindMatches: function(matches) {
       var attrs = {};
@@ -77,42 +75,109 @@
     }
   });
 
+  Backbone.EditCategoryView = Backbone.View.extend({
+    formTemplate: _.template(`
+      <form class="bootbox-form">
+        <div class="form-group">
+          <input name="name" type="text" placeholder="<%=_lang('name')%>" value="<%=name%>" class="form-control" autocomplete="off" />
+        </div>
+        <div class="form-group">
+          <input name="description" type="text" placeholder="<%=_lang('description')%>" value="<%=description%>" class="form-control" autocomplete="off" />
+        </div>
+      </form>
+    `),
+    title: _lang('categoryInformation'),
+    initialize: function(options) {
+      this.onSave = options.onSave;
+      this.onDelete = options.onDelete;
+    },
+    render: function() {
+      bootbox.dialog({
+        title: this.title,
+        message: this.formTemplate(this.model.toJSON()),
+        size: 'small',
+        buttons: {
+          cancel: {
+            label: _lang('cancel')
+          },
+          confirm: {
+            label: _lang('save'),
+            callback: this.onClickSave.bind(this)
+          }
+        }
+      });
+      this.$el = $('.bootbox.modal');
+      this.$form = this.$('form');
+
+      if (typeof this.onDelete == 'function')
+        this.$form.append(new Backbone.ConfirmDeleteInlineFormControl({
+          message: _lang('deleteThisPlayer'),
+          onValidate: this.validateBeforeDelete.bind(this),
+          callback: this.onClickDelete.bind(this),
+          actionLabel: _lang('delete'),
+          confirmLabel: _lang('yes'),
+          cancelLabel: _lang('no')
+        }).render().$el);
+
+      return this;
+    },
+    validateBeforeDelete: function() {
+      if (this.model.matches.length) return _lang('cannotDeleteWhenMatchesExist');
+      return false;
+    },
+    onClickDelete: function() {
+      bootbox.hideAll();
+      this.onDelete();
+    },
+    onClickSave: function() {
+      bootbox.hideAll();
+      var data = this.$form.serializeObject();
+      this.model.set(data);
+      if (typeof this.onSave == 'function') this.onSave();
+    }
+  });
+
   Backbone.CategoryView = Backbone.View.extend({
     template: _.template(`
       <div class="info">
-        <div class="title">
-          <input type="text" name="name" value="<%=name%>" placeholder="<%=_lang('name')%>" tabindex="<%=tabindex+1%>" />
-          <input type="text" name="description" value="<%=description%>" placeholder="<%=editable ? _lang('description') : ''%>" tabindex="<%=tabindex+2%>" />
+        <div class="title clearfix">
+          <div class="name pull-left"><%=name%></div>
+          <div class="description pull-right"><%=description%></div>
         </div>
         <div class="stats"></div>
       </div>
       <div class="buttons">
-        <% if (!editable) { %>
-          <button class="btn btn-default btn-sm goto-matches" data-id="<%=id%>" data-attr="<%=matchIdAttribute%>" title="<%=_lang('matches')%>"><i class="fa fa-fw fa-check-circle"></i></button>
-        <% } else { %>
-          <button class="btn btn-danger btn-sm delete" title="<%=_lang('delete')%>"><i class="fa fa-fw fa-times"></i></button>
-        <% } %>
+        <button class="btn btn-default btn-sm goto-matches" data-id="<%=id%>" data-attr="<%=matchIdAttribute%>" title="<%=_lang('matches')%>"><i class="fa fa-fw fa-check-circle"></i></button>
       </div>
     `),
     className: 'tag category',
     events: {
-      'keydown input': 'onInputKeydown',
-      'blur input': 'saveInputToModel',
-      'click button.delete': 'onClickDelete'
+      'click .info': 'onClick'
     },
+    editView: Backbone.EditCategoryView,
     initialize: function(options) {
-      this.listenTo(this.model, 'change', this.onChange);
+      this.listenTo(this.model, 'change', this.render);
     },
-    onChange: function(model, options) {
-      var data = this.model.toRender();
-      if (options && options.renderAll) {
-        this.render();
-      } else {
-        this.renderStats(data);
-      }
+    onClick: function(e) {
+      new this.editView({
+        model: this.model,
+        onSave: this.onSave.bind(this),
+        onDelete: this.onDelete.bind(this)
+      }).render();
     },
-    focus: function() {
-      this.$el.find('input').first().focus();
+    onSave: function() {
+      this.model.save(null, {wait: true});
+    },
+    onDelete: function() {
+      this.$el.animate({backgroundColor: '#ffdddd'}, 100);
+      setTimeout(function() {
+        this.$el.animate({
+          opacity: 0
+        }, 750, function() {
+          this.model.collection.remove(this.model);
+          this.model.destroy();
+        }.bind(this));
+      }.bind(this), 100);
     },
     render: function() {
       var data = this.model.toRender();
@@ -122,62 +187,10 @@
         .data('id', this.model.id)
         .data('cid', this.model.cid)
         .data('matchIdAttribute', this.model.matchIdAttribute)
-        .find('input').prop('readonly', !data.editable);
 
-      this.renderStats(data);
-
-      return this;
-    },
-    renderStats: function(data) {
       this.$('.stats').text(data.stats.completed + '/' + data.stats.total + ' ' + _lang(data.stats.total == 1 ? 'match' : 'matches').toLowerCase());
+
       return this;
-    },
-    onClickDelete: function(e) {
-      this.$el.animate({backgroundColor: '#ffdddd'}, 100);
-
-      setTimeout(function() {
-        if (this.model.get('match_ids').length) {
-          bootbox.alert(_lang('cannotDeleteWhenMatchesExist'), function() {
-            this.$el.animate({backgroundColor: 'transparent'}, 100, function() {$(this).css({backgroundColor:''});});
-          }.bind(this));
-          return;
-        }
-
-        bootbox.confirm(_lang('areYouSure'), function(result) {
-          if (!result) {
-            this.$el.animate({backgroundColor: 'transparent'}, 100, function() {$(this).css({backgroundColor:''});});
-            return;
-          }
-          this.$el.animate({
-            opacity: 0
-          }, 750, function() {
-            this.model.collection.remove(this.model);
-            this.model.destroy();
-          }.bind(this));
-        }.bind(this));
-
-      }.bind(this), 100);
-
-    },
-    onInputKeydown: function(e) {
-      if (e.keyCode == 13) {
-        e.exitEditMode = true;
-        this.saveInputToModel.apply(this, arguments);
-      }
-    },
-    saveInputToModel: function(e) {
-      var $input = $(e.currentTarget),
-          attr = $input.attr('name'),
-          value = $input.val(),
-          attributes = {},
-          options = {wait: true};
-      attributes[attr] = value;
-      if (e.exitEditMode) {
-        attributes.editable = false;
-        options.renderAll = true;
-        document.activeElement.blur();
-      }
-      this.model.save(attributes, options);
     }
   });
 
@@ -196,8 +209,13 @@
     sync: dataStoreRounds.sync
   });
 
+  Backbone.EditRoundView = Backbone.EditCategoryView.extend({
+    title: _lang('roundInformation')
+  });
+
   Backbone.RoundView = Backbone.CategoryView.extend({
-    className: 'tag round'
+    className: 'tag round',
+    editView: Backbone.EditRoundView
   });
 
 }.call(this));
