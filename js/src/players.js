@@ -99,6 +99,65 @@
     }
   });
 
+  Backbone.EditPlayersView = Backbone.View.extend({
+    formTemplate: _.template(`
+      <form class="bootbox-form">
+        <div class="form-group">
+          <input name="name" placeholder="<%=_lang('name')%>" value="<%=name%>" class="bootbox-input bootbox-input-text form-control" autocomplete="off" type="text">
+        </div>
+        <div class="form-group">
+          <input name="email" placeholder="<%=_lang('email')%>" value="<%=email%>" class="bootbox-input bootbox-input-text form-control" autocomplete="off" type="email">
+        </div>
+        <div class="form-group">
+          <input name="phone" placeholder="<%=_lang('telephone')%>" value="<%=phone%>" class="bootbox-input bootbox-input-text form-control" autocomplete="off" type="text">
+        </div>
+      </form>
+    `),
+    initialize: function(options) {
+      this.onSave = options.onSave;
+      this.onDelete = options.onDelete;
+    },
+    render: function() {
+      bootbox.dialog({
+        title: _lang('playerInformation'),
+        message: this.formTemplate(this.model.toJSON()),
+        size: 'small',
+        buttons: {
+          cancel: {
+            label: _lang('cancel')
+          },
+          confirm: {
+            label: _lang('save'),
+            callback: this.onClickSave.bind(this)
+          }
+        }
+      });
+      this.$el = $('.bootbox.modal');
+      this.$form = this.$('form');
+
+      if (typeof this.onDelete == 'function')
+        this.$form.append(new Backbone.ConfirmDeleteInlineFormControl({
+          message: _lang('deleteThisPlayer'),
+          callback: this.onClickDelete.bind(this),
+          actionLabel: _lang('delete'),
+          confirmLabel: _lang('yes'),
+          cancelLabel: _lang('no')
+        }).render().$el);
+
+      return this;
+    },
+    onClickDelete: function() {
+      bootbox.hideAll();
+      this.onDelete();
+    },
+    onClickSave: function() {
+      bootbox.hideAll();
+      var data = this.$form.serializeObject();
+      this.model.set(data);
+      if (typeof this.onSave == 'function') this.onSave();
+    }
+  });
+
   Backbone.PlayerView = Backbone.View.extend({
     template: _.template(`
       <tbody>
@@ -146,129 +205,24 @@
     },
     onPlayerClick: function(e) {
       new Backbone.EditPlayersView({
-        model: this.model
+        model: this.model,
+        onSave: this.onSave.bind(this),
+        onDelete: this.onDelete.bind(this)
       }).render();
     },
-    onClickDelete: function(e) {
-      e.preventDefault();
-      this.$el.animate({backgroundColor: '#ffdddd'}, 100);
-
-      setTimeout(function() {
-        bootbox.confirm(_lang('areYouSure'), function(result) {
-          if (!result) {
-            this.$el.animate({backgroundColor: 'transparent'}, 100, function() {$(this).css({backgroundColor:''});});
-            return;
-          }
-          this.$el.animate({
-            opacity: 0
-          }, 750, function() {
-            this.model.collection.remove(this.model);
-            this.model.destroy();
-          }.bind(this));
-        }.bind(this));
-      }.bind(this), 100);
-    }
-  });
-
-  Backbone.ConfirmDeleteInlineFormControl = Backbone.View.extend({
-    template: _.template(`
-      <div class="form-group action">
-        <button type="button" class="btn btn-danger action"><%=actionLabel%></button>
-      </div>
-      <div class="inline-form confirm">
-        <div class="form-group">
-          <label><%=message%></label>
-          <button type="button" class="btn btn-primary confirm"><%=confirmLabel%></button>
-          <button type="button" class="btn btn-primary cancel"><%=cancelLabel%></button>
-        </div>
-      </div>
-    `),
-    events: {
-      'click button.action': 'onAction',
-      'click button.confirm': 'onConfirm',
-      'click button.cancel': 'onCancel'
-    },
-    initialize: function(options) {
-      this.message = options.message || 'Are you sure?';
-      this.callback = options.callback || function() {};
-      this.actionLabel = options.actionLabel || 'Action';
-      this.confirmLabel = options.confirmLabel || 'Confirm';
-      this.cancelLabel = options.cancelLabel || 'Cancel';
-    },
-    render: function() {
-      this.$el.html(this.template({
-        message: this.message,
-        actionLabel: this.actionLabel,
-        confirmLabel: this.confirmLabel,
-        cancelLabel: this.cancelLabel
-      }));
-      this.$actionGroup = this.$('.form-group.action');
-      this.$confirmGroup = this.$('.inline-form.confirm');
-      this.$confirmGroup.hide();
-      return this;
-    },
-    onAction: function() {
-      this.$actionGroup.hide();
-      this.$confirmGroup.show();
-    },
-    onConfirm: function() {
-      this.callback();
-    },
-    onCancel: function() {
-      this.$confirmGroup.hide();
-      this.$actionGroup.show();
-    }
-  });
-
-  Backbone.EditPlayersView = Backbone.View.extend({
-    formTemplate: _.template(`
-      <form class="bootbox-form">
-        <div class="form-group">
-          <input name="name" placeholder="<%=_lang('name')%>" value="<%=name%>" class="bootbox-input bootbox-input-text form-control" autocomplete="off" type="text">
-        </div>
-        <div class="form-group">
-          <input name="email" placeholder="<%=_lang('email')%>" value="<%=email%>" class="bootbox-input bootbox-input-text form-control" autocomplete="off" type="email">
-        </div>
-        <div class="form-group">
-          <input name="phone" placeholder="<%=_lang('telephone')%>" value="<%=phone%>" class="bootbox-input bootbox-input-text form-control" autocomplete="off" type="text">
-        </div>
-      </form>
-    `),
-    render: function() {
-      bootbox.dialog({
-        title: _lang('playerInformation'),
-        message: this.formTemplate(this.model.toJSON()),
-        size: 'small',
-        buttons: {
-          cancel: {
-            label: _lang('cancel')
-          },
-          confirm: {
-            label: _lang('save'),
-            callback: this.onSave.bind(this)
-          }
-        }
-      });
-      this.$el = $('.bootbox.modal');
-      this.$form = this.$('form');
-      this.$form.append(new Backbone.ConfirmDeleteInlineFormControl({
-        message: _lang('areYouSure'),
-        callback: this.onDelete.bind(this),
-        actionLabel: _lang('delete'),
-        confirmLabel: _lang('yes'),
-        cancelLabel: _lang('no')
-      }).render().$el);
-      return this;
+    onSave: function() {
+      this.model.save(null, {wait: true});
     },
     onDelete: function() {
-      bootbox.hideAll();
-      console.log('Need to delete now...');
-    },
-    onSave: function() {
-      var data = this.$form.serializeObject();
-      this.model.save(data, {wait: true, renderAll: true}).done(function() {
-        bootbox.hideAll();
-      });
+      this.$('tbody').animate({backgroundColor: '#ffdddd'}, 100);
+      setTimeout(function() {
+        this.$el.animate({
+          opacity: 0
+        }, 750, function() {
+          this.model.collection.remove(this.model);
+          this.model.destroy();
+        }.bind(this));
+      }.bind(this), 100);
     }
   });
 
@@ -291,22 +245,29 @@
     },
     onAddPlayer: function(e) {
       var model = new Backbone.PlayerModel();
-      this.collection.add(model, {sort: false});
-      var view = this.views[this.views.length-1];
-      view.$el.css({
-        backgroundColor: '#ddffdd'
-      });
-      $('html, body').animate({
-        scrollTop: view.$el.offset().top
-      }, 500);
-      view.$el.animate({
-        backgroundColor: 'transparent'
-      }, 750, function() {
-        this.$el.css({backgroundColor:''});
-        new Backbone.EditPlayersView({
-          model: model
-        }).render();
-      }.bind(view));
+
+      new Backbone.EditPlayersView({
+        model: model,
+        onSave: function() {
+          this.collection.add(model, {sort: false});
+          var view = this.views[this.views.length-1];
+          view.$('tbody').css({backgroundColor: '#ddffdd'});
+
+          model.save(null, {wait: true}).done(function() {
+            $('html, body').animate({
+              scrollTop: view.$el.offset().top
+            }, 500);
+
+            view.$('tbody').animate({
+              backgroundColor: '#fff'
+            }, 750, function() {
+              view.$('tbody').css({backgroundColor:''});
+            });
+            
+          }.bind(this));
+          
+        }.bind(this)
+      }).render();
     },
     remove: function() {
       $(window).off('resize', this.onResize);

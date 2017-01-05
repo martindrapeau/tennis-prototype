@@ -8,19 +8,6 @@
       SINGLES = 'singles',
       DOUBLES = 'doubles';
 
-  _.shortName = function(name) {
-    var pieces = name.split(/\s+/);
-    return _.map(pieces, function(v, i) {
-      return i+1 < pieces.length ? v[0] : v;
-    }).join(' ');
-  };
-  _.initials = function(name) {
-    var pieces = name.split(/\s+/);
-    return _.map(pieces, function(v, i) {
-      return v[0].toUpperCase();
-    }).join('');
-  };
-
   var dataStore = new BackboneLocalStorage('matches');
 
   Backbone.MatchModel = Backbone.Model.extend({

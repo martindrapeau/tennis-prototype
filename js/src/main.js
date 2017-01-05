@@ -9,34 +9,6 @@ $(document).ready(function() {
     }
   });
 
-  $.fn.serializeObject = function() {
-    var o = {};
-    var a = this.serializeArray();
-    $.each(a, function() {
-      if (o[this.name] !== undefined) {
-        if (!o[this.name].push) {
-          o[this.name] = [o[this.name]];
-        }
-        o[this.name].push(this.value || '');
-      } else {
-        o[this.name] = this.value || '';
-      }
-    });
-    return o;
-  };
-
-  _.extend(Backbone.View.prototype, {
-    show: function(options) {
-      this.delegateEvents();
-      this.render(options);
-      this.$el.show();
-    },
-    hide: function() {
-      this.$el.hide();
-      this.undelegateEvents();
-    }
-  });
-
   Backbone.TennisApp = Backbone.View.extend({
     sideMenuTemplate: _.template(`
       <% var state = {program_id: null}; %>
