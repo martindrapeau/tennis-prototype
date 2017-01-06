@@ -49,9 +49,7 @@
       other_tie5: null,
       exception: null,
       location: null,
-      comment: null,
-      // The following is ignored by the back-end
-      editable: false
+      comment: null
     },
     initialize: function() {
       this.user = null;
@@ -62,7 +60,6 @@
       this.on('change:user_partner_id', _.partial(this.bindPlayer, 'user_partner'));
       this.on('change:other_id', _.partial(this.bindPlayer, 'other'));
       this.on('change:other_partner_id', _.partial(this.bindPlayer, 'other_partner'));
-      this.set({editable: false}, {silent: true});
     },
     setPlayer: function(key, player) {
       var attrs = {};
@@ -298,22 +295,58 @@
   });
 
   Backbone.MatchView = Backbone.View.extend({
-    template: undefined,
+    template: _.template(`
+      <thead>
+        <tr>
+          <th colspan="2">
+            <input type="text" name="location" value="<%=location%>" placeholder="<%=_lang('court')%>" tabindex="<%=tabindex%>" />
+          </th>
+          <th class="date-time dropdown" colspan="4">
+            <input type="text" name="date" value="<%=date%>" tabindex="<%=tabindex+1%>" />
+            <input type="text" name="time" value="<%=time%>" tabindex="<%=tabindex+2%>" />
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="user">
+          <td class="player"><%=user_title%></td>
+          <td class="marker"></td>
+          <td class="set"><input type="number" pattern="[0-9]*" inputmode="numeric" name="user_set1" value="<%=user_set1%>" tabindex="<%=tabindex+10%>" /></td>
+          <td class="set"><input type="number" pattern="[0-9]*" inputmode="numeric" name="user_set2" value="<%=user_set2%>" tabindex="<%=tabindex+12%>" /></td>
+          <td class="set"><input type="number" pattern="[0-9]*" inputmode="numeric" name="user_set3" value="<%=user_set3%>" tabindex="<%=tabindex+14%>" /></td>
+          <td class="points">
+            <input type="number" pattern="[0-9]*" inputmode="numeric" name="user_points" value="<%=user_points%>" tabindex="<%=tabindex+16%>" />
+            <% if (user_points || other_points || editable) { %><span class="pts">pts</span><% } %>
+          </td>
+        </tr>
+        <tr class="other">
+          <td class="player"><%=other_title%></td>
+          <td class="marker"></td>
+          <td class="set"><input type="number" pattern="[0-9]*" inputmode="numeric" name="other_set1" value="<%=other_set1%>" tabindex="<%=tabindex+11%>" /></td>
+          <td class="set"><input type="number" pattern="[0-9]*" inputmode="numeric" name="other_set2" value="<%=other_set2%>" tabindex="<%=tabindex+13%>" /></td>
+          <td class="set"><input type="number" pattern="[0-9]*" inputmode="numeric" name="other_set3" value="<%=other_set3%>" tabindex="<%=tabindex+15%>" /></td>
+          <td class="points">
+            <input type="number" pattern="[0-9]*" inputmode="numeric" name="other_points" value="<%=other_points%>" tabindex="<%=tabindex+17%>" />
+            <% if (user_points || other_points || editable) { %><span class="pts">pts</span><% } %>
+          </td>
+          </td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <th colspan="<%=editable ? 5 : 6 %>">
+            <input type="text" name="comment" value="<%=comment%>" placeholder="<%=editable ? _lang('comment') : ''%>" tabindex="<%=tabindex+20%>" />
+          </th>
+        </tr>
+      </tfoot>
+    `),
     className: 'match',
     tagName: 'table',
     events: {
-      'click': 'onClick',
-      'keydown input': 'onInputKeydown',
-      'blur input:not([name=date])': 'saveInputToModel',
-      'focus input[readonly]:not(.editing)': 'onReadonlyInputFocus',
-      'click .dropdown-menu a.type': 'onClickType',
-      'click .dropdown-menu a.exception': 'onClickException',
-      'click .dropdown-menu a.delete': 'onClickDelete',
-      'click .dropdown-menu.time a': 'onClickTime',
-      'changed.bs.select .player .selectpicker': 'onPlayerSelect'
+      'click': 'onClick'
     },
     initialize: function(options) {
-      this.listenTo(this.model, 'change', this.onChange);
+      this.listenTo(this.model, 'change', this.render);
     },
     onClick: function(e) {
       e.preventDefault();
@@ -338,36 +371,6 @@
         }.bind(this));
       }.bind(this), 100);
     },
-    onPlayerSelect: function(e) {
-      var id = $(e.currentTarget).val();
-      id = id ? parseInt(id, 10) : null;
-      var key = $(e.currentTarget).attr('name'),
-          attributes = {};
-      attributes[key + '_id'] = id;
-      this.model.save(attributes, {wait: true});
-    },
-    onChange: function(model, options) {
-      if (options && options.renderAll)
-        this.render();
-      else
-        this.renderMarker(this.model.toRender());
-    },
-    onClickType: function(e) {
-      e.preventDefault();
-      var type = $(e.currentTarget).data('type'),
-          attributes = {type: type};
-      if (type == SINGLES) _.extend(attributes, {user_partner_id: null, other_partner_id: null});
-      this.model.save(attributes, {wait: true, renderAll: true}).done(function() {
-        _.delay(function() {
-          this.model.set({editable: true}, {renderAll: true});
-        }.bind(this), 100);
-      }.bind(this));
-    },
-    onClickException: function(e) {
-      e.preventDefault();
-      var exception = $(e.currentTarget).data('exception');
-      this.model.save({exception: exception}, {wait: true});
-    },
     onClickDelete: function(e) {
       e.preventDefault();
       this.$el.animate({backgroundColor: '#ffdddd'}, 100);
@@ -390,166 +393,17 @@
       }.bind(this), 100);
       
     },
-    onClickTime: function(e) {
-      e.preventDefault();
-      var time = $(e.currentTarget).text();
-      this.$('input[name=time]').val(time);
-      var value = moment(this.$('input[name=date]').val() + ' ' + time).format('YYYY-MM-DD HH:mm:ss');
-      this.model.save({played_on: value}, {wait: true});
-    },
-    onInputKeydown: function(e) {
-      if (e.keyCode == 13) {
-        e.exitEditMode = true;
-        this.saveInputToModel.apply(this, arguments);
-      }
-    },
-    onReadonlyInputFocus: function(e) {
-      $(e.currentTarget).blur();
-    },
-    saveInputToModel: function(e) {
-      var $input = $(e.currentTarget),
-          attr = $input.attr('name'),
-          type = $input.attr('type'),
-          value = $input.val(),
-          attributes = {},
-          options = {wait: true};
-      if (type == 'number') {
-        value = parseFloat(value, 10);
-        if (isNaN(value)) value = null;
-      }
-      if (attr == 'date') {
-        attr = 'played_on';
-        value = moment(value + ' ' + this.$('input[name=time]').val()).format('YYYY-MM-DD HH:mm:ss');
-      }
-      if (attr == 'time') {
-        attr = 'played_on';
-        value = moment(this.$('input[name=date]').val() + ' ' + value).format('YYYY-MM-DD HH:mm:ss');
-      }
-      attributes[attr] = value;
-      if (e.exitEditMode) {
-        attributes.editable = false;
-        options.renderAll = true;
-        document.activeElement.blur();
-      }
-      this.model.save(attributes, options);
-    },
-    focus: function() {
-      this.$el.find('input').first().focus();
-    },
     render: function(options) {
       options || (options = this.lastRenderOptions);
       var data = this.model.toRender();
-      var players = options.players;
-      if (!players) {
-        players = this.model.collection.playersCollection.toJSON();
-        players.unshift({id: null, name: '--'});
-      }
-      this.lastRenderOptions = _.clone(options);
-
-      data.user = function() {
-        if (!data.editable) {
-          return '<div title="' + data.user_tooltip + '">' + data.user_title + '</div>';
-        }
-        var html = this.playerSelectTemplate({
-          key: 'user',
-          id: data.user_id,
-          players: players,
-          match: data
-        });
-        if (data.type == DOUBLES) {
-          html += '<br/>';
-          html += this.playerSelectTemplate({
-            key: 'user_partner',
-            id: data.user_partner_id,
-            players: players,
-            match: data
-          });
-        }
-        return html;
-      }.bind(this);
-
-      data.other = function() {
-        if (!data.editable) {
-          return '<div title="' + data.other_tooltip + '">' + data.other_title + '</div>';
-        }
-        var html = this.playerSelectTemplate({
-          key: 'other',
-          id: data.other_id,
-          players: players,
-          match: data
-        });
-        if (data.type == DOUBLES) {
-          html += '<br/>';
-          html += this.playerSelectTemplate({
-            key: 'other_partner',
-            id: data.other_partner_id,
-            players: players,
-            match: data
-          });
-        }
-        return html;
-      }.bind(this);
 
       this.$el
         .html(this.template(data))
         .data('id', this.model.id)
-        .data('cid', this.model.cid)
-        .find('input').prop('readonly', !data.editable);
-
-      if (data.editable) {
-        var $dateInput = this.$('input[name=date]'),
-            $timeInput = this.$('input[name=time]'),
-            $timeDropdown = this.$('.dropdown-menu.time');
-
-        $dateInput.datetimepicker({
-            format: 'YYYY-MM-DD',
-            widgetPositioning: {
-              horizontal: 'right',
-              vertical: 'bottom'
-            }
-          })
-          .on('dp.change', _.bind(this.saveInputToModel, this))
-          .on('focus', function(e) {
-            setTimeout(function() {
-              if ($dateInput.is(':focus') && !$dateInput.siblings('.dropdown-menu').is(':visible'))
-                $dateInput.data('DateTimePicker').hide().show();
-            }, 100);
-          });
-
-        this.$(".dropdown.more").on("shown.bs.dropdown", function() {
-          var el = $(this).find(".dropdown-menu")[0];
-          if (el.scrollIntoView) el.scrollIntoView({smooth: true});
-        });
-
-        $timeInput
-          .on('focus', function(e) {
-            setTimeout(function() {
-              if ($timeInput.is(':focus') && !$timeInput.siblings('.dropdown-menu').is(':visible'))
-                $timeInput.dropdown('toggle');
-            }, 100);
-            $timeInput.dropdown().show();
-          });
-
-        this.$('input:not([name=time])').on('focus', function(e) {
-          if ($timeDropdown.is(':visible')) $timeInput.dropdown('toggle');
-        });
-
-        this.$('.selectpicker')
-          .selectpicker({
-            iconBase: 'fa',
-            showTick: true,
-            tickIcon: "fa-user"
-          })
-          .on('show.bs.select', this.onShowUserSelectPicker.bind(this));
-      }
+        .data('cid', this.model.cid);
 
       this.renderMarker(data);
       return this;
-    },
-    onShowUserSelectPicker: function(e) {
-      var $select = $(e.target),
-          key = $select.attr('name');
-      console.log('onShowUserSelectPicker', $select, key, this);
     },
     renderMarker: function(data) {
       this.$('.marker').removeClass('exception').prop('title', undefined).empty();
@@ -581,10 +435,6 @@
 
       return this;
     }
-  });
-  $('document').ready(function() {
-    Backbone.MatchView.prototype.template = _.template($('#match-template').html());
-    Backbone.MatchView.prototype.playerSelectTemplate = _.template($('#match-player-select-template').html());
   });
 
   Backbone.MatchesView = Backbone.View.extend({
@@ -621,54 +471,16 @@
       this.listenTo(this.collection, 'add remove', this.render);
       this.onResize = _.debounce(this._onResize.bind(this), 100);
     },
-    getModelInEdit: function() {
-      return this.collection.findWhere({editable: true});
-    },
-    stopEditing: function(options) {
-      var model = this.getModelInEdit();
-      if (model) model.set({editable: false}, options);
-      document.activeElement.blur();
-    },
     delegateEvents: function() {
       Backbone.View.prototype.delegateEvents.apply(this, arguments);
       $(window).on('resize.matches', this.onResize);
-      $('body').on('click.matches', this.onClickBody.bind(this));
     },
     undelegateEvents: function() {
       Backbone.View.prototype.undelegateEvents.apply(this, arguments);
-      this.stopEditing();
       $(window).off('resize.matches');
-      $('body').off('click.matches');
-    },
-    onCategoryOrRoundSelect: function(e) {
-      var id = $(e.currentTarget).val();
-      id = id ? parseInt(id, 10) : null;
-      var key = $(e.currentTarget).attr('name');
-          attributes = {};
-      attributes[key + '_id'] = id;
-      this.model.set(attributes, {pushState: true});
-    },
-    onFocusMatch: function(e) {
-      var $el = $(e.currentTarget);
-      if ($el.is('.match')) {
-        var cid = $el.data('cid'),
-            modelInEdit = this.getModelInEdit();
-        if (modelInEdit && cid == modelInEdit.cid) return;
-        if (modelInEdit) modelInEdit.set({editable: false}, {renderAll: true});
-        var model = this.collection.get(cid);
-        if (model) model.set({editable: true}, {renderAll: true});
-        e.stopPropagation();
-      }
-    },
-    onClickBody: function(e) {
-      var $el = $(e.target);
-      if (this.model.get('view') != 'matches' || $el.closest('.bootstrap-select').length) return;
-      var modelInEdit = this.getModelInEdit();
-      if (modelInEdit && !$el.is('.match') && !$el.closest('.match').is('.match')) {
-        modelInEdit.set({editable: false}, {renderAll: true});
-      }
     },
     onAddMatch: function(e) {
+      e.preventDefault();
       var last = this.collection.lastInProgram(this.model.get('program_id')),
           model = new Backbone.MatchModel(_.extend({
             editable: true,
@@ -676,21 +488,32 @@
             category_id: this.model.get('category_id'),
             round_id: this.model.get('round_id')
           }, last ? last.pick(['type', 'location', 'played_on', 'program_id']) : undefined));
-      this.collection.add(model);
-      model.bindPlayers();
-      var view = this.views[this.views.length-1];
-      view.$el.css({
-        backgroundColor: '#ddffdd'
-      });
-      $('html, body').animate({
-        scrollTop: view.$el.offset().top
-      }, 500);
-      view.$el.animate({
-        backgroundColor: 'transparent'
-      }, 750, function() {
-        this.$el.css({backgroundColor:''});
-        model.set({editable: true}, {renderAll: true});
-      }.bind(view));
+
+      new Backbone.EditMatchView({
+        model: model,
+        onSave: function() {
+          this.collection.add(model, {sort: false});
+          model.bindPlayers();
+          var view = _.find(this.views, function(view) {
+            if (view.model.cid == model.cid) return true;
+          });
+          view.$('tbody').css({backgroundColor: '#ddffdd'});
+
+          model.save(null, {wait: true}).done(function() {
+            $('html, body').animate({
+              scrollTop: view.$el.offset().top
+            }, 500);
+
+            view.$('tbody').animate({
+              backgroundColor: '#fff'
+            }, 750, function() {
+              view.$('tbody').css({backgroundColor:''});
+            });
+            
+          }.bind(this));
+          
+        }.bind(this)
+      }).render();
     },
     remove: function() {
       $(window).off('resize', this.onResize);
@@ -833,8 +656,18 @@
         </div>
         <label><%=_lang('dateAndTime')%></label>
         <div class="form-group date-time clearfix">
-          <input class="form-control pull-left" type="text" name="date" value="<%=date%>" tabindex="<%=tabindex+1%>" />
-          <input class="form-control pull-right" type="text" name="time" value="<%=time%>" tabindex="<%=tabindex+2%>" />
+          <div class="input-group date pull-left">
+            <input class="form-control" type="text" name="date" value="<%=date%>" tabindex="<%=tabindex+1%>" />
+            <span class="input-group-addon">
+              <span class="glyphicon glyphicon-calendar"></span>
+            </span>
+          </div>
+          <div class="input-group time pull-right">
+            <input class="form-control" type="text" name="time" value="<%=time%>" tabindex="<%=tabindex+2%>" />
+            <span class="input-group-addon">
+              <span class="glyphicon glyphicon-time"></span>
+            </span>
+          </div>
         </div>
         <label><%=_lang('comment')%></label>
         <div class="form-group">
@@ -849,6 +682,33 @@
           <option value="<%=player.id%>" <%=player.id == id ? "selected" : ""%>><%=player.name%></option>
         <% } %>
       </select>
+    `),
+    timePickerTemplate: _.template(`
+      <table class="date-time-picker">
+        <thead>
+          <tr><th colspan="7"><%=_lang('hour')%></th><th colspan="3"><%=_lang('minute')%></th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>AM</th>
+            <td class="hour">00</td><td class="hour">01</td><td class="hour">02</td><td class="hour">03</td><td class="hour">04</td><td class="hour">05</td>
+            <td class="minute">00</td><td class="minute">05</td><td class="minute">10</td>
+          </tr>
+          <tr>
+            <td class="hour">06</td><td class="hour">07</td><td class="hour">08</td><td class="hour">09</td><td class="hour">10</td><td class="hour">11</td>
+            <td class="minute">15</td><td class="minute">20</td><td class="minute">25</td>
+          </tr>
+          <tr>
+            <th>PM</th>
+            <td class="hour">12</td><td class="hour">13</td><td class="hour">14</td><td class="hour">15</td><td class="hour">16</td><td class="hour">17</td>
+            <td class="minute">30</td><td class="minute">35</td><td class="minute">40</td>
+          </tr>
+          <tr>
+            <td class="hour">18</td><td class="hour">19</td><td class="hour">20</td><td class="hour">21</td><td class="hour">22</td><td class="hour">23</td>
+            <td class="minute">45</td><td class="minute">50</td><td class="minute">55</td>
+          </tr>
+        </tbody>
+      </table>
     `),
     title: _lang('matchInformation'),
     deleteConfirmMessage: _lang('deleteThisMatch'),
@@ -903,12 +763,26 @@
         tickIcon: "fa-user"
       });
 
-      this.$('input[name=date]').datetimepicker({
+      this.$('.input-group.date').datetimepicker({
         format: 'YYYY-MM-DD',
         widgetPositioning: {horizontal: 'left', vertical: 'top'}
       });
 
+      this.$('.input-group.time').datetimepicker({
+        format: 'HH:mm',
+        widgetPositioning: {horizontal: 'right', vertical: 'top'}
+      });
+
       return this;
+    },
+    onClickSave: function() {
+      bootbox.hideAll();
+      var data = this.$form.serializeObject();
+      data.played_on = moment(data.date + ' ' + data.time).format('YYYY-MM-DD HH:mm:ss');
+      delete data.date;
+      delete data.time;
+      this.model.set(data);
+      if (typeof this.onSave == 'function') this.onSave();
     }
   });
 
