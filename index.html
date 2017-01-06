@@ -64,27 +64,6 @@
       </div>
     </div>
 
-<script id="matches-selects-template" type="text/template">
-  <div class="selects">
-    <div class="category-select">
-      <select name="category" class="selectpicker" data-width="100%">
-        <% for (var i = 0; i < categories.length; i++) { %>
-          <% var category = categories[i]; %>
-          <option value="<%=category.id%>" <%=category.id == category_id ? "selected" : ""%>><%=category.name%></option>
-        <% } %>
-      </select>
-    </div>
-    <div class="round-select">
-      <select name="round" class="selectpicker" data-width="100%">
-        <% for (var i = 0; i < rounds.length; i++) { %>
-          <% var round = rounds[i]; %>
-          <option value="<%=round.id%>" <%=round.id == round_id ? "selected" : ""%>><%=round.name%></option>
-        <% } %>
-      </select>
-    </div>
-  </div>
-</script>
-
 <script id="match-player-select-template" type="text/template">
   <select name="<%=key%>" class="selectpicker" data-width="120px">
     <% for (var i = 0; i < players.length; i++) { %>

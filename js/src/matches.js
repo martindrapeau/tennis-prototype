@@ -302,6 +302,7 @@
     className: 'match',
     tagName: 'table',
     events: {
+      'click': 'onClick',
       'keydown input': 'onInputKeydown',
       'blur input:not([name=date])': 'saveInputToModel',
       'focus input[readonly]:not(.editing)': 'onReadonlyInputFocus',
@@ -313,6 +314,29 @@
     },
     initialize: function(options) {
       this.listenTo(this.model, 'change', this.onChange);
+    },
+    onClick: function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      new Backbone.EditMatchView({
+        model: this.model,
+        onSave: this.onSave.bind(this),
+        onDelete: this.onDelete.bind(this)
+      }).render();
+    },
+    onSave: function() {
+      this.model.save(null, {wait: true});
+    },
+    onDelete: function() {
+      this.$('tbody').animate({backgroundColor: '#ffdddd'}, 100);
+      setTimeout(function() {
+        this.$el.animate({
+          opacity: 0
+        }, 750, function() {
+          this.model.collection.remove(this.model);
+          this.model.destroy();
+        }.bind(this));
+      }.bind(this), 100);
     },
     onPlayerSelect: function(e) {
       var id = $(e.currentTarget).val();
@@ -564,6 +588,26 @@
   });
 
   Backbone.MatchesView = Backbone.View.extend({
+    selectsTemplate: _.template(`
+      <div class="selects">
+        <div class="category-select">
+          <select name="category" class="selectpicker" data-width="100%">
+            <% for (var i = 0; i < categories.length; i++) { %>
+              <% var category = categories[i]; %>
+              <option value="<%=category.id%>" <%=category.id == category_id ? "selected" : ""%>><%=category.name%></option>
+            <% } %>
+          </select>
+        </div>
+        <div class="round-select">
+          <select name="round" class="selectpicker" data-width="100%">
+            <% for (var i = 0; i < rounds.length; i++) { %>
+              <% var round = rounds[i]; %>
+              <option value="<%=round.id%>" <%=round.id == round_id ? "selected" : ""%>><%=round.name%></option>
+            <% } %>
+          </select>
+        </div>
+      </div>
+    `),
     events: {
       'click .add-match': 'onAddMatch',
       'click .match': 'onFocusMatch',
@@ -756,8 +800,116 @@
       return this;
     }
   });
-  $('document').ready(function() {
-    Backbone.MatchesView.prototype.selectsTemplate = _.template($('#matches-selects-template').html());
+
+
+  Backbone.EditMatchView = Backbone.EditEntityView.extend({
+    formTemplate: _.template(`
+      <form class="bootbox-form match">
+        <label><%=_lang('playersAndScore')%></label>
+        <div class="form-group players clearfix">
+          <div class="vs">vs</div>
+          <div class="user pull-left"><%=user()%></div>
+          <div class="other pull-right"><%=other()%></div>
+        </div>
+        <div class="form-group user score">
+          <span class="marker">&nbsp;</span>
+          <input class="form-control" type="number" pattern="[0-9]*" inputmode="numeric" name="user_set1" value="<%=user_set1%>" tabindex="<%=tabindex+10%>" />
+          <input class="form-control" type="number" pattern="[0-9]*" inputmode="numeric" name="user_set2" value="<%=user_set2%>" tabindex="<%=tabindex+12%>" />
+          <input class="form-control" type="number" pattern="[0-9]*" inputmode="numeric" name="user_set3" value="<%=user_set3%>" tabindex="<%=tabindex+14%>" />
+          <input class="form-control pts" type="number" pattern="[0-9]*" inputmode="numeric" name="user_points" value="<%=user_points%>" tabindex="<%=tabindex+16%>" />
+          <span class="pts">pts</span>
+        </div>
+        <div class="form-group other score">
+          <span class="marker">&nbsp;</span>
+          <input class="form-control" type="number" pattern="[0-9]*" inputmode="numeric" name="other_set1" value="<%=other_set1%>" tabindex="<%=tabindex+11%>" />
+          <input class="form-control" type="number" pattern="[0-9]*" inputmode="numeric" name="other_set2" value="<%=other_set2%>" tabindex="<%=tabindex+13%>" />
+          <input class="form-control" type="number" pattern="[0-9]*" inputmode="numeric" name="other_set3" value="<%=other_set3%>" tabindex="<%=tabindex+15%>" />
+          <input class="form-control pts" type="number" pattern="[0-9]*" inputmode="numeric" name="other_points" value="<%=other_points%>" tabindex="<%=tabindex+17%>" />
+          <span class="pts">pts</span>
+        </div>
+        <label><%=_lang('court')%></label>
+        <div class="form-group">
+          <input name="location" type="text" placeholder="<%=_lang('court')%>" value="<%=location%>" class="form-control" autocomplete="off" />
+        </div>
+        <label><%=_lang('dateAndTime')%></label>
+        <div class="form-group date-time clearfix">
+          <input class="form-control pull-left" type="text" name="date" value="<%=date%>" tabindex="<%=tabindex+1%>" />
+          <input class="form-control pull-right" type="text" name="time" value="<%=time%>" tabindex="<%=tabindex+2%>" />
+        </div>
+        <label><%=_lang('comment')%></label>
+        <div class="form-group">
+          <input name="comment" type="text" placeholder="<%=_lang('comment')%>" value="<%=comment%>" class="form-control" autocomplete="off" />
+        </div>
+      </form>
+    `),
+    playerSelectTemplate: _.template(`
+      <select name="<%=key%>" class="selectpicker" data-width="100%">
+        <% for (var i = 0; i < players.length; i++) { %>
+          <% var player = players[i]; %>
+          <option value="<%=player.id%>" <%=player.id == id ? "selected" : ""%>><%=player.name%></option>
+        <% } %>
+      </select>
+    `),
+    title: _lang('matchInformation'),
+    deleteConfirmMessage: _lang('deleteThisMatch'),
+    buildFormHtml: function() {
+      var data = this.model.toRender(),
+          players = this.model.collection.playersCollection.toJSON();
+      players.unshift({id: null, name: '--'});
+
+      data.user = function() {
+        var html = this.playerSelectTemplate({
+          key: 'user',
+          id: data.user_id,
+          players: players,
+          match: data
+        });
+        if (data.type == DOUBLES) {
+          html += this.playerSelectTemplate({
+            key: 'user_partner',
+            id: data.user_partner_id,
+            players: players,
+            match: data
+          });
+        }
+        return html;
+      }.bind(this);
+
+      data.other = function() {
+        var html = this.playerSelectTemplate({
+          key: 'other',
+          id: data.other_id,
+          players: players,
+          match: data
+        });
+        if (data.type == DOUBLES) {
+          html += this.playerSelectTemplate({
+            key: 'other_partner',
+            id: data.other_partner_id,
+            players: players,
+            match: data
+          });
+        }
+        return html;
+      }.bind(this);
+
+      return this.formTemplate(data);
+    },
+    onRender: function() {
+
+      this.$('.selectpicker').selectpicker({
+        iconBase: 'fa',
+        showTick: true,
+        tickIcon: "fa-user"
+      });
+
+      this.$('input[name=date]').datetimepicker({
+        format: 'YYYY-MM-DD',
+        widgetPositioning: {horizontal: 'left', vertical: 'top'}
+      });
+
+      return this;
+    }
   });
 
 }.call(this));

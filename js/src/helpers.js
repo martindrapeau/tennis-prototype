@@ -117,19 +117,29 @@
     title: 'Entity information',
     deleteConfirmMessage: 'Delete this entity?',
     onValidateBeforeDelete: function() {
-      // This gets called before deletion.
+      // This gets called before deletion (if you provided an onDelete callback).
       // Override this function and return a string to prevent deletion in certain conditions.
       // Return a falsy value to allow deletion.
       return false;
     },
+    onRender: function() {
+      // Override to provide extra rendering logic. Make sure to return this.
+      return this;
+    },
+    buildFormHtml: function() {
+      // Override to provide your own HTML generation code for the form
+      return this.formTemplate(this.model.toJSON());
+    },
     initialize: function(options) {
+      // Callback for when the user saves the form
       this.onSave = options.onSave;
+      // Provide this callback if you want a delete button. Omit it not to have one.
       this.onDelete = options.onDelete;
     },
     render: function() {
       bootbox.dialog({
         title: this.title,
-        message: this.formTemplate(this.model.toJSON()),
+        message: this.buildFormHtml(),
         size: 'small',
         buttons: {
           cancel: {
@@ -156,7 +166,7 @@
         }).render().$el);
       }
 
-      return this;
+      return this.onRender();
     },
     onClickDelete: function() {
       bootbox.hideAll();
