@@ -99,7 +99,7 @@
     }
   });
 
-  Backbone.EditPlayerView = Backbone.View.extend({
+  Backbone.EditPlayerView = Backbone.EditEntityView.extend({
     formTemplate: _.template(`
       <form class="bootbox-form">
         <div class="form-group">
@@ -113,49 +113,8 @@
         </div>
       </form>
     `),
-    initialize: function(options) {
-      this.onSave = options.onSave;
-      this.onDelete = options.onDelete;
-    },
-    render: function() {
-      bootbox.dialog({
-        title: _lang('playerInformation'),
-        message: this.formTemplate(this.model.toJSON()),
-        size: 'small',
-        buttons: {
-          cancel: {
-            label: _lang('cancel')
-          },
-          confirm: {
-            label: _lang('save'),
-            callback: this.onClickSave.bind(this)
-          }
-        }
-      });
-      this.$el = $('.bootbox.modal');
-      this.$form = this.$('form');
-
-      if (typeof this.onDelete == 'function')
-        this.$form.append(new Backbone.ConfirmDeleteInlineFormControl({
-          message: _lang('deleteThisPlayer'),
-          callback: this.onClickDelete.bind(this),
-          actionLabel: _lang('delete'),
-          confirmLabel: _lang('yes'),
-          cancelLabel: _lang('no')
-        }).render().$el);
-
-      return this;
-    },
-    onClickDelete: function() {
-      bootbox.hideAll();
-      this.onDelete();
-    },
-    onClickSave: function() {
-      bootbox.hideAll();
-      var data = this.$form.serializeObject();
-      this.model.set(data);
-      if (typeof this.onSave == 'function') this.onSave();
-    }
+    title: _lang('playerInformation'),
+    deleteConfirmMessage: _lang('deleteThisPlayer')
   });
 
   Backbone.PlayerView = Backbone.View.extend({

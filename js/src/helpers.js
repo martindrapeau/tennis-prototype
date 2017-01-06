@@ -44,7 +44,7 @@
   Backbone.ConfirmDeleteInlineFormControl = Backbone.View.extend({
     template: _.template(`
       <div class="form-group action">
-        <button type="button" class="btn btn-danger action"><%=actionLabel%></button>
+        <button type="button" class="btn btn-default action"><span class="text-danger"><%=actionLabel%></span></button>
       </div>
       <div class="inline-form confirm">
         <div class="form-group">
@@ -103,6 +103,70 @@
       this.$confirmGroup.fadeOut(function() {
         this.$actionGroup.fadeIn();
       }.bind(this));
+    }
+  });
+
+  Backbone.EditEntityView = Backbone.View.extend({
+    formTemplate: _.template(`
+      <form class="bootbox-form">
+        <div class="form-group">
+          <input name="name" type="text" placeholder="<%=_lang('name')%>" value="<%=name%>" class="form-control" autocomplete="off" />
+        </div>
+      </form>
+    `),
+    title: 'Entity information',
+    deleteConfirmMessage: 'Delete this entity?',
+    onValidateBeforeDelete: function() {
+      // This gets called before deletion.
+      // Override this function and return a string to prevent deletion in certain conditions.
+      // Return a falsy value to allow deletion.
+      return false;
+    },
+    initialize: function(options) {
+      this.onSave = options.onSave;
+      this.onDelete = options.onDelete;
+    },
+    render: function() {
+      bootbox.dialog({
+        title: this.title,
+        message: this.formTemplate(this.model.toJSON()),
+        size: 'small',
+        buttons: {
+          cancel: {
+            label: _lang('cancel')
+          },
+          confirm: {
+            label: _lang('save'),
+            callback: this.onClickSave.bind(this)
+          }
+        }
+      });
+      this.$el = $('.bootbox.modal');
+      this.$form = this.$('form');
+
+      if (typeof this.onDelete == 'function') {
+        this.$form.append('<br/>');
+        this.$form.append(new Backbone.ConfirmDeleteInlineFormControl({
+          message: this.deleteConfirmMessage,
+          onValidate: this.onValidateBeforeDelete.bind(this),
+          callback: this.onClickDelete.bind(this),
+          actionLabel: '<i class="fa fa-fw fa-trash"></i> ' + _lang('delete'),
+          confirmLabel: _lang('yes'),
+          cancelLabel: _lang('no')
+        }).render().$el);
+      }
+
+      return this;
+    },
+    onClickDelete: function() {
+      bootbox.hideAll();
+      this.onDelete();
+    },
+    onClickSave: function() {
+      bootbox.hideAll();
+      var data = this.$form.serializeObject();
+      this.model.set(data);
+      if (typeof this.onSave == 'function') this.onSave();
     }
   });
 

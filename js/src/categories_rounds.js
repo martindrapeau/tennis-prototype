@@ -75,7 +75,7 @@
     }
   });
 
-  Backbone.EditCategoryView = Backbone.View.extend({
+  Backbone.EditCategoryView = Backbone.EditEntityView.extend({
     formTemplate: _.template(`
       <form class="bootbox-form">
         <div class="form-group">
@@ -88,53 +88,9 @@
     `),
     title: _lang('categoryInformation'),
     deleteConfirmMessage: _lang('deleteThisCategory'),
-    initialize: function(options) {
-      this.onSave = options.onSave;
-      this.onDelete = options.onDelete;
-    },
-    render: function() {
-      bootbox.dialog({
-        title: this.title,
-        message: this.formTemplate(this.model.toJSON()),
-        size: 'small',
-        buttons: {
-          cancel: {
-            label: _lang('cancel')
-          },
-          confirm: {
-            label: _lang('save'),
-            callback: this.onClickSave.bind(this)
-          }
-        }
-      });
-      this.$el = $('.bootbox.modal');
-      this.$form = this.$('form');
-
-      if (typeof this.onDelete == 'function')
-        this.$form.append(new Backbone.ConfirmDeleteInlineFormControl({
-          message: this.deleteConfirmMessage,
-          onValidate: this.validateBeforeDelete.bind(this),
-          callback: this.onClickDelete.bind(this),
-          actionLabel: _lang('delete'),
-          confirmLabel: _lang('yes'),
-          cancelLabel: _lang('no')
-        }).render().$el);
-
-      return this;
-    },
-    validateBeforeDelete: function() {
+    onValidateBeforeDelete: function() {
       if (this.model.matches.length) return _lang('cannotDeleteWhenMatchesExist');
       return false;
-    },
-    onClickDelete: function() {
-      bootbox.hideAll();
-      this.onDelete();
-    },
-    onClickSave: function() {
-      bootbox.hideAll();
-      var data = this.$form.serializeObject();
-      this.model.set(data);
-      if (typeof this.onSave == 'function') this.onSave();
     }
   });
 
@@ -212,7 +168,7 @@
 
   Backbone.EditRoundView = Backbone.EditCategoryView.extend({
     title: _lang('roundInformation'),
-    deleteConfirmMessage: _lang('deleteThisRound'),
+    deleteConfirmMessage: _lang('deleteThisRound')
   });
 
   Backbone.RoundView = Backbone.CategoryView.extend({
