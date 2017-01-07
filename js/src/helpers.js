@@ -181,7 +181,7 @@
           message: this.deleteConfirmMessage,
           onValidate: this.onValidateBeforeDelete.bind(this),
           callback: this.onClickDelete.bind(this),
-          actionLabel: '<i class="fa fa-fw fa-trash"></i> ' + _lang('delete'),
+          actionLabel: '<i class="fa fa-fw fa-trash"></i>',
           confirmLabel: _lang('yes'),
           cancelLabel: _lang('no')
         }).render().$el);
