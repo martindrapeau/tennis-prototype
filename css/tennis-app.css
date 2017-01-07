@@ -267,7 +267,7 @@ body.standalone .contents {
 }
 
 #matches .match>thead>tr>th {
-  padding: 0;
+  padding: 5px 10px;
 }
 #matches .match>tbody>tr>td {
   padding: 5px 10px;
@@ -295,54 +295,7 @@ body.standalone .contents {
   padding: 0;
 }
 
-#matches .match input {
-  display: inline-block;
-  width: 100%;
-  margin: 5px 0;
-  padding: 5px;
-  border: 1px dotted #9999FF;
-  border-radius: 0;
-  background-color: transparent;
-  text-shadow: none;
-  box-shadow: none;
-  background-color: #fff;
-}
-#matches .match input[type=number]::-webkit-inner-spin-button, 
-#matches .match input[type=number]::-webkit-outer-spin-button { 
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    margin: 0; 
-}
-
-#matches .match input[readonly] {
-  border: 1px solid transparent;
-  background-color: transparent;
-}
-
-#matches .match thead input[readonly] {
-  padding-bottom: 0;
-}
-
-#matches .match input[readonly][name=date].editing {
-  border: 1px dotted #9999FF;
-  padding-bottom: 5px;
-}
-
-#matches .match tfoot input[readonly] {
-  padding-top: 0;
-}
-
 #matches .match th.date-time {
-  text-align: right;
-}
-
-#matches .match input[name=date] {
-  width: 85px;
-}
-
-#matches .match input[name=time] {
-  width: 50px;
   text-align: right;
 }
 
@@ -351,47 +304,16 @@ body.standalone .contents {
   padding: 0;
 }
 
-#matches .match td.set input {
-  text-align: center;
-  padding: 5px 0;
-}
-
-#matches .match td.points input {
-  width: 30px;
-  text-align: right;
-}
-
 #matches .match td.points .pts {
   font-size: 12px;
 }
 
 #matches .match>tfoot>tr>th {
-  padding: 0;
+  padding: 5px 10px;
   font-weight: normal;
   color: #666;
 }
 
-#matches .match>tfoot>tr>th.dropdown {
-  text-align: right;
-}
-#matches .match>tfoot>tr>th.dropdown>.dropdown-menu {
-  max-width: 320px;
-  min-width: 280px;
-}
-#matches .match>tfoot>tr>th.dropdown>.dropdown-menu a.strong {
-  font-weight: bold;
-}
-#matches .match .dropdown-menu a.inline {
-  display: inline-block;
-  clear: none;
-}
-#matches .match .dropdown-menu .dropdown-header {
-  font-weight: bold;
-}
-
-#matches .match .dropdown.date-time>ul.dropdown-menu {
-  width: 320px;
-}
 
 .bootbox-form.match label {
   color: #999;

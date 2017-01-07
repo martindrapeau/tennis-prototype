@@ -49,7 +49,7 @@
       this.listenTo(matches, 'add', function(match) {
         _.each(match.getPlayerIds(), function(id) {
           var player = this.get(id);
-          if (player) player.bindMatches(model.matches.concat([match]));
+          if (player) player.bindMatches(player.matches.concat([match]));
         }.bind(this));
       });
 

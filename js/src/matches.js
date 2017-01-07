@@ -298,52 +298,45 @@
     template: _.template(`
       <thead>
         <tr>
-          <th colspan="2">
-            <input type="text" name="location" value="<%=location%>" placeholder="<%=_lang('court')%>" tabindex="<%=tabindex%>" />
-          </th>
-          <th class="date-time dropdown" colspan="4">
-            <input type="text" name="date" value="<%=date%>" tabindex="<%=tabindex+1%>" />
-            <input type="text" name="time" value="<%=time%>" tabindex="<%=tabindex+2%>" />
-          </th>
+          <th colspan="2"><%=location%></th>
+          <th class="date-time dropdown" colspan="4"><%=date%> <%=time%></th>
         </tr>
       </thead>
       <tbody>
         <tr class="user">
           <td class="player"><%=user_title%></td>
           <td class="marker"></td>
-          <td class="set"><input type="number" pattern="[0-9]*" inputmode="numeric" name="user_set1" value="<%=user_set1%>" tabindex="<%=tabindex+10%>" /></td>
-          <td class="set"><input type="number" pattern="[0-9]*" inputmode="numeric" name="user_set2" value="<%=user_set2%>" tabindex="<%=tabindex+12%>" /></td>
-          <td class="set"><input type="number" pattern="[0-9]*" inputmode="numeric" name="user_set3" value="<%=user_set3%>" tabindex="<%=tabindex+14%>" /></td>
+          <td class="set"><%=user_set1%></td>
+          <td class="set"><%=user_set2%></td>
+          <td class="set"><%=user_set3%></td>
           <td class="points">
-            <input type="number" pattern="[0-9]*" inputmode="numeric" name="user_points" value="<%=user_points%>" tabindex="<%=tabindex+16%>" />
-            <% if (user_points || other_points || editable) { %><span class="pts">pts</span><% } %>
+            <%=user_points%>
+            <% if (user_points || other_points) { %><span class="pts">pts</span><% } %>
           </td>
         </tr>
         <tr class="other">
           <td class="player"><%=other_title%></td>
           <td class="marker"></td>
-          <td class="set"><input type="number" pattern="[0-9]*" inputmode="numeric" name="other_set1" value="<%=other_set1%>" tabindex="<%=tabindex+11%>" /></td>
-          <td class="set"><input type="number" pattern="[0-9]*" inputmode="numeric" name="other_set2" value="<%=other_set2%>" tabindex="<%=tabindex+13%>" /></td>
-          <td class="set"><input type="number" pattern="[0-9]*" inputmode="numeric" name="other_set3" value="<%=other_set3%>" tabindex="<%=tabindex+15%>" /></td>
+          <td class="set"><%=other_set1%></td>
+          <td class="set"><%=other_set2%></td>
+          <td class="set"><%=other_set3%></td>
           <td class="points">
-            <input type="number" pattern="[0-9]*" inputmode="numeric" name="other_points" value="<%=other_points%>" tabindex="<%=tabindex+17%>" />
-            <% if (user_points || other_points || editable) { %><span class="pts">pts</span><% } %>
+            <%=other_points%>
+            <% if (user_points || other_points) { %><span class="pts">pts</span><% } %>
           </td>
           </td>
         </tr>
       </tbody>
       <tfoot>
         <tr>
-          <th colspan="<%=editable ? 5 : 6 %>">
-            <input type="text" name="comment" value="<%=comment%>" placeholder="<%=editable ? _lang('comment') : ''%>" tabindex="<%=tabindex+20%>" />
-          </th>
+          <th colspan="6"><%=comment%></th>
         </tr>
       </tfoot>
     `),
     className: 'match',
     tagName: 'table',
     events: {
-      'click': 'onClick'
+      'click tbody': 'onClick'
     },
     initialize: function(options) {
       this.listenTo(this.model, 'change', this.render);
@@ -474,10 +467,12 @@
     delegateEvents: function() {
       Backbone.View.prototype.delegateEvents.apply(this, arguments);
       $(window).on('resize.matches', this.onResize);
+      $('#top-menu').on('click', '.add-match', this.onAddMatch.bind(this));
     },
     undelegateEvents: function() {
       Backbone.View.prototype.undelegateEvents.apply(this, arguments);
       $(window).off('resize.matches');
+      $('#top-menu').off('click', '.add-match');
     },
     onAddMatch: function(e) {
       e.preventDefault();
@@ -488,6 +483,7 @@
             category_id: this.model.get('category_id'),
             round_id: this.model.get('round_id')
           }, last ? last.pick(['type', 'location', 'played_on', 'program_id']) : undefined));
+      model.collection = this.collection;
 
       new Backbone.EditMatchView({
         model: model,
@@ -554,13 +550,7 @@
         this.views.push(view);
       }
 
-      if (this.categoryCollection.findWhere({program_id: state.program_id}) && this.roundCollection.findWhere({program_id: state.program_id})) {
-        this.$add = $('<button class="btn btn-default add-match">' + _lang('addAMatch') + '...</button>');
-        this.$el.append(this.$add);
-        _.defer(function() {
-          if (this.views.length) this.$add.css('width', this.views[0].$el.css('width'));
-        }.bind(this));
-      } else {
+      if (!this.categoryCollection.findWhere({program_id: state.program_id}) && !this.roundCollection.findWhere({program_id: state.program_id})) {
         this.$('.match.empty').text(_lang('cannotCreateMatchWithoutCategorieAndRound'));
       }
 
@@ -676,7 +666,7 @@
       </form>
     `),
     playerSelectTemplate: _.template(`
-      <select name="<%=key%>" class="selectpicker" data-width="100%">
+      <select name="<%=key%>_id" class="selectpicker" data-width="100%">
         <% for (var i = 0; i < players.length; i++) { %>
           <% var player = players[i]; %>
           <option value="<%=player.id%>" <%=player.id == id ? "selected" : ""%>><%=player.name%></option>
@@ -781,6 +771,11 @@
       data.played_on = moment(data.date + ' ' + data.time).format('YYYY-MM-DD HH:mm:ss');
       delete data.date;
       delete data.time;
+      _.each(['user_id', 'user_partner_id', 'other_id', 'other_partner_id', 'user_set1', 'user_set2', 'user_set3', 'user_points', 'other_set1', 'other_set2', 'other_set3', 'other_points'], function(key) {
+        data[key] = parseFloat(data[key], 10);
+        if (isNaN(data[key])) data[key] = null;
+      });
+      console.log(data);
       this.model.set(data);
       if (typeof this.onSave == 'function') this.onSave();
     }

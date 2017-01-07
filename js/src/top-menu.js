@@ -15,6 +15,11 @@
           <li><a href="#" class="add-round"><i class="fa fa-fw fa-plus"></i> <%=_lang('addRound')%></a></li>
           <li><a href="#" class="delete-program"><i class="fa fa-fw fa-trash"></i> <%=_lang('delete')%></a></li>
         </ul>
+      <% } else if (view == 'matches') { %>
+        <button id="#matches-menu" type="button" class="btn pull-right dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"><i class="fa fa-fw fa-ellipsis-h"></i></button>
+        <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="matches-menu">
+          <li><a href="#" class="add-match"><i class="fa fa-fw fa-plus"></i> <%=_lang('addAMatch')%></a></li>
+        </ul>
       <% } %>
     <% } else { %>
       <% if (view == 'players') { %>
