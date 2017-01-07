@@ -400,31 +400,20 @@
     },
     renderMarker: function(data) {
       this.$('.marker').removeClass('exception').prop('title', undefined).empty();
-      this.$('.dropdown-menu .exception>i').removeClass('fa-check');
 
       if (data.winner != null) this.$('.'+data.winner+' .marker').text('✓');
 
-      if (data.exception == INCOMPLETE) {
-        this.$('.marker').addClass('exception').text('?').attr('title', 'Match incomplete');
-        this.$('.dropdown-menu .incomplete>i').addClass('fa-check');
+      switch (data.exception) {
+        case INCOMPLETE:
+          this.$('.marker').addClass('exception').text('?').attr('title', 'Match incomplete');
+          break;
+        case USER_WON_BECAUSE_FORFEIT:
+          this.$('.other .marker').addClass('exception').text(_lang('forfeitShort')).attr('title', _lang('forfeit'));
+          break;
+        case OTHER_WON_BECAUSE_FORFEIT:
+          this.$('.user .marker').addClass('exception').text(_lang('forfeitShort')).attr('title', _lang('forfeit'));
+          break;
       }
-
-      if (data.exception == USER_WON_BECAUSE_FORFEIT) {
-        this.$('.other .marker').addClass('exception').text(_lang('forfeitShort')).attr('title', _lang('forfeit'));
-        this.$('.dropdown-menu .user-forfeited>i').addClass('fa-check');
-      }
-
-      if (data.exception == OTHER_WON_BECAUSE_FORFEIT) {
-        this.$('.user .marker').addClass('exception').text(_lang('forfeitShort')).attr('title', _lang('forfeit'));
-        this.$('.dropdown-menu .other-forfeited>i').addClass('fa-check');
-      }
-
-      if (!data.exception) {
-        this.$('.dropdown-menu .clear-exception>i').addClass('fa-check');
-      }
-
-      this.$('.dropdown-menu .type>i').removeClass('fa-check');
-      this.$('.dropdown-menu .type[data-type=' + data.type + ']>i').addClass('fa-check');
 
       return this;
     }
