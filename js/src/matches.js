@@ -718,6 +718,17 @@
 
       return this.formTemplate(data);
     },
+    domToData: function() {
+      var data = this.$form.serializeObject();
+      data.played_on = moment(data.date + ' ' + data.time).format('YYYY-MM-DD HH:mm:ss');
+      delete data.date;
+      delete data.time;
+      _.each(['user_id', 'user_partner_id', 'other_id', 'other_partner_id', 'user_set1', 'user_set2', 'user_set3', 'user_points', 'other_set1', 'other_set2', 'other_set3', 'other_points'], function(key) {
+        data[key] = parseFloat(data[key], 10);
+        if (isNaN(data[key])) data[key] = null;
+      });
+      return data;
+    },
     onRender: function() {
 
       this.$('.selectpicker').selectpicker({
@@ -745,22 +756,6 @@
       this.renderMarker(null, this.model.toRender());
 
       return this;
-    },
-    domToData: function() {
-      var data = this.$form.serializeObject();
-      data.played_on = moment(data.date + ' ' + data.time).format('YYYY-MM-DD HH:mm:ss');
-      delete data.date;
-      delete data.time;
-      _.each(['user_id', 'user_partner_id', 'other_id', 'other_partner_id', 'user_set1', 'user_set2', 'user_set3', 'user_points', 'other_set1', 'other_set2', 'other_set3', 'other_points'], function(key) {
-        data[key] = parseFloat(data[key], 10);
-        if (isNaN(data[key])) data[key] = null;
-      });
-      return data;
-    },
-    onClickSave: function() {
-      bootbox.hideAll();
-      this.model.set(this.domToData());
-      if (typeof this.onSave == 'function') this.onSave();
     },
     renderMarker: function(e, data) {
       data || (data = new Backbone.MatchModel(this.domToData()).toRender());

@@ -151,6 +151,10 @@
       // Override to provide your own HTML generation code for the form
       return this.formTemplate(this.model.toJSON());
     },
+    domToData: function() {
+      // Override this to serialize the form yourself
+      return this.$form.serializeObject();
+    },
     initialize: function(options) {
       // Callback for when the user saves the form
       this.onSave = options.onSave;
@@ -195,8 +199,7 @@
     },
     onClickSave: function() {
       bootbox.hideAll();
-      var data = this.$form.serializeObject();
-      this.model.set(data);
+      this.model.set(this.domToData());
       if (typeof this.onSave == 'function') this.onSave();
     }
   });
