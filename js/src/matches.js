@@ -673,33 +673,6 @@
         <% } %>
       </select>
     `),
-    timePickerTemplate: _.template(`
-      <table class="date-time-picker">
-        <thead>
-          <tr><th colspan="7"><%=_lang('hour')%></th><th colspan="3"><%=_lang('minute')%></th></tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th>AM</th>
-            <td class="hour">00</td><td class="hour">01</td><td class="hour">02</td><td class="hour">03</td><td class="hour">04</td><td class="hour">05</td>
-            <td class="minute">00</td><td class="minute">05</td><td class="minute">10</td>
-          </tr>
-          <tr>
-            <td class="hour">06</td><td class="hour">07</td><td class="hour">08</td><td class="hour">09</td><td class="hour">10</td><td class="hour">11</td>
-            <td class="minute">15</td><td class="minute">20</td><td class="minute">25</td>
-          </tr>
-          <tr>
-            <th>PM</th>
-            <td class="hour">12</td><td class="hour">13</td><td class="hour">14</td><td class="hour">15</td><td class="hour">16</td><td class="hour">17</td>
-            <td class="minute">30</td><td class="minute">35</td><td class="minute">40</td>
-          </tr>
-          <tr>
-            <td class="hour">18</td><td class="hour">19</td><td class="hour">20</td><td class="hour">21</td><td class="hour">22</td><td class="hour">23</td>
-            <td class="minute">45</td><td class="minute">50</td><td class="minute">55</td>
-          </tr>
-        </tbody>
-      </table>
-    `),
     title: _lang('matchInformation'),
     deleteConfirmMessage: _lang('deleteThisMatch'),
     buildFormHtml: function() {
@@ -767,11 +740,13 @@
         widgetPositioning: {horizontal: 'right', vertical: 'top'}
       });
 
+      this.$('.score input').on('change', this.renderMarker.bind(this));
+
+      this.renderMarker(null, this.model.toRender());
+
       return this;
     },
-    onClickSave: function() {
-      bootbox.hideAll();
-
+    domToData: function() {
       var data = this.$form.serializeObject();
       data.played_on = moment(data.date + ' ' + data.time).format('YYYY-MM-DD HH:mm:ss');
       delete data.date;
@@ -780,9 +755,44 @@
         data[key] = parseFloat(data[key], 10);
         if (isNaN(data[key])) data[key] = null;
       });
-      this.model.set(data);
-      
+      return data;
+    },
+    onClickSave: function() {
+      bootbox.hideAll();
+      this.model.set(this.domToData());
       if (typeof this.onSave == 'function') this.onSave();
+    },
+    renderMarker: function(e, data) {
+      data || (data = new Backbone.MatchModel(this.domToData()).toRender());
+
+      this.$('.marker').removeClass('exception').prop('title', undefined).empty();
+      this.$('.dropdown-menu .exception>i').removeClass('fa-check');
+
+      if (data.winner != null) this.$('.'+data.winner+' .marker').text('✓');
+
+      if (data.exception == INCOMPLETE) {
+        this.$('.marker').addClass('exception').text('?').attr('title', 'Match incomplete');
+        this.$('.dropdown-menu .incomplete>i').addClass('fa-check');
+      }
+
+      if (data.exception == USER_WON_BECAUSE_FORFEIT) {
+        this.$('.other .marker').addClass('exception').text(_lang('forfeitShort')).attr('title', _lang('forfeit'));
+        this.$('.dropdown-menu .user-forfeited>i').addClass('fa-check');
+      }
+
+      if (data.exception == OTHER_WON_BECAUSE_FORFEIT) {
+        this.$('.user .marker').addClass('exception').text(_lang('forfeitShort')).attr('title', _lang('forfeit'));
+        this.$('.dropdown-menu .other-forfeited>i').addClass('fa-check');
+      }
+
+      if (!data.exception) {
+        this.$('.dropdown-menu .clear-exception>i').addClass('fa-check');
+      }
+
+      this.$('.dropdown-menu .type>i').removeClass('fa-check');
+      this.$('.dropdown-menu .type[data-type=' + data.type + ']>i').addClass('fa-check');
+
+      return this;
     }
   });
 
