@@ -198,7 +198,7 @@
     isPlayerWinner: function(player_id) {
       var key = this.getWinner();
       if (!key) return false;
-      return this.get(key + '_id') == player_id || this.get(key + '_partner_id' == player_id);
+      return this.get(key + '_id') == player_id || this.get(key + '_partner_id') == player_id;
     },
     isComplete: function() {
       return this.getWinner() != null;
