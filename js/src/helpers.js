@@ -41,24 +41,38 @@
     }
   });
 
+  // Close popovers when clicking outside
+  // http://stackoverflow.com/questions/11703093/how-to-dismiss-a-twitter-bootstrap-popover-by-clicking-outside
+  $(document).on('click', function (e) {
+    $('[data-toggle="popover"],[data-original-title]').each(function () {
+        //the 'is' for buttons that trigger popups
+        //the 'has' for icons within a button that triggers a popup
+        if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {                
+            (($(this).popover('hide').data('bs.popover')||{}).inState||{}).click = false  // fix for BS 3.3.6
+        }
+
+    });
+  });
+
   Backbone.ConfirmDeleteInlineFormControl = Backbone.View.extend({
     template: _.template(`
-      <div class="form-group action">
-        <button type="button" class="btn btn-default action"><span class="text-danger"><%=actionLabel%></span></button>
-      </div>
-      <div class="inline-form confirm">
-        <div class="form-group">
-          <span><%=message%></span>
-          <button type="button" class="btn btn-primary btn-sm confirm"><%=confirmLabel%></button>
-          <button type="button" class="btn btn-primary btn-sm cancel"><%=cancelLabel%></button>
+      <div class="popover-markup"> 
+        <a class="action btn btn-default"><span class="text-danger"><%=actionLabel%></span></a>
+        <div class="content hide">
+          <div class="inline-form confirm">
+            <div class="form-group">
+              <span><%=message%></span>
+              <a class="btn btn-primary btn-sm confirm"><%=confirmLabel%></a>
+              <a class="btn btn-primary btn-sm cancel"><%=cancelLabel%></a>
+            </div>
+          </div>
+          <div class="validation-failed-message text-danger"></div>
         </div>
       </div>
-      <div class="validation-failed-message text-danger"></div>
     `),
     events: {
-      'click button.action': 'onAction',
-      'click button.confirm': 'onConfirm',
-      'click button.cancel': 'onCancel'
+      'click a.confirm': 'onConfirm',
+      'click a.cancel': 'onCancel'
     },
     initialize: function(options) {
       this.message = options.message || 'Are you sure?';
@@ -75,34 +89,41 @@
         confirmLabel: this.confirmLabel,
         cancelLabel: this.cancelLabel
       }));
-      this.$actionGroup = this.$('.form-group.action');
+      this.$action = this.$('a.action');
+      this.$content = this.$('.content');
       this.$confirmGroup = this.$('.inline-form.confirm');
       this.$validationFailedMessage = this.$('.validation-failed-message');
-      this.$confirmGroup.hide();
-      this.$validationFailedMessage.hide();
+
+      this.$action.popover({
+        placement: 'top',
+        html: true,
+        content: this.onAction.bind(this)
+      });
+
       return this;
     },
     onAction: function() {
       if (typeof this.onValidate == 'function') {
         var result = this.onValidate();
         if (result) {
-          this.$actionGroup.fadeOut(function() {
-            this.$validationFailedMessage.html(result).fadeIn();
-          }.bind(this));
-          return;
+          this.$validationFailedMessage.html(result);
+          this.$validationFailedMessage.show();
+          this.$confirmGroup.hide();
+          return this.$content.html();
         }
       }
-      this.$actionGroup.fadeOut(function() {
-        this.$confirmGroup.fadeIn();
-      }.bind(this));
+      this.$validationFailedMessage.hide();
+      this.$confirmGroup.show();
+      return this.$content.html();
     },
-    onConfirm: function() {
+    onConfirm: function(e) {
+      e.preventDefault();
+      this.$action.popover('hide');
       if (typeof this.callback == 'function') this.callback();
     },
-    onCancel: function() {
-      this.$confirmGroup.fadeOut(function() {
-        this.$actionGroup.fadeIn();
-      }.bind(this));
+    onCancel: function(e) {
+      e.preventDefault();
+      this.$action.popover('hide');
     }
   });
 
@@ -155,8 +176,8 @@
       this.$form = this.$('form');
 
       if (typeof this.onDelete == 'function') {
-        this.$form.append('<br/>');
-        this.$form.append(new Backbone.ConfirmDeleteInlineFormControl({
+        this.$('.modal-footer').prepend(new Backbone.ConfirmDeleteInlineFormControl({
+          className: 'pull-left',
           message: this.deleteConfirmMessage,
           onValidate: this.onValidateBeforeDelete.bind(this),
           callback: this.onClickDelete.bind(this),

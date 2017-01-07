@@ -381,6 +381,15 @@ body.standalone .contents {
 }
 
 
+.popover {
+  max-width: 300px;
+}
+
+.popover .form-group {
+  margin-bottom: 0;
+}
+
+
 .program .categories,
 .program .rounds,
 .program h4 {
