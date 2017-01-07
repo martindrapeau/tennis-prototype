@@ -647,13 +647,13 @@
         <label><%=_lang('dateAndTime')%></label>
         <div class="form-group date-time clearfix">
           <div class="input-group date pull-left">
-            <input class="form-control" type="text" name="date" value="<%=date%>" tabindex="<%=tabindex+1%>" />
+            <input class="form-control" type="text" name="date" value="<%=date%>" readonly="readonly" />
             <span class="input-group-addon">
               <span class="glyphicon glyphicon-calendar"></span>
             </span>
           </div>
           <div class="input-group time pull-right">
-            <input class="form-control" type="text" name="time" value="<%=time%>" tabindex="<%=tabindex+2%>" />
+            <input class="form-control" type="text" name="time" value="<%=time%>" readonly="readonly" />
             <span class="input-group-addon">
               <span class="glyphicon glyphicon-time"></span>
             </span>
@@ -754,11 +754,15 @@
       });
 
       this.$('.input-group.date').datetimepicker({
+        ignoreReadonly: true,
+        allowInputToggle: true,
         format: 'YYYY-MM-DD',
         widgetPositioning: {horizontal: 'left', vertical: 'top'}
       });
 
       this.$('.input-group.time').datetimepicker({
+        ignoreReadonly: true,
+        allowInputToggle: true,
         format: 'HH:mm',
         widgetPositioning: {horizontal: 'right', vertical: 'top'}
       });
@@ -767,6 +771,7 @@
     },
     onClickSave: function() {
       bootbox.hideAll();
+
       var data = this.$form.serializeObject();
       data.played_on = moment(data.date + ' ' + data.time).format('YYYY-MM-DD HH:mm:ss');
       delete data.date;
@@ -775,8 +780,8 @@
         data[key] = parseFloat(data[key], 10);
         if (isNaN(data[key])) data[key] = null;
       });
-      console.log(data);
       this.model.set(data);
+      
       if (typeof this.onSave == 'function') this.onSave();
     }
   });

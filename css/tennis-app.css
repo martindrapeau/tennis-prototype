@@ -374,6 +374,12 @@ body.standalone .contents {
   width: 48%;
 }
 
+.bootbox-form.match input[name=date][readonly],
+.bootbox-form.match input[name=time][readonly],
+.bootbox-form.match .input-group-addon {
+  background-color: #fff;
+}
+
 
 .program .categories,
 .program .rounds,
