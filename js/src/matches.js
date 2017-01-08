@@ -440,6 +440,9 @@
         </div>
       </div>
     `),
+    events: {
+      'changed.bs.select .selects select.selectpicker': 'onCategoryOrRoundSelect'
+    },
     initialize: function(options) {
       this.programCollection = options.programCollection;
       this.categoryCollection = options.categoryCollection;
@@ -456,6 +459,14 @@
       Backbone.View.prototype.undelegateEvents.apply(this, arguments);
       $(window).off('resize.matches');
       $('#top-menu').off('click', '.add-match');
+    },
+    onCategoryOrRoundSelect: function(e) {
+      var id = $(e.currentTarget).val();
+      id = id ? parseInt(id, 10) : null;
+      var key = $(e.currentTarget).attr('name');
+          attributes = {};
+      attributes[key + '_id'] = id;
+      this.model.set(attributes, {pushState: true});
     },
     onAddMatch: function(e) {
       e.preventDefault();
