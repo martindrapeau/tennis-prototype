@@ -71,8 +71,12 @@
           },
           confirm: {
             label: _lang('save'),
-            callback: function(result) {
-              if (!result) return;
+            callback: function() {
+              var result = $('.bootbox.modal').find('input').val();
+              if (!result) {
+                // TODO: Report error to user.
+                return false;
+              }
 
               this.model = model;
               this.collection.add(this.model);
@@ -82,9 +86,10 @@
                 $.when(category.save(null, {wait: true}), round.save(null, {wait: true})).done(function() {
                   this.categoryCollection.add(category, {silent: true});
                   this.roundCollection.add(round, {silent: true});
-                  this.stateModel.set({view: 'program', program_id: this.model.id}, {renderMenu: true, hideMenu: true, programIsNew: true});
+                  this.stateModel.set({view: 'program', program_id: this.model.id}, {pushState: true, renderMenu: true, hideMenu: true, programIsNew: true});
                 }.bind(this));
               }.bind(this));
+              bootbox.hideAll();
             }.bind(this)
           }
         }

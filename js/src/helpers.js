@@ -54,13 +54,6 @@
     });
   });
 
-  // Prevent doing things when a modal is open
-  $(document).on('click', '.modal-backdrop.in', function(e) {
-    console.log('.modal-backdrop.in touchstart mousedown');
-    e.preventDefault();
-    e.stopPropagation();
-  });
-
   Backbone.ConfirmDeleteInlineFormControl = Backbone.View.extend({
     template: _.template(`
       <div class="popover-markup"> 

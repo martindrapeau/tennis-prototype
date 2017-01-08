@@ -144,7 +144,6 @@ $(document).ready(function() {
       this.views.program.addProgram.call(this.views.program);
     },
     onClick: function(e) {
-      console.log('click');
       e.preventDefault();
       var $a = $(e.currentTarget),
           name = $a.attr('href').replace('#', '') || 'home',
