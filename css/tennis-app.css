@@ -92,6 +92,17 @@ a:focus, a:hover {
   height: 100px;
 }
 
+#side-menu-backdrop {
+  position: absolute;
+  left: 0;
+  top: 50px;
+  right: 0;
+  bottom: 0;
+  background-color: #000;
+  opacity: 0.05;
+  z-index: 2000;
+}
+
 .canvas {
   position: relative;
   left: 0;

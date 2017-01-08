@@ -440,12 +440,6 @@
         </div>
       </div>
     `),
-    events: {
-      'click .add-match': 'onAddMatch',
-      'click .match': 'onFocusMatch',
-      'focus .match': 'onFocusMatch',
-      'changed.bs.select .selects select.selectpicker': 'onCategoryOrRoundSelect'
-    },
     initialize: function(options) {
       this.programCollection = options.programCollection;
       this.categoryCollection = options.categoryCollection;

@@ -31,10 +31,19 @@ $(document).ready(function() {
           </li>
         <% } %>
         <% state = {program_id: null}; %>
-        <li><a href="#program" data-state='<%=JSON.stringify(state)%>'><i class="fa fa-fw fa-plus"></i> <%=_lang('addAProgram')%></a></li>
+        <li><a href="#program" data-state='<%=JSON.stringify(state)%>' class="add-program"><i class="fa fa-fw fa-plus"></i> <%=_lang('addAProgram')%></a></li>
         <li class="spacer">&nbsp;</li>
       </ul>
     `),
+    events: {
+      'click #side-menu a.add-program': 'onClickAddProgram',
+      'click #side-menu a:not(.add-program)': 'onClick',
+      'click #side-menu-backdrop': 'onClickBackdrop',
+      'show.bs.offcanvas #side-menu': 'onShowMenu',
+      'hide.bs.offcanvas #side-menu': 'onHideMenu',
+      'shown.bs.offcanvas #side-menu': 'onShownMenu',
+      'hidden.bs.offcanvas #side-menu': 'onHiddenMenu'
+    },
     initialize: function(options) {
 
       this.players = new Backbone.PlayerCollection();
@@ -130,14 +139,12 @@ $(document).ready(function() {
 
       $(window).on('popstate', this.onPopState.bind(this));
     },
-    events: {
-      'click #side-menu a': 'onClick',
-      'show.bs.offcanvas #side-menu': 'onShowMenu',
-      'hide.bs.offcanvas #side-menu': 'onHideMenu',
-      'shown.bs.offcanvas #side-menu': 'onShownMenu',
-      'hidden.bs.offcanvas #side-menu': 'onHiddenMenu'
+    onClickAddProgram: function(e) {
+      e.preventDefault();
+      this.views.program.addProgram.call(this.views.program);
     },
     onClick: function(e) {
+      console.log('click');
       e.preventDefault();
       var $a = $(e.currentTarget),
           name = $a.attr('href').replace('#', '') || 'home',
@@ -145,6 +152,9 @@ $(document).ready(function() {
       if (name == 'program-toggle') return this.programToggle(state.program_id);
       this.model.set(_.extend(Backbone.TennisAppState.prototype.defaults, {view: name}, state), {pushState: true, hideMenu: true});
       return false;
+    },
+    onClickBackdrop: function(e) {
+      this.$sideMenu.offcanvas('hide');
     },
     programToggle: function(program_id) {
       var model = this.programs.get(program_id);
@@ -158,8 +168,7 @@ $(document).ready(function() {
     onShowMenu: function(e) {
       $('html').css({overflow:'hidden'});
       this.$el.css("overflow", "hidden");
-      this.viewNeedsDelegateEvents = this.views[this.model.get('view')];
-      if (this.viewNeedsDelegateEvents) this.viewNeedsDelegateEvents.undelegateEvents();
+      this.$('#side-menu-backdrop').fadeIn();
     },
     onShownMenu: function(e) {
       this.$el.off("touchmove.bs");
@@ -173,8 +182,7 @@ $(document).ready(function() {
     onHideMenu: function(e) {
       this.$('.canvas').css({overflow: ''});
       this.$('.canvas').off('touchmove.tennis');
-      if (this.viewNeedsDelegateEvents) this.viewNeedsDelegateEvents.delegateEvents();
-      this.viewNeedsDelegateEvents = undefined;
+      this.$('#side-menu-backdrop').fadeOut();
     },
     onHiddenMenu: function(e) {
       $('html').css({overflow:''});
@@ -210,7 +218,6 @@ $(document).ready(function() {
     },
     show: function(model, options) {
       options || (options = {});
-      this.viewNeedsDelegateEvents = undefined;
 
       // Hide old view
       var oldViewName = this.model.previous('view'),
@@ -227,7 +234,7 @@ $(document).ready(function() {
 
       // Update/render menus
       this.topMenuView.render();
-      if (options && options.renderSideMenu)
+      if (options && options.renderMenu)
         this.renderSideMenu();
       else
         this.updateSideMenuLinks();

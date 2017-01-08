@@ -27,6 +27,12 @@
       <h4><%=_lang('rounds')%></h4>
       <div class="rounds"></div>
     `),
+    addProgramFormTemplate: _.template(`
+      <form class="bootbox-form">
+        <input class="bootbox-input bootbox-input-text form-control" autocomplete="off" type="text" placeholder="<%=_lang('programName')%>" />
+        <p class="help-block"><%=_lang('programHelp')%></p>
+      </form>
+    `),
     className: 'program',
     events: {
       'click button.goto-matches': 'onClickGotoMatches'
@@ -52,6 +58,39 @@
       $('#top-menu').off('click', '.delete-program');
       $('#top-menu').off('click', '.add-category');
       $('#top-menu').off('click', '.add-round');
+    },
+    addProgram: function() {
+      var model = new Backbone.ProgramModel({name: '', expanded: true});
+      bootbox.dialog({
+        title: _lang('newProgram'),
+        message: this.addProgramFormTemplate(model.toJSON()),
+        size: 'small',
+        buttons: {
+          cancel: {
+            label: _lang('cancel')
+          },
+          confirm: {
+            label: _lang('save'),
+            callback: function(result) {
+              if (!result) return;
+
+              this.model = model;
+              this.collection.add(this.model);
+              this.model.save({name: result}, {wait: true}).done(function() {
+                var category = new Backbone.CategoryModel({name: 'A1', program_id: this.model.id}),
+                    round = new Backbone.RoundModel({name: _lang('week') + ' 1', program_id: this.model.id});
+                $.when(category.save(null, {wait: true}), round.save(null, {wait: true})).done(function() {
+                  this.categoryCollection.add(category, {silent: true});
+                  this.roundCollection.add(round, {silent: true});
+                  this.stateModel.set({view: 'program', program_id: this.model.id}, {renderMenu: true, hideMenu: true, programIsNew: true});
+                }.bind(this));
+              }.bind(this));
+            }.bind(this)
+          }
+        }
+      });
+
+      return this;
     },
     onEditProgram: function(e) {
       if (e) e.preventDefault();
@@ -162,34 +201,11 @@
         }.bind(this)
       }).render();
     },
-    createNewProgram: function(options) {
-      console.log('program createNewProgram', options);
-      this.model = new Backbone.ProgramModel({
-        name: _lang('newProgram')
-      });
-      this.model.save(null, {wait: true}).done(function() {
-        this.collection.add(this.model);
-        var category = new Backbone.CategoryModel({name: 'A1', program_id: this.model.id}),
-            round = new Backbone.RoundModel({name: _lang('week') + ' 1', program_id: this.model.id});
-        $.when(category.save(null, {wait: true}), round.save(null, {wait: true})).done(function() {
-          this.categoryCollection.add(category, {silent: true});
-          this.roundCollection.add(round, {silent: true});
-          this.stateModel.set({program_id: this.model.id}, {replaceState: true, hideMenu: true, renderMenu: true, programIsNew: true});
-          _.defer(function() {
-            this.onEditProgram();
-          }.bind(this));
-        }.bind(this));
-      }.bind(this));
-      options.replaceState = false;
-      options.pushState = false;
-      options.hideMenu = false;
-      return this;
-    },
     render: function(options) {
       if (this.model) this.stopListening(this.model);
 
       var program_id = this.stateModel.get('program_id');
-      if (!program_id && options) return this.createNewProgram(options);
+      if (!program_id) throw 'program_id is not set';
 
       this.model = this.collection.get(program_id);
       if (!this.model) return this;

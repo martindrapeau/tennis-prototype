@@ -70,6 +70,7 @@
       exportAllPlayers: ['Export all players', 'Exporter tous les joueurs'],
       newProgram: ['New season', 'Nouvelle saison'],
       programName: ['Season name', 'Nom de la saison'],
+      programHelp: ['A program is a season or a tournament.', 'Une programmation représente soit un saison ou un tournoi.'],
       changeTheName: ['Change the name', 'Changer le nom'],
       category: ['Category', 'Catégorie'],
       categories: ['Categories', 'Catégories'],
