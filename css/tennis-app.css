@@ -330,6 +330,10 @@ body.standalone .contents {
   color: #999;
 }
 
+.bootbox-form.match label.btn {
+  color: #fff;
+}
+
 .bootbox-form.match .form-group.players {
   display: block;
   position: relative;
@@ -394,6 +398,17 @@ body.standalone .contents {
 
 .bootbox-form.match .form-group.outcome {
   position: relative;
+}
+
+.bootbox-form.match .form-group.outcome>button>.caret {
+  margin-left: 10px;
+}
+
+.bootbox-form.match .form-group.type>.btn-group {
+  width: 100%;
+}
+.bootbox-form.match .form-group.type>.btn-group>.btn {
+  width: 50%;
 }
 
 
