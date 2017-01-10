@@ -5,10 +5,10 @@
       <form class="bootbox-form match">
         <div class="form-group type">
           <div class="btn-group" data-toggle="buttons">
-            <label class="btn btn-primary <% if (type == Backbone.SINGLES) { %>active<% } %> />">
+            <label class="btn btn-default <% if (type == Backbone.SINGLES) { %>active<% } %> />">
               <input type="radio" name="type" value="<%=Backbone.SINGLES%>" <% if (type == Backbone.SINGLES) { %>checked="checked"<% } %> autocomplete="off" /> <%=_lang('singles')%>
             </label>
-            <label class="btn btn-primary <% if (type == Backbone.DOUBLES) { %>active<% } %> />">
+            <label class="btn btn-default <% if (type == Backbone.DOUBLES) { %>active<% } %> />">
               <input type="radio" name="type" value="<%=Backbone.DOUBLES%>" <% if (type == Backbone.DOUBLES) { %>checked="checked"<% } %> autocomplete="off" /> <%=_lang('doubles')%>
             </label> 
           </div>

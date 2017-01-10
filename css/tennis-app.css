@@ -28,7 +28,7 @@ body {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  margin: 0; 
+  margin: 0;
 }
 
 a {
@@ -37,6 +37,11 @@ a {
 
 a:focus, a:hover {
   color: #000;
+}
+
+.btn.active {
+  box-shadow: none;
+  -webkit-box-shadow: none;
 }
 
 .navbar-default {
@@ -330,8 +335,8 @@ body.standalone .contents {
   color: #999;
 }
 
-.bootbox-form.match label.btn {
-  color: #fff;
+.bootbox-form.match label.btn-default {
+  color: #000;
 }
 
 .bootbox-form.match .form-group.players {
