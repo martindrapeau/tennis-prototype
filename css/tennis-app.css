@@ -392,6 +392,11 @@ body.standalone .contents {
 }
 
 
+.bootbox-form.match .form-group.outcome {
+  position: relative;
+}
+
+
 .popover {
   max-width: 300px;
 }
