@@ -1,10 +1,10 @@
 (function() {
 
-  Backbone.HomeView = Backbone.View.extend({
+  Backbone.SettingsView = Backbone.View.extend({
     template: _.template(`
       <div class="wrapper">
         <div class="center">
-          <h1><%=_lang('appName')%></h1>
+          <h1><%=_lang('settings')%></h1>
           <br/>
           <p class="lead">
             <span class="account"><%=_lang('account')%>: John Doe</span>
@@ -31,8 +31,7 @@
       window.location.reload();
     },
     render: function() {
-      var data = this.model.toJSON();
-      this.$el.html(this.template(data));
+      this.$el.html(this.template());
     	return this;
     }
   });

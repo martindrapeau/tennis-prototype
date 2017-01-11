@@ -28,7 +28,6 @@
     <script src="js/3rd/moment.fr-ca.js" type="text/javascript"></script>
     <script src="js/3rd/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
 
-
     <script src="js/src/device.js" type="text/javascript"></script>
 
     <script src="js/src/lang.js" type="text/javascript"></script>
@@ -43,6 +42,7 @@
     <script src="js/src/programs.js" type="text/javascript"></script>
     <script src="js/src/data.js" type="text/javascript"></script>
     <script src="js/src/top-menu.js" type="text/javascript"></script>
+    <script src="js/src/settings.js" type="text/javascript"></script>
     <script src="js/src/main.js" type="text/javascript"></script>
 
     <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
@@ -59,6 +59,7 @@
       <div id="top-menu" class="navbar navbar-default navbar-fixed-top"></div>
       <div class="contents">
         <div id="side-menu-backdrop" style="display: none;"></div>
+        <div id="settings" style="display: none;"></div>
         <div id="home" class="content" style="display: none;"></div>
         <div id="program" class="content program" style="display: none;"></div>
         <div id="players" class="content players" style="display: none;"></div>
@@ -66,68 +67,6 @@
         <div id="rankings" class="content rankings" style="display: none;"></div>
       </div>
     </div>
-
-<script id="match-template" type="text/template">
-  <thead>
-    <tr>
-      <th colspan="2">
-        <input type="text" name="location" value="<%=location%>" placeholder="<%=_lang('court')%>" tabindex="<%=tabindex%>" />
-      </th>
-      <th class="date-time dropdown" colspan="4">
-        <input type="text" name="date" value="<%=date%>" tabindex="<%=tabindex+1%>" />
-        <input type="text" name="time" value="<%=time%>" tabindex="<%=tabindex+2%>" />
-      </th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr class="user">
-      <td class="player"><%=user()%></td>
-      <td class="marker"></td>
-      <td class="set"><input type="number" pattern="[0-9]*" inputmode="numeric" name="user_set1" value="<%=user_set1%>" tabindex="<%=tabindex+10%>" /></td>
-      <td class="set"><input type="number" pattern="[0-9]*" inputmode="numeric" name="user_set2" value="<%=user_set2%>" tabindex="<%=tabindex+12%>" /></td>
-      <td class="set"><input type="number" pattern="[0-9]*" inputmode="numeric" name="user_set3" value="<%=user_set3%>" tabindex="<%=tabindex+14%>" /></td>
-      <td class="points">
-        <input type="number" pattern="[0-9]*" inputmode="numeric" name="user_points" value="<%=user_points%>" tabindex="<%=tabindex+16%>" />
-        <% if (user_points || other_points || editable) { %><span class="pts">pts</span><% } %>
-      </td>
-    </tr>
-    <tr class="other">
-      <td class="player"><%=other()%></td>
-      <td class="marker"></td>
-      <td class="set"><input type="number" pattern="[0-9]*" inputmode="numeric" name="other_set1" value="<%=other_set1%>" tabindex="<%=tabindex+11%>" /></td>
-      <td class="set"><input type="number" pattern="[0-9]*" inputmode="numeric" name="other_set2" value="<%=other_set2%>" tabindex="<%=tabindex+13%>" /></td>
-      <td class="set"><input type="number" pattern="[0-9]*" inputmode="numeric" name="other_set3" value="<%=other_set3%>" tabindex="<%=tabindex+15%>" /></td>
-      <td class="points">
-        <input type="number" pattern="[0-9]*" inputmode="numeric" name="other_points" value="<%=other_points%>" tabindex="<%=tabindex+17%>" />
-        <% if (user_points || other_points || editable) { %><span class="pts">pts</span><% } %>
-      </td>
-      </td>
-    </tr>
-  </tbody>
-  <tfoot>
-    <tr>
-      <th colspan="<%=editable ? 5 : 6 %>">
-        <input type="text" name="comment" value="<%=comment%>" placeholder="<%=editable ? _lang('comment') : ''%>" tabindex="<%=tabindex+20%>" />
-      </th>
-      <% if (editable) { %>
-        <th colspan="1" class="dropdown more">
-          <button class="btn btn-default btn-sm more dropdown-toggle" type="button" id="match-more-<%=id%>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"><%=_lang('more')%> <span class="caret"></span></button>
-          <ul class="dropdown-menu dropdown-menu-right more" aria-labelledby="match-more-<%=id%>">
-            <li><a href="#" class="type singles" data-type="singles"><i class="fa fa-fw"></i> <%=_lang('singles')%></a></li>
-            <li><a href="#" class="type doubles" data-type="doubles"><i class="fa fa-fw"></i> <%=_lang('doubles')%></a></li>
-            <li role="separator" class="divider"></li>
-            <li><a href="#" class="exception incomplete" data-exception="incomplete"><i class="fa fa-fw"></i> <%=_lang('matchIncomplete')%></a></li>
-            <li><a href="#" class="exception user-forfeited" data-exception="user_won_because_forfeit"><i class="fa fa-fw"></i> <%=user_title_inline%> <%=_lang('forfeited')%></a></li>
-            <li><a href="#" class="exception other-forfeited" data-exception="other_won_because_forfeit"><i class="fa fa-fw"></i> <%=other_title_inline%> <%=_lang('forfeited')%></a></li>
-            <li><a href="#" class="exception clear-exception" data-exception="null"><i class="fa fa-fw"></i> <%=_lang('noException')%></a></li>
-            <li role="separator" class="divider"></li>
-            <li><a href="#" class="delete"><i class="fa fa-fw fa-trash"></i> <%=_lang('delete')%></a></li>
-          </ul>
-        </th>
-      <% } %>
-    </tr>
-  </tfoot>
-</script>
 
   </body>
 </html>

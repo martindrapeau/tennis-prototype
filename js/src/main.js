@@ -1,11 +1,33 @@
 $(document).ready(function() {
 
+  // Application state is persisted to local storage with id 101.
+  // This is a singleton.
   Backbone.TennisAppState = Backbone.Model.extend({
+    sync: new BackboneLocalStorage('app').sync,
     defaults: {
+      id: 101,
+      // Credentials and access state - store in local storage to avoid user login everytime
+      organization_id: undefined,
+      organization: undefined,
+      admin_id: undefined,
+      admin: undefined,
+      // View state - always cleared upon startup and overwritten by what's in the URL
       view: undefined,
       program_id: undefined,
       category_id: undefined,
       round_id: undefined
+    },
+    // Clear view state after fetching from local storage
+    fetch: function() {
+      return Backbone.Model.prototype.fetch.apply(this, arguments).always(function() {
+        console.log('clear view state');
+        this.set({
+          view: undefined,
+          program_id: undefined,
+          category_id: undefined,
+          round_id: undefined
+        }, {silent: true});
+      }.bind(this));
     }
   });
 
@@ -45,6 +67,9 @@ $(document).ready(function() {
       'hidden.bs.offcanvas #side-menu': 'onHiddenMenu'
     },
     initialize: function(options) {
+
+      // Restore URL state
+      model.set(this.getState());
 
       this.players = new Backbone.PlayerCollection();
       this.matches = new Backbone.MatchCollection();
@@ -205,7 +230,7 @@ $(document).ready(function() {
           name = state.view,
           method = options && options.replaceState ? 'replaceState' : 'pushState';
       delete state.view;
-      var omitKeys = []
+      var omitKeys = ['organization', 'organization_id', 'admin', 'admin_id'];
       _.each(state, function(v, k) {
         if (v === null || v === '' || v === undefined) omitKeys.push(k);
       });
@@ -272,11 +297,14 @@ $(document).ready(function() {
     }
   });
 
-  var state = Backbone.TennisApp.prototype.getState();
-
-  window.app = new Backbone.TennisApp({
-    model: new Backbone.TennisAppState(state),
-    el: $('body')
+  // Fetch state model from local storage and then start the app
+  var model = new Backbone.TennisAppState();
+  model.fetch().always(function() {
+    console.log('start app');
+    window.app = new Backbone.TennisApp({
+      model: model,
+      el: $('body')
+    });
   });
-
+  
 });

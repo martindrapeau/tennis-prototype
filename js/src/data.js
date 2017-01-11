@@ -1,5 +1,15 @@
 (function() {
 
+  window._organizations = [{
+    id: 100,
+    name: 'Ligue de Tennis Montréal Nord',
+    admin_ids: [2414]
+  }, {
+    id: 101,
+    name: 'Tennis Deux-Montagnes',
+    admin_ids: [2414, 2417]
+  }];
+
   window._programs = [{
     id: 1000,
     name: "Saison 2016"
