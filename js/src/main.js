@@ -230,7 +230,7 @@ $(document).ready(function() {
           name = state.view,
           method = options && options.replaceState ? 'replaceState' : 'pushState';
       delete state.view;
-      var omitKeys = ['organization', 'organization_id', 'admin', 'admin_id'];
+      var omitKeys = ['id', 'organization', 'organization_id', 'admin', 'admin_id'];
       _.each(state, function(v, k) {
         if (v === null || v === '' || v === undefined) omitKeys.push(k);
       });
