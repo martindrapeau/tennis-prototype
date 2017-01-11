@@ -14,6 +14,7 @@
       appName: ['Tennis App', 'Tennis App'],
       all: ['All', 'Tous'],
       settings: ['Settings', 'Configuration'],
+      information: ['Information', 'Information'],
       account: ['Account', 'Compte'],
       email: ['Email', 'Courriel'],
       name: ['Name', 'Nom'],

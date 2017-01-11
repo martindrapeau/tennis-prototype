@@ -31,14 +31,6 @@ body {
   margin: 0;
 }
 
-a {
-  color: #333;
-}
-
-a:focus, a:hover {
-  color: #000;
-}
-
 .btn.active {
   box-shadow: none;
   -webkit-box-shadow: none;
@@ -181,6 +173,15 @@ body.standalone .contents {
 
 #home .wrapper .center h1 {
   font-size: 60px;
+}
+
+#home a {
+  color: #333;
+}
+
+#home a:focus,
+#home a:hover {
+  color: #000;
 }
 
 

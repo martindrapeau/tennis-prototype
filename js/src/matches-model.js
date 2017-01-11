@@ -99,16 +99,20 @@
       data.date = when.isValid() ? when.format('YYYY-MM-DD') : '';
       data.time = when.isValid() ? when.format('HH:mm') : '';
 
-      !data.user || (data.user.title = _.shortName(data.user.name));
-      !data.user_partner || (data.user_partner.title = _.shortName(data.user_partner.name));
+      !data.user || (data.user.title = _.shortName(data.user.name), data.user.initials = _.initials(data.user.name));
+      !data.user_partner || (data.user_partner.title = _.shortName(data.user_partner.name), data.user_partner.initials = _.initials(data.user_partner.name));
       data.user_title = _.compact([data.user ? data.user.title : null, data.user_partner ? data.user_partner.title : null]).join('<br/>');
       data.user_title_inline = _.compact([data.user ? data.user.title : null, data.user_partner ? data.user_partner.title : null]).join(' &amp; ');
+      data.user_initials_inline = _.compact([data.user ? data.user.initials : null, data.user_partner ? data.user_partner.initials : null]).join(' &amp; ');
+      data.user_short_inline = data.user && data.user_partner ? data.user_initials_inline : data.user_title_inline;
       data.user_tooltip = _.compact([data.user ? data.user.name : null, data.user_partner ? data.user_partner.name : null]).join(' &amp; ');
 
-      !data.other || (data.other.title = _.shortName(data.other.name));
-      !data.other_partner || (data.other_partner.title = _.shortName(data.other_partner.name));
+      !data.other || (data.other.title = _.shortName(data.other.name), data.other.initials = _.initials(data.other.name));
+      !data.other_partner || (data.other_partner.title = _.shortName(data.other_partner.name), data.other_partner.initials = _.initials(data.other_partner.name));
       data.other_title = _.compact([data.other ? data.other.title : null, data.other_partner ? data.other_partner.title : null]).join('<br/>');
       data.other_title_inline = _.compact([data.other ? data.other.title : null, data.other_partner ? data.other_partner.title : null]).join(' &amp; ');
+      data.other_initials_inline = _.compact([data.other ? data.other.initials : null, data.other_partner ? data.other_partner.initials : null]).join(' &amp; ');
+      data.other_short_inline = data.other && data.other_partner ? data.other_initials_inline : data.other_title_inline;
       data.other_tooltip = _.compact([data.other ? data.other.name : null, data.other_partner ? data.other_partner.name : null]).join(' &amp; ');
 
       data.score = this.getScore();

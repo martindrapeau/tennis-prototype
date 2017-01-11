@@ -195,6 +195,7 @@
 
       new Backbone.EditMatchView({
         model: model,
+        tab: 'config',
         onSave: function() {
           this.collection.add(model, {sort: false});
           model.bindPlayers();

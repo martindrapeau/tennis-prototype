@@ -62,8 +62,8 @@
           <div class="inline-form confirm">
             <div class="form-group">
               <span><%=message%></span>
-              <a class="btn btn-primary btn-sm confirm"><%=confirmLabel%></a>
-              <a class="btn btn-primary btn-sm cancel"><%=cancelLabel%></a>
+              <a class="btn btn-danger btn-sm confirm"><%=confirmLabel%></a>
+              <a class="btn btn-default btn-sm cancel"><%=cancelLabel%></a>
             </div>
           </div>
           <div class="validation-failed-message text-danger"></div>

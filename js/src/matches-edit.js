@@ -3,7 +3,12 @@
   Backbone.EditMatchView = Backbone.EditEntityView.extend({
     formTemplate: _.template(`
       <form class="bootbox-form match">
-        <div class="form-group type">
+        <ul class="nav nav-tabs">
+          <li <% if (tab == 'info') { %>class="active"<% } %> ><a href="#" class="info"><%=_lang('information')%></a></li>
+          <li <% if (tab == 'config') { %>class="active"<% } %> ><a href="#" class="config"><%=_lang('settings')%></a></li>
+        </ul>
+        <br/>
+        <div class="form-group type tab-config">
           <div class="btn-group" data-toggle="buttons">
             <label class="btn btn-default <% if (type == Backbone.SINGLES) { %>active<% } %> />">
               <input type="radio" name="type" value="<%=Backbone.SINGLES%>" <% if (type == Backbone.SINGLES) { %>checked="checked"<% } %> autocomplete="off" /> <%=_lang('singles')%>
@@ -13,13 +18,12 @@
             </label> 
           </div>
         </div>
-        <label><%=_lang('playersAndScore')%></label>
-        <div class="form-group players clearfix">
+        <div class="form-group players clearfix tab-info">
           <div class="vs">vs</div>
           <div class="user pull-left"></div>
           <div class="other pull-right"></div>
         </div>
-        <div class="form-group user score">
+        <div class="form-group user score tab-info">
           <span class="marker">&nbsp;</span>
           <input class="form-control" type="number" pattern="[0-9]*" inputmode="numeric" name="user_set1" value="<%=user_set1%>" tabindex="<%=tabindex+10%>" />
           <input class="form-control" type="number" pattern="[0-9]*" inputmode="numeric" name="user_set2" value="<%=user_set2%>" tabindex="<%=tabindex+12%>" />
@@ -27,7 +31,7 @@
           <input class="form-control pts" type="number" pattern="[0-9]*" inputmode="numeric" name="user_points" value="<%=user_points%>" tabindex="<%=tabindex+16%>" />
           <span class="pts">pts</span>
         </div>
-        <div class="form-group other score">
+        <div class="form-group other score tab-info">
           <span class="marker">&nbsp;</span>
           <input class="form-control" type="number" pattern="[0-9]*" inputmode="numeric" name="other_set1" value="<%=other_set1%>" tabindex="<%=tabindex+11%>" />
           <input class="form-control" type="number" pattern="[0-9]*" inputmode="numeric" name="other_set2" value="<%=other_set2%>" tabindex="<%=tabindex+13%>" />
@@ -35,28 +39,28 @@
           <input class="form-control pts" type="number" pattern="[0-9]*" inputmode="numeric" name="other_points" value="<%=other_points%>" tabindex="<%=tabindex+17%>" />
           <span class="pts">pts</span>
         </div>
-        <div class="form-group outcome"></div>
-        <label><%=_lang('court')%></label>
-        <div class="form-group">
+        <div class="form-group outcome tab-info"></div>
+        <label class="tab-config"><%=_lang('court')%></label>
+        <div class="form-group tab-config">
           <input name="location" type="text" placeholder="<%=_lang('court')%>" value="<%=location%>" class="form-control" autocomplete="off" />
         </div>
-        <label><%=_lang('dateAndTime')%></label>
-        <div class="form-group date-time clearfix">
+        <label class="tab-config"><%=_lang('dateAndTime')%></label>
+        <div class="form-group date-time clearfix tab-config">
           <div class="input-group date pull-left">
             <input class="form-control" type="text" name="date" value="<%=date%>" readonly="readonly" />
             <span class="input-group-addon">
               <span class="glyphicon glyphicon-calendar"></span>
             </span>
           </div>
-          <div class="input-group time pull-right">
+          <div class="input-group time pull-right tab-config">
             <input class="form-control" type="text" name="time" value="<%=time%>" readonly="readonly" />
             <span class="input-group-addon">
               <span class="glyphicon glyphicon-time"></span>
             </span>
           </div>
         </div>
-        <label><%=_lang('comment')%></label>
-        <div class="form-group">
+        <label class="tab-info"><%=_lang('comment')%></label>
+        <div class="form-group tab-info">
           <input name="comment" type="text" placeholder="<%=_lang('comment')%>" value="<%=comment%>" class="form-control" autocomplete="off" />
         </div>
       </form>
@@ -77,15 +81,26 @@
       <ul class="dropdown-menu" aria-labelledby="match-outcome">
         <li><a href="#" class="exception clear-exception" data-exception="null"><i class="fa fa-fw"></i> <%=_lang('noException')%></a></li>
         <li><a href="#" class="exception incomplete" data-exception="incomplete"><i class="fa fa-fw"></i> <%=_lang('matchIncomplete')%></a></li>
-        <li><a href="#" class="exception user-forfeited" data-exception="other_won_because_forfeit"><i class="fa fa-fw"></i> <%=user_title_inline%> <%=_lang('forfeited')%></a></li>
-        <li><a href="#" class="exception other-forfeited" data-exception="user_won_because_forfeit"><i class="fa fa-fw"></i> <%=other_title_inline%> <%=_lang('forfeited')%></a></li>
+        <li><a href="#" class="exception user-forfeited" data-exception="other_won_because_forfeit"><i class="fa fa-fw"></i> <%=user_short_inline%> <%=_lang('forfeited')%></a></li>
+        <li><a href="#" class="exception other-forfeited" data-exception="user_won_because_forfeit"><i class="fa fa-fw"></i> <%=other_short_inline%> <%=_lang('forfeited')%></a></li>
       </ul>
     `),
     title: _lang('matchInformation'),
     deleteConfirmMessage: _lang('deleteThisMatch'),
     events: {
       'change input,select': 'renderDynamicElements',
+      'click .nav-tabs a': 'onClickNavTab',
       'click .form-group.outcome .dropdown-menu a.exception': 'onClickException'
+    },
+    initialize: function(options) {
+      Backbone.EditEntityView.prototype.initialize.apply(this, arguments);
+      this.tab = options.tab || 'info';
+    },
+    onClickNavTab: function(e) {
+      e.preventDefault();
+      this.$('.nav-tabs>li').removeClass('active');
+      $(e.target).closest('li').addClass('active');
+      this.renderTabs();
     },
     onClickException: function(e) {
       e.preventDefault();
@@ -110,7 +125,7 @@
       return data;
     },
     buildFormHtml: function() {
-      return this.formTemplate(this.model.toRender());
+      return this.formTemplate(_.extend({tab: this.tab}, this.model.toRender()));
     },
     buildPlayerHtml: function(key, data, players) {
       var html = this.playerSelectTemplate({
@@ -146,6 +161,7 @@
       });
 
       this.renderDynamicElements(null, this.model.toRender());
+      this.renderTabs();
 
       this.delegateEvents();
 
@@ -161,10 +177,16 @@
       }
       this.$('.form-group.players .user').html(this.buildPlayerHtml('user', data, this.players));
       this.$('.form-group.players .other').html(this.buildPlayerHtml('other', data, this.players));
-      this.$('.selectpicker').selectpicker({
+      this.$('.selectpicker[name=user_id],.selectpicker[name=user_partner_id]').selectpicker({
         iconBase: 'fa',
         showTick: true,
         tickIcon: "fa-user"
+      });
+      this.$('.selectpicker[name=other_id],.selectpicker[name=other_partner_id]').selectpicker({
+        iconBase: 'fa',
+        showTick: true,
+        tickIcon: "fa-user",
+        dropdownAlignRight: true
       });
 
 
@@ -176,7 +198,7 @@
 
       if (data.winner != null) {
         this.$('.'+data.winner+' .marker').text('✓');
-        $outcome.find('button>.outcome').html(data[data.winner + '_title_inline'] + ' ' + _lang(data.type == Backbone.SINGLES ? 'playerWon' : 'playersWon'));
+        $outcome.find('button>.outcome').html(data[data.winner + '_short_inline'] + ' ' + _lang(data.type == Backbone.SINGLES ? 'playerWon' : 'playersWon'));
       }
 
       if (data.exception == Backbone.INCOMPLETE) {
@@ -205,6 +227,15 @@
       $outcome.find('.dropdown-menu .type[data-type=' + data.type + ']>i').addClass('fa-arrow-right');
 
       return this;
+    },
+    renderTabs: function() {
+      if (this.$('.nav-tabs>li.active>a').hasClass('info')) {
+        this.$('.tab-config').hide();
+        this.$('.tab-info').show();
+      } else {
+        this.$('.tab-info').hide();
+        this.$('.tab-config').show();
+      }
     }
   });
 
