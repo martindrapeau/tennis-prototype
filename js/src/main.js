@@ -8,7 +8,7 @@ $(document).ready(function() {
       // Credentials and access state - store in local storage to avoid user login everytime.
       // Never saved in the URL.
       id: 101,
-      organization_id: undefined,
+      organization_id: 100,
       organization: undefined,
       admin_id: undefined,
       admin: undefined,
@@ -78,11 +78,12 @@ $(document).ready(function() {
       this.categories = new Backbone.CategoryCollection();
       this.rounds = new Backbone.RoundCollection();
 
-      var p1 = this.players.fetch(),
-          p2 = this.matches.fetch(),
-          p3 = this.programs.fetch(),
-          p4 = this.categories.fetch(),
-          p5 = this.rounds.fetch();
+      var options = {shard: {organization_id: model.get('organization_id')}},
+          p1 = this.players.fetch(options),
+          p2 = this.matches.fetch(options),
+          p3 = this.programs.fetch(options),
+          p4 = this.categories.fetch(options),
+          p5 = this.rounds.fetch(options);
 
       $.when(p1, p2, p3, p4, p5).done(function() {
         this.matches.bindPlayers(this.players);

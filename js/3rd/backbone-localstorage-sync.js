@@ -8,11 +8,22 @@ https://github.com/srackham/backbone-localstorage-sync
 
 // Constructor function for creating Backbone sync adaptor objects.
 var BackboneLocalStorage = function(name, options) {
+  options || (options = {});
   if (!name) throw('Please specify a name for the Backbone sync adaptor.')
   this.name = name;
+
+  // Option to segregate values based on a filter of key/value attributes
+  this.shard = options.shard;
+
+  this.shardAttribute = options.shardAttribute;
+  if (this.shardAttribute && !(this.shardType == 'single' || this.shardType == 'list'))
+    throw 'Invalid shardType value. Must be single or list.';
+  this.shardType = options.shardType;
+  this.shardValue = options.shardValue;
+
   // data is keyed by model model id and contains model attribute hashes.
   var json = window.localStorage.getItem(this.name);
-  if (json === null && options && options.data) {
+  if (json === null && options.data) {
     this.data = {};
     for (var i = 0; i < options.data.length; i++) {
       this.data[options.data[i].id] = options.data[i];
@@ -21,6 +32,7 @@ var BackboneLocalStorage = function(name, options) {
   } else {
     this.data = (json && JSON.parse(json)) || {};
   }
+
   this.sync = this.sync.bind(this);
 };
 
@@ -42,6 +54,20 @@ if (window.module && window.module.exports) {
 
 BackboneLocalStorage.prototype = {
 
+  hasAccess: function(model) {
+    if (typeof this.shard != 'object') return true;
+
+    var json = model.attributes || model;
+    return Object.keys(this.shard).every(function(attr) {
+      if (json[attr] === undefined) return true;
+      if (_.isArray(json[attr]) && json[attr].indexOf(this.shard[attr]) == -1 || json[attr] != this.shard[attr]) {
+        console.log('hasAccess failed', {name: this.name, shardAttr: attr, shardValue: this.shard[attr], modelValue: json[attr]});
+        return false;
+      }
+      return true;
+    }.bind(this));
+  },
+
   saveData: function() {
     window.localStorage.setItem(this.name, JSON.stringify(this.data));
   },
@@ -54,25 +80,27 @@ BackboneLocalStorage.prototype = {
   },
 
   update: function(model) {
-    this.data[model.id] = model.toJSON();
+    var json = model.toJSON();
+    if (!this.hasAccess(json)) throw 'No access';
+    this.data[model.id] = json;
     this.saveData();
     return model.toJSON();
   },
 
   find: function(model) {
-    return this.data[model.id];
+    return this.hasAccess(this.data[model.id]) ? this.data[model.id] : undefined;
   },
 
   findAll: function() {
     // Return array of all models attribute hashes.
-    return Object.keys(this.data).map(
-      function(id) {
-        return this.data[id];
-      }.bind(this)
-    );
+    return Object.keys(this.data).reduce(function(result, id) {
+      if (this.hasAccess(this.data[id])) result.push(this.data[id]);
+      return result;
+    }.bind(this), []);
   },
 
   destroy: function(model) {
+    if (!this.hasAccess(this.data[model.id])) throw 'No access';
     delete this.data[model.id];
     this.saveData();
     return model.toJSON();
@@ -92,6 +120,7 @@ BackboneLocalStorage.prototype = {
    */
   sync: function(method, model, options) {
     options || (options = {});
+    if (options.shard !== undefined) this.shard = options.shard;
 
     var resp; // JSON response from the "server".
     switch (method) {
