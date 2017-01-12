@@ -5,8 +5,9 @@ $(document).ready(function() {
   Backbone.TennisAppState = Backbone.Model.extend({
     sync: new BackboneLocalStorage('app').sync,
     defaults: {
+      // Credentials and access state - store in local storage to avoid user login everytime.
+      // Never saved in the URL.
       id: 101,
-      // Credentials and access state - store in local storage to avoid user login everytime
       organization_id: undefined,
       organization: undefined,
       admin_id: undefined,
@@ -82,21 +83,6 @@ $(document).ready(function() {
           p3 = this.programs.fetch(),
           p4 = this.categories.fetch(),
           p5 = this.rounds.fetch();
-
-      // DEV: The first time, bootstrap in fictional data from data.js.
-      var loadCollectionDataIfEmpty = function (name, promise, data) {
-        promise.always(function() {
-          if (this[name].size()) return;
-          console.log(name + ' dataStore is empty. Setting up default data.');
-          this[name].reset(data);
-          this[name].each(function(model) {model.save();});
-        }.bind(this));
-      }.bind(this);
-      loadCollectionDataIfEmpty('players', p1, window._players);
-      loadCollectionDataIfEmpty('matches', p2, window._matches);
-      loadCollectionDataIfEmpty('programs', p3, window._programs);
-      loadCollectionDataIfEmpty('categories', p4, window._categories);
-      loadCollectionDataIfEmpty('rounds', p5, window._rounds);
 
       $.when(p1, p2, p3, p4, p5).done(function() {
         this.matches.bindPlayers(this.players);

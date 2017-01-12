@@ -1,6 +1,6 @@
 (function() {
 
-  var dataStore = new BackboneLocalStorage('players');
+  var dataStore = new BackboneLocalStorage('players', {data: window._players});
 
   Backbone.PlayerModel = Backbone.Model.extend({
     sync: dataStore.sync,
@@ -210,7 +210,9 @@
     },
     onAddPlayer: function(e) {
       e.preventDefault();
-      var model = new Backbone.PlayerModel();
+      var model = new Backbone.PlayerModel({
+        organization_ids: [this.model.get('organization_id')],
+      });
 
       new Backbone.EditPlayerView({
         model: model,

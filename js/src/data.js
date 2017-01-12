@@ -12,33 +12,39 @@
 
   window._programs = [{
     id: 1000,
+    organization_id: 100,
     name: "Saison 2016"
   }, {
     id: 1100,
+    organization_id: 101,
     name: "Saison 2015"
   }];
 
   window._categories = [{
     id: 3001,
     program_id: 1000,
+    organization_id: 100,
     name: "A1",
     description: "lundi",
     player_ids: []
   }, {
     id: 3002,
     program_id: 1000,
+    organization_id: 100,
     name: "A2",
     description: "lundi",
     player_ids: []
   }, {
     id: 3003,
     program_id: 1000,
+    organization_id: 100,
     name: "A3",
     description: "lundi",
     player_ids: []
   }, {
     id: 3100,
     program_id: 1100,
+    organization_id: 101,
     name: "Double A",
     description: "mardi",
     player_ids: []
@@ -47,36 +53,42 @@
   window._rounds = [{
     id: 4001,
     program_id: 1000,
+    organization_id: 100,
     name: "Semaine 1",
     description: "1 au 4 mai",
     date: "2016-05-01"
   }, {
     id: 4002,
     program_id: 1000,
+    organization_id: 100,
     name: "Semaine 2",
     description: "7 au 10 mai",
     date: "2016-05-07"
   }, {
     id: 4003,
     program_id: 1000,
+    organization_id: 100,
     name: "Semaine 3",
     description: "14 au 17 mai",
     date: "2016-05-14"
   }, {
     id: 4004,
     program_id: 1000,
+    organization_id: 100,
     name: "Semaine 4",
     description: "21 au 24 mai",
     date: "2016-05-21"
   }, {
     id: 4005,
     program_id: 1000,
+    organization_id: 100,
     name: "Semaine 5",
     description: "28 au 31 mai",
     date: "2016-05-28"
   }, {
     id: 4100,
     program_id: 1100,
+    organization_id: 101,
     name: "Semaine 1",
     description: "1 au 4 mai",
     date: "2015-05-01"
@@ -84,36 +96,42 @@
 
   window._players = [{
     id: 2314,
+    organization_ids: [100, 101],
     name: "Abdelkader Merabet",
     email: "abdel@merabet.com",
     phone: "514-123-1234",
     image: null
   }, {
     id: 2317,
+    organization_ids: [100, 101],
     name: "Samuel Gendron",
     email: "sam@gendron.com",
     phone: "514-123-1234",
     image: null
   }, {
     id: 2414,
+    organization_ids: [100, 101],
     name: "Martin Gilbert Drapeau",
     email: "martindrapeau@gmail.com",
     phone: "514-123-1234",
     image: null
   }, {
     id: 2415,
+    organization_ids: [100, 101],
     name: "Ludovic Bazinet",
     email: "ludovicbazinet@gmail.com",
     phone: "514-123-1234",
     image: null
   }, {
     id: 2417,
+    organization_ids: [100, 101],
     name: "Alain Mussely",
     email: "alain@must.com",
     phone: "514-123-1234",
     image: null
   }, {
     id: 2418,
+    organization_ids: [100, 101],
     name: "Eva Mussely",
     email: "eva@must.com",
     phone: "514-123-1234",
@@ -122,6 +140,7 @@
 
   window._matches = [{
     id: 5402,
+    organization_id: 100,
     program_id: 1000,
     category_id: 3001,
     round_id: 4001,
@@ -169,6 +188,7 @@
     comment: "Bon match!"
   }, {
     id: 5404,
+    organization_id: 100,
     program_id: 1000,
     category_id: 3001,
     round_id: 4001,
@@ -215,6 +235,7 @@
     comment: "Bon match!"
   }, {
     id: 5406,
+    organization_id: 100,
     program_id: 1000,
     category_id: 3001,
     round_id: 4002,
@@ -262,6 +283,7 @@
     comment: "Bon match!"
   }, {
     id: 5408,
+    organization_id: 100,
     program_id: 1000,
     category_id: 3001,
     round_id: 4002,
@@ -308,6 +330,7 @@
     comment: "Bon match!"
   }, {
     id: 5506,
+    organization_id: 101,
     program_id: 1100,
     category_id: 3100,
     round_id: 4100,
@@ -359,152 +382,6 @@
     },
     location: "Calixa Lavallée",
     comment: "Bon match!"
-  }];
-
-  window._events = [{
-    Id: 1000,
-    When: '2016-08-08 09:00:00',
-    Start: ' 9:00',
-    End: '16:00',
-    DateString: 'lundi 8 août',
-    Name: 'Camp option hockey cosom',
-    Type: 'Activity',
-    InvoiceId: 2000,
-    PersonId: 3,
-    FirstName: 'Ludovic',
-    LastName: 'Bazinet',
-    ProfilePictureUrl: 'img/ludovic.jpg',
-    OrganizationId: 201,
-    OrganizationLogoUrl: 'img/sports-montreal.jpg',
-    OrganizationName: "Sports Montréal"
-  }, {
-    Id: 1001,
-    When: '2016-08-09 09:00:00',
-    Start: ' 9:00',
-    End: '16:00',
-    DateString: 'mardi 9 août',
-    Name: 'Camp option hockey cosom',
-    Type: 'Activity',
-    InvoiceId: 2000,
-    PersonId: 3,
-    FirstName: 'Ludovic',
-    LastName: 'Bazinet',
-    ProfilePictureUrl: 'img/ludovic.jpg',
-    OrganizationId: 201,
-    OrganizationLogoUrl: 'img/sports-montreal.jpg',
-    OrganizationName: "Sports Montréal"
-  }, {
-    Id: 1002,
-    When: '2016-08-09 19:00:00',
-    Start: '19:00',
-    End: '21:00',
-    DateString: 'mardi 9 août',
-    Name: "LIGUE RÉCRÉATIVE (jeu en double) Mardi, Niv. 3.5/4.0 - 19h00 à 21h00",
-    Type: 'Activity',
-    InvoiceId: 2003,
-    PersonId: 4,
-    FirstName: 'Martin',
-    LastName: 'Drapeau',
-    ProfilePictureUrl: 'img/martin.jpg',
-    OrganizationId: 201,
-    OrganizationLogoUrl: 'img/tennis-montreal.png',
-    OrganizationName: "Tennis Montréal"
-  }, {
-    Id: 1003,
-    When: '2016-08-10 09:00:00',
-    Start: ' 9:00',
-    End: '16:00',
-    DateString: 'mercredi 10 août',
-    Name: 'Camp option hockey cosom',
-    Type: 'Activity',
-    InvoiceId: 2000,
-    PersonId: 3,
-    FirstName: 'Ludovic',
-    LastName: 'Bazinet',
-    ProfilePictureUrl: 'img/ludovic.jpg',
-    OrganizationId: 201,
-    OrganizationLogoUrl: 'img/sports-montreal.jpg',
-    OrganizationName: "Sports Montréal"
-  }, {
-    Id: 1004,
-    When: '2016-08-11 09:00:00',
-    Start: ' 9:00',
-    End: '16:00',
-    DateString: 'jeudi 11 août',
-    Name: 'Camp option hockey cosom',
-    Type: 'Activity',
-    InvoiceId: 2000,
-    PersonId: 3,
-    FirstName: 'Ludovic',
-    LastName: 'Bazinet',
-    ProfilePictureUrl: 'img/ludovic.jpg',
-    OrganizationId: 201,
-    OrganizationLogoUrl: 'img/sports-montreal.jpg',
-    OrganizationName: "Sports Montréal"
-  }, {
-    Id: 1005,
-    When: '2016-08-12 09:00:00',
-    Start: ' 9:00',
-    End: '16:00',
-    DateString: 'vendredi 12 août',
-    Name: 'Camp option hockey cosom',
-    Type: 'Activity',
-    InvoiceId: 2000,
-    PersonId: 3,
-    FirstName: 'Ludovic',
-    LastName: 'Bazinet',
-    ProfilePictureUrl: 'img/ludovic.jpg',
-    OrganizationId: 201,
-    OrganizationLogoUrl: 'img/sports-montreal.jpg',
-    OrganizationName: "Sports Montréal"
-  }, {
-    Id: 1006,
-    When: '2016-08-16 19:00:00',
-    Start: '19:00',
-    End: '21:00',
-    DateString: 'mardi 16 août',
-    Name: "LIGUE RÉCRÉATIVE (jeu en double) Mardi, Niv. 3.5/4.0 - 19h00 à 21h00",
-    Type: 'Activity',
-    InvoiceId: 2003,
-    PersonId: 4,
-    FirstName: 'Martin',
-    LastName: 'Drapeau',
-    ProfilePictureUrl: 'img/martin.jpg',
-    OrganizationId: 201,
-    OrganizationLogoUrl: 'img/tennis-montreal.png',
-    OrganizationName: "Tennis Montréal"
-  }, {
-    Id: 1007,
-    When: '2016-08-23 19:00:00',
-    Start: '19:00',
-    End: '21:00',
-    DateString: 'mardi 23 août',
-    Name: "LIGUE RÉCRÉATIVE (jeu en double) Mardi, Niv. 3.5/4.0 - 19h00 à 21h00",
-    Type: 'Activity',
-    InvoiceId: 2003,
-    PersonId: 4,
-    FirstName: 'Martin',
-    LastName: 'Drapeau',
-    ProfilePictureUrl: 'img/martin.jpg',
-    OrganizationId: 201,
-    OrganizationLogoUrl: 'img/tennis-montreal.png',
-    OrganizationName: "Tennis Montréal"
-  }, {
-    Id: 1008,
-    When: '2016-08-30 19:00:00',
-    Start: '19:00',
-    End: '21:00',
-    DateString: 'mardi 30 août',
-    Name: "LIGUE RÉCRÉATIVE (jeu en double) Mardi, Niv. 3.5/4.0 - 19h00 à 21h00",
-    Type: 'Activity',
-    InvoiceId: 2003,
-    PersonId: 4,
-    FirstName: 'Martin',
-    LastName: 'Drapeau',
-    ProfilePictureUrl: 'img/martin.jpg',
-    OrganizationId: 201,
-    OrganizationLogoUrl: 'img/tennis-montreal.png',
-    OrganizationName: "Tennis Montréal"
   }];
 
 }.call(this));

@@ -7,12 +7,20 @@ https://github.com/srackham/backbone-localstorage-sync
 'use strict';
 
 // Constructor function for creating Backbone sync adaptor objects.
-var BackboneLocalStorage = function(name) {
+var BackboneLocalStorage = function(name, options) {
   if (!name) throw('Please specify a name for the Backbone sync adaptor.')
   this.name = name;
-  var json = window.localStorage.getItem(this.name);
   // data is keyed by model model id and contains model attribute hashes.
-  this.data = (json && JSON.parse(json)) || {};
+  var json = window.localStorage.getItem(this.name);
+  if (json === null && options && options.data) {
+    this.data = {};
+    for (var i = 0; i < options.data.length; i++) {
+      this.data[options.data[i].id] = options.data[i];
+    }
+    window.localStorage.setItem(this.name, JSON.stringify(this.data));
+  } else {
+    this.data = (json && JSON.parse(json)) || {};
+  }
   this.sync = this.sync.bind(this);
 };
 

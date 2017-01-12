@@ -1,6 +1,6 @@
 (function() {
 
-  var dataStore = new BackboneLocalStorage('programs');
+  var dataStore = new BackboneLocalStorage('programs', {data: window._programs});
 
   Backbone.ProgramModel = Backbone.Model.extend({
     sync: dataStore.sync,
@@ -60,7 +60,11 @@
       $('#top-menu').off('click', '.add-round');
     },
     addProgram: function() {
-      var model = new Backbone.ProgramModel({name: '', expanded: true});
+      var model = new Backbone.ProgramModel({
+        name: '',
+        organization_id: this.stateModel.get('organization_id'),
+        expanded: true
+      });
       bootbox.dialog({
         title: _lang('newProgram'),
         message: this.addProgramFormTemplate(model.toJSON()),
@@ -175,7 +179,10 @@
     onAddCategoryOrRound: function(type, e) {
       e.preventDefault();
       var modelClass = type == 'category' ? Backbone.CategoryModel : Backbone.RoundModel,
-          model = new modelClass({program_id: this.model.id}),
+          model = new modelClass({
+            organization_id: this.stateModel.get('organization_id'),
+            program_id: this.model.id
+          }),
           collection = type == 'category' ? this.categoryCollection : this.roundCollection,
           viewClass = type == 'category' ? Backbone.CategoryView : Backbone.RoundView,
           editViewClass = viewClass.prototype.editView;

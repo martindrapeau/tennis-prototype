@@ -1,6 +1,6 @@
 (function() {
 
-  var dataStoreCategories = new BackboneLocalStorage('categories');
+  var dataStoreCategories = new BackboneLocalStorage('categories', {data: window._categories});
 
   Backbone.CategoryModel = Backbone.Model.extend({
     matchIdAttribute: 'category_id',
@@ -152,7 +152,7 @@
   });
 
 
-  var dataStoreRounds = new BackboneLocalStorage('rounds');
+  var dataStoreRounds = new BackboneLocalStorage('rounds', {data: window._rounds});
 
   Backbone.RoundModel = Backbone.CategoryModel.extend({
     matchIdAttribute: 'round_id',

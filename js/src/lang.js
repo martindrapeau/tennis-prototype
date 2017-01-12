@@ -12,6 +12,13 @@
     },
     dict: {
       appName: ['Tennis App', 'Tennis App'],
+      login: ['Login', 'Connexion'],
+      signup: ['Signup', 'Créer un compte'],
+      password: ['Password', 'Mot de passe'],
+      createAnAccount: ["You don't have one? Create your account.", "Vous en avez pas? Créer un compte."],
+      loginToAccount: ["Already have an account? Login.", "Vous en avez déjà un? Connexion."],
+      confirm: ['Confirm', 'Confirmer'],
+      submit: ['Submit', 'Soumettre'],
       all: ['All', 'Tous'],
       settings: ['Settings', 'Configuration'],
       information: ['Information', 'Information'],

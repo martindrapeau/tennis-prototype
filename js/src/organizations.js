@@ -1,6 +1,6 @@
 (function() {
 
-  var dataStore = new BackboneLocalStorage('organizations');
+  var dataStore = new BackboneLocalStorage('organizations', {data: window._organizations});
 
   Backbone.OrganizationModel = new Backbone.Model.extend({
     sync: dataStore.sync,

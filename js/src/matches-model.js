@@ -10,7 +10,7 @@
     DOUBLES: 'doubles'
   });
 
-  var dataStore = new BackboneLocalStorage('matches');
+  var dataStore = new BackboneLocalStorage('matches', {data: window._matches});
 
   Backbone.MatchModel = Backbone.Model.extend({
     sync: dataStore.sync,

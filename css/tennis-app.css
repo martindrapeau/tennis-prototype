@@ -184,6 +184,16 @@ body.standalone .contents {
   color: #000;
 }
 
+#home form {
+  width: 260px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+#home form button {
+  width: 100%;
+}
+
 
 #program {
   padding: 15px;

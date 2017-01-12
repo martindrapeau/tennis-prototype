@@ -186,7 +186,7 @@
       e.preventDefault();
       var last = this.collection.lastInProgram(this.model.get('program_id')),
           model = new Backbone.MatchModel(_.extend({
-            editable: true,
+            organization_id: this.model.get('organization_id'),
             program_id: this.model.get('program_id'),
             category_id: this.model.get('category_id'),
             round_id: this.model.get('round_id')
