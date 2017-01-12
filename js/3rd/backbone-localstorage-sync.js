@@ -60,7 +60,8 @@ BackboneLocalStorage.prototype = {
     var json = model.attributes || model;
     return Object.keys(this.shard).every(function(attr) {
       if (json[attr] === undefined) return true;
-      if (_.isArray(json[attr]) && json[attr].indexOf(this.shard[attr]) == -1 || json[attr] != this.shard[attr]) {
+      if (_.isArray(json[attr]) && json[attr].indexOf(this.shard[attr]) == -1 ||
+          !_.isArray(json[attr]) && json[attr] != this.shard[attr]) {
         console.log('hasAccess failed', {name: this.name, shardAttr: attr, shardValue: this.shard[attr], modelValue: json[attr]});
         return false;
       }

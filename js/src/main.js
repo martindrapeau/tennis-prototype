@@ -8,7 +8,7 @@ $(document).ready(function() {
       // Credentials and access state - store in local storage to avoid user login everytime.
       // Never saved in the URL.
       id: 101,
-      organization_id: 100,
+      organization_id: undefined,
       organization: undefined,
       admin_id: undefined,
       admin: undefined,
@@ -54,7 +54,7 @@ $(document).ready(function() {
           </li>
         <% } %>
         <% state = {program_id: null}; %>
-        <li><a href="#program" data-state='<%=JSON.stringify(state)%>' class="add-program"><i class="fa fa-fw fa-plus"></i> <%=_lang('addAProgram')%></a></li>
+        <li class="<%=organization_id ? '' : 'disabled'%>"><a href="#program" data-state='<%=JSON.stringify(state)%>' class="add-program"><i class="fa fa-fw fa-plus"></i> <%=_lang('addAProgram')%></a></li>
         <li class="spacer">&nbsp;</li>
       </ul>
     `),
@@ -78,7 +78,62 @@ $(document).ready(function() {
       this.categories = new Backbone.CategoryCollection();
       this.rounds = new Backbone.RoundCollection();
 
-      var options = {shard: {organization_id: model.get('organization_id')}},
+      this.topMenuView = new Backbone.TopMenuView({
+        el: $('#top-menu'),
+        model: this.model,
+        programCollection: this.programs
+      });
+
+      this.views = {
+        home: new Backbone.HomeView({
+          el: $('#home'),
+          model: this.model
+        }),
+        program: new Backbone.ProgramView({
+          el: $('#program'),
+          model: undefined,
+          collection: this.programs,
+          stateModel: this.model,
+          matchCollection: this.matches,
+          categoryCollection: this.categories,
+          roundCollection: this.rounds
+        }),
+        players: new Backbone.PlayersView({
+          el: $('#players'),
+          model: this.model,
+          collection: this.players
+        }),
+        matches: new Backbone.MatchesView({
+          el: $('#matches'),
+          model: this.model,
+          collection: this.matches,
+          programCollection: this.programs,
+          categoryCollection: this.categories,
+          roundCollection: this.rounds
+        }),
+        rankings: new Backbone.RankingsView({
+          el: $('#rankings'),
+          model: this.model,
+          collection: undefined,
+          playerCollection: this.players,
+          matchCollection: this.matches,
+          programCollection: this.programs,
+          categoryCollection: this.categories,
+          roundCollection: this.rounds
+        })
+      };
+
+      this.listenTo(this.model, 'change:organization_id', this.load);
+      this.listenTo(this.model, 'change', this.show);
+      this.listenTo(this.programs, 'change', this.renderSideMenu);
+
+      $(window).on('popstate', this.onPopState.bind(this));
+    },
+    load: function() {
+      var options = {
+            reset: true,
+            shard: {organization_id: this.model.get('organization_id')}
+          },
           p1 = this.players.fetch(options),
           p2 = this.matches.fetch(options),
           p3 = this.programs.fetch(options),
@@ -96,63 +151,14 @@ $(document).ready(function() {
           model.set({expanded: model.id == program_id}, {silent: true});
         });
 
-        this.topMenuView = new Backbone.TopMenuView({
-          el: $('#top-menu'),
-          model: this.model,
-          programCollection: this.programs
-        });
-
-        this.views = {
-          home: new Backbone.HomeView({
-            el: $('#home'),
-            model: this.model
-          }),
-          program: new Backbone.ProgramView({
-            el: $('#program'),
-            model: undefined,
-            collection: this.programs,
-            stateModel: this.model,
-            matchCollection: this.matches,
-            categoryCollection: this.categories,
-            roundCollection: this.rounds
-          }),
-          players: new Backbone.PlayersView({
-            el: $('#players'),
-            model: this.model,
-            collection: this.players
-          }),
-          matches: new Backbone.MatchesView({
-            el: $('#matches'),
-            model: this.model,
-            collection: this.matches,
-            programCollection: this.programs,
-            categoryCollection: this.categories,
-            roundCollection: this.rounds
-          }),
-          rankings: new Backbone.RankingsView({
-            el: $('#rankings'),
-            model: this.model,
-            collection: undefined,
-            playerCollection: this.players,
-            matchCollection: this.matches,
-            programCollection: this.programs,
-            categoryCollection: this.categories,
-            roundCollection: this.rounds
-          })
-        };
-
         this.render();
-        this.show();
-
       }.bind(this));
 
-      this.listenTo(this.model, 'change', this.show);
-      this.listenTo(this.programs, 'change', this.renderSideMenu);
-
-      $(window).on('popstate', this.onPopState.bind(this));
+      return this;
     },
     onClickAddProgram: function(e) {
       e.preventDefault();
+      if ($(e.currentTarget).closest('li').hasClass('disabled')) return false;
       this.views.program.addProgram.call(this.views.program);
     },
     onClick: function(e) {
@@ -161,7 +167,7 @@ $(document).ready(function() {
           name = $a.attr('href').replace('#', '') || 'home',
           state = $a.data('state');
       if (name == 'program-toggle') return this.programToggle(state.program_id);
-      this.model.set(_.extend(Backbone.TennisAppState.prototype.defaults, {view: name}, state), {pushState: true, hideMenu: true});
+      this.model.set(_.extend(_.pick(Backbone.TennisAppState.prototype.defaults, 'view', 'program_id', 'category_id', 'round_id'), {view: name}, state), {pushState: true, hideMenu: true});
       return false;
     },
     onClickBackdrop: function(e) {
@@ -259,6 +265,7 @@ $(document).ready(function() {
     render: function() {
       this.$sideMenu = this.$('#side-menu');
       this.renderSideMenu();
+      this.show();
       return this;
     },
     renderSideMenu: function() {
@@ -291,7 +298,7 @@ $(document).ready(function() {
     window.app = new Backbone.TennisApp({
       model: model,
       el: $('body')
-    });
+    }).load();
   });
   
 });
