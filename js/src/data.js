@@ -3,11 +3,11 @@
   window._organizations = [{
     id: 100,
     name: 'Ligue de Tennis Montréal Nord',
-    admin_ids: [2414]
+    admin_id: [2414]
   }, {
     id: 101,
     name: 'Tennis Deux-Montagnes',
-    admin_ids: [2414, 2417]
+    admin_id: [2414, 2417]
   }];
 
   window._programs = [{

@@ -93,9 +93,12 @@
       var id = $(e.currentTarget).val();
       id = id ? parseInt(id, 10) : null;
       this.model.set({category_id: id}, {pushState: true});
+      this.listenTo(this.model, 'change', this.render);
     },
     render: function(options) {
       options || (options = {});
+
+      this.$el.empty();
 
       var data = this.model.toJSON(),
           program = this.programCollection.findWhere({id: data.program_id});

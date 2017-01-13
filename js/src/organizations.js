@@ -2,7 +2,7 @@
 
   var dataStore = new BackboneLocalStorage('organizations', {data: window._organizations});
 
-  Backbone.OrganizationModel = new Backbone.Model.extend({
+  Backbone.OrganizationModel = Backbone.Model.extend({
     sync: dataStore.sync,
     defaults: {
       id: undefined,
@@ -11,7 +11,7 @@
     }
   });
 
-  Backbone.OrganizationCollection = new Backbone.Collection.extend({
+  Backbone.OrganizationCollection = Backbone.Collection.extend({
     sync: dataStore.sync,
     model: Backbone.OrganizationModel
   });

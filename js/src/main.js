@@ -8,9 +8,9 @@ $(document).ready(function() {
       // Credentials and access state - store in local storage to avoid user login everytime.
       // Never saved in the URL.
       id: 101,
-      organization_id: undefined,
+      organization_id: 100,
       organization: undefined,
-      admin_id: undefined,
+      admin_id: 2414,
       admin: undefined,
       // View state - always cleared upon startup and overwritten by what's in the URL
       view: undefined,
@@ -77,6 +77,7 @@ $(document).ready(function() {
       this.programs = new Backbone.ProgramCollection();
       this.categories = new Backbone.CategoryCollection();
       this.rounds = new Backbone.RoundCollection();
+      this.organizations = new Backbone.OrganizationCollection();
 
       this.topMenuView = new Backbone.TopMenuView({
         el: $('#top-menu'),
@@ -138,9 +139,13 @@ $(document).ready(function() {
           p2 = this.matches.fetch(options),
           p3 = this.programs.fetch(options),
           p4 = this.categories.fetch(options),
-          p5 = this.rounds.fetch(options);
+          p5 = this.rounds.fetch(options),
+          p6 = this.organizations.fetch({
+            reset: true,
+            shard: {admin_id: this.model.get('admin_id')}
+          });
 
-      $.when(p1, p2, p3, p4, p5).done(function() {
+      $.when(p1, p2, p3, p4, p5, p6).done(function() {
         this.matches.bindPlayers(this.players);
         this.players.bindMatches(this.matches);
         this.categories.bindMatches(this.matches);
