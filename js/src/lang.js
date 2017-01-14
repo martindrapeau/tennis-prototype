@@ -19,6 +19,7 @@
       loginToAccount: ["Already have an account? Login.", "Vous en avez déjà un? Connexion."],
       confirm: ['Confirm', 'Confirmer'],
       submit: ['Submit', 'Soumettre'],
+      invalidEmailOrPasswrd: ['Invalid email or password', 'Courriel ou mot de passe invalide.'],
       all: ['All', 'Tous'],
       organization: ['Organization', 'Organisation'],
       addOrganization: ['New organization', "Nouvelle organisation"],

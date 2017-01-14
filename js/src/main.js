@@ -31,16 +31,6 @@ $(document).ready(function() {
     }
   });
 
-  Backbone.AdminModel = Backbone.Model.extend({
-    defaults: {
-      id: undefined,
-      name: undefined,
-      email: undefined,
-      phone: undefined,
-      image: undefined
-    }
-  });
-
   Backbone.TennisApp = Backbone.View.extend({
     sideMenuTemplate: _.template(`
       <% var state = {program_id: null}; %>
@@ -142,12 +132,13 @@ $(document).ready(function() {
 
       $(window).on('popstate', this.onPopState.bind(this));
 
-      this.session.set({id: this.model.get('session_id') || 0});
+      this.listenTo(this.model, 'change:session_id', this.renewSession);
       this.renewSession();
     },
     renewSession: function() {
       // Fetch the current session and restore the admin_id.
       // Then fetch organizations the admin has access to.
+      this.session.set({id: this.model.get('session_id') || null}, {silent: true});
       this.session.fetch()
         .done(function() {
           this.model.set({admin_id: this.session.get('admin_id')}, {silent: true});

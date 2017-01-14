@@ -35,7 +35,7 @@
               <div class="form-group">
                 <input class="form-control" type="password" name="password" placeholder="<%=_lang('password')%>" />
               </div>
-              <div class="form-group">
+              <div class="form-group submit">
                 <button type="submit" class="btn btn-danger"><%=_lang('submit')%></button>
               </div>
               <p><a href="#" class="show-signup"><%=_lang('createAnAccount')%> <i class="fa fa-fw fa-arrow-right"></i></a></p>
@@ -51,7 +51,7 @@
               <div class="form-group">
                 <input class="form-control" type="password" name="confirm" placeholder="<%=_lang('confirm')%>" />
               </div>
-              <div class="form-group">
+              <div class="form-group submit">
                 <button type="submit" class="btn btn-danger"><%=_lang('submit')%></button>
               </div>
               <p><a href="#" class="show-login"><%=_lang('loginToAccount')%> <i class="fa fa-fw fa-arrow-right"></i></a></p>
@@ -71,22 +71,28 @@
       'click a.change-account': 'onChangeAccount',
       'click a.change-organization': 'onChangeOrganization',
       'click a.add-organization': 'onAddOrganization',
+      'submit form.login': 'onLogin',
+      'submit form.signup': 'onSignup',
       'click .clear': 'onClickClear'
     },
     initialize: function(options) {
       this.session = options.session;
       this.organizations = options.organizations;
       this.listenTo(this.model, 'change', this.render);
+
+      // TEMP LOGIN STUFF
+      this.sessions = new Backbone.SessionCollection();
+      this.sessions.fetch();
     },
     onShowSignup: function(e) {
       e.preventDefault();
-      this.$('form.login').hide();
-      this.$('form.signup').show();
+      this.$login.hide();
+      this.$signup.show();
     },
     onShowLogin: function(e) {
       e.preventDefault();
-      this.$('form.login').show();
-      this.$('form.signup').hide();
+      this.$login.show();
+      this.$signup.hide();
     },
     onChangeAccount: function(e) {
       e.preventDefault();
@@ -101,6 +107,29 @@
       e.preventDefault();
       console.log('onAddOrganization');
     },
+    onLogin: function(e) {
+      e.preventDefault();
+
+      var credentials = this.$login.serializeObject(),
+          session = this.sessions.findWhere(credentials);
+
+      if (!session) {
+        this.render();
+        this.$signup.hide();
+        this.$login.show();
+        this.$login.find('.form-group.submit').before('<p class="lead text-center">' + _lang('invalidEmailOrPasswrd') + '</p>');
+        return;
+      }
+
+      this.model.save({session_id: session.id});
+    },
+    onSignup: function(e) {
+      e.preventDefault();
+      this.render();
+      this.$login.hide();
+      this.$signup.show();
+      this.$signup.find('.form-group.submit').before('<p class="lead text-center">Not yet implemented</p>');
+    },
     onClickClear: function(e) {
       localStorage.clear();
       window.location.reload();
@@ -113,9 +142,11 @@
         organization: organization ? organization.toJSON() : null
       });
     },
-    render: function() {
+    render: function(options) {
       var data = this.toRender();
       this.$el.html(this.template(data));
+      this.$login = this.$('form.login');
+      this.$signup = this.$('form.signup');
     	return this;
     }
   });

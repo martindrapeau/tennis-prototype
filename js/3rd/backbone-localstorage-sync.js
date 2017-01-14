@@ -126,7 +126,7 @@ BackboneLocalStorage.prototype = {
     var resp; // JSON response from the "server".
     switch (method) {
       case 'read':    // Model/Collection `fetch` APIs.
-        resp = model.id ? this.find(model) : this.findAll();
+        resp = model.id !== undefined ? this.find(model) : this.findAll();
         break;
       case 'create':  // Model `save` API.
         resp = this.create(model);
