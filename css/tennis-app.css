@@ -168,7 +168,8 @@ body.standalone .contents {
 
 #home .wrapper .center {
   display: table-cell;
-  vertical-align: middle;
+  vertical-align: top;
+  padding-top: 10px;
 }
 
 #home .wrapper .center h1 {

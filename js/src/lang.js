@@ -12,6 +12,11 @@
     },
     dict: {
       appName: ['Tennis App', 'Tennis App'],
+      welcome: ['Welcome', 'Bienvenue'],
+      managingThisOrganization: ['Managing this organization', 'Gestion de cette organisation'],
+      createAnOrganization: ['Please create an organization', 'Veuillez créer une organisation'],
+      pleaseChooseAnOrganization: ['Please choose an organization', 'Veuillez choisir une organisation'],
+      clickOnMenuToNavigate: ['Tap on <i class="fa fa-fw fa-bars"></i> to start', 'Appuyez sur <i class="fa fa-fw fa-bars"></i> pour débuter'],
       login: ['Login', 'Connexion'],
       signup: ['Signup', 'Créer un compte'],
       password: ['Password', 'Mot de passe'],

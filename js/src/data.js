@@ -12,6 +12,12 @@
     name: "Alain Mussely",
     email: "alain@must.com",
     password: '1234'
+  }, {
+    id: 12,
+    admin_id: 2415,
+    name: "Ludovic Bazinet",
+    email: "ludovicbazinet@gmail.com",
+    password: '1234'
   }];
 
   window._organizations = [{

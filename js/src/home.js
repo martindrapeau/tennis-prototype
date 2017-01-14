@@ -7,25 +7,41 @@
           <h1><%=_lang('appName')%></h1>
           <br/>
           <% if (admin_id) { %>
-            <p class="lead"><%=_lang('account')%>: <%=admin.name%></p>
+            <p class="lead"><%=_lang('welcome')%> <%=admin.name%>!</p>
             <p><a href="#" class="change-account"><i class="fa fa-fw fa-user-circle"></i> <%=_lang('changeAccount')%></a></p>
             <br/>
-            <form class="organization form-inline">
-              <span class="lead"><%=_lang('organization')%>: </span>
-              <div class="btn-group">
-                <button class="btn btn-default dropdown-toggle" type="button" id="choose-organization" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                  <%=organization_id == null ? _lang('pleaseChoose') : organization.name%>
-                  <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="choose-organization">
-                  <% for (var i = 0; i < organizations.length; i++) { %>
-                    <li class="<%=organizations[i].id == organization_id ? 'active' : ''%>"><a href="#" class="change-organization" data-id="<%=JSON.stringify(organizations[i].id)%>"><%=organizations[i].name%></a></li>
-                  <% } %>
-                  <li role="separator" class="divider"></li>
-                  <li><a href="#" class="add-organization"><i class="fa fa-fw fa-plus"></i> <%=_lang('addOrganization')%></a></li>
-                </ul>
-              </div>
-            </form>
+            <p class="lead">
+              <% if (organization_id) { %>
+                <%=_lang('managingThisOrganization')%>
+              <% } else if (organizations.length == 0) { %>
+                <%=_lang('createAnOrganization')%>
+              <% } else {%>
+                <%=_lang('pleaseChooseAnOrganization')%>
+              <% } %>
+            </p>
+            <% if (organizations.length) { %>
+              <form class="organization">
+                <div class="form-group btn-group">
+                  <button class="btn btn-default dropdown-toggle" type="button" id="choose-organization" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    <%=organization_id == null ? _lang('pleaseChoose') : organization.name%>
+                    <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="choose-organization">
+                    <% for (var i = 0; i < organizations.length; i++) { %>
+                      <li class="<%=organizations[i].id == organization_id ? 'active' : ''%>"><a href="#" class="change-organization" data-id="<%=JSON.stringify(organizations[i].id)%>"><%=organizations[i].name%></a></li>
+                    <% } %>
+                    <li role="separator" class="divider"></li>
+                    <li><a href="#" class="add-organization"><i class="fa fa-fw fa-plus"></i> <%=_lang('addOrganization')%></a></li>
+                  </ul>
+                </div>
+                <% if (organization_id) { %>
+                  <br/><br/>
+                  <p class="lead"><%=_lang('clickOnMenuToNavigate')%></p>
+                <% } %>
+              </form>
+            <% } else {%>
+              <p><button class="btn btn-danger add-organization"><i class="fa fa-fw fa-plus"></i> <%=_lang('addOrganization')%></button></p>
+            <% } %>
           <% } else { %>
             <form class="login">
               <h3><%=_lang('login')%></h3>
@@ -70,7 +86,7 @@
       'click a.show-login': 'onShowLogin',
       'click a.change-account': 'onChangeAccount',
       'click a.change-organization': 'onChangeOrganization',
-      'click a.add-organization': 'onAddOrganization',
+      'click .add-organization': 'onAddOrganization',
       'submit form.login': 'onLogin',
       'submit form.signup': 'onSignup',
       'click .clear': 'onClickClear'
