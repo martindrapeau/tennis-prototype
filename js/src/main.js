@@ -5,13 +5,12 @@ $(document).ready(function() {
   Backbone.TennisAppState = Backbone.Model.extend({
     sync: new BackboneLocalStorage('app').sync,
     defaults: {
+      id: 101,
       // Credentials and access state - store in local storage to avoid user login everytime.
       // Never saved in the URL.
-      id: 101,
-      organization_id: 100,
-      organization: undefined,
+      session_id: 10,
       admin_id: 2414,
-      admin: undefined,
+      organization_id: 100,
       // View state - always cleared upon startup and overwritten by what's in the URL
       view: undefined,
       program_id: undefined,
@@ -29,6 +28,16 @@ $(document).ready(function() {
           round_id: undefined
         }, {silent: true});
       }.bind(this));
+    }
+  });
+
+  Backbone.AdminModel = Backbone.Model.extend({
+    defaults: {
+      id: undefined,
+      name: undefined,
+      email: undefined,
+      phone: undefined,
+      image: undefined
     }
   });
 
@@ -72,6 +81,7 @@ $(document).ready(function() {
       // Restore URL state
       model.set(this.getState());
 
+      this.session = new Backbone.SessionModel();
       this.players = new Backbone.PlayerCollection();
       this.matches = new Backbone.MatchCollection();
       this.programs = new Backbone.ProgramCollection();
@@ -88,7 +98,9 @@ $(document).ready(function() {
       this.views = {
         home: new Backbone.HomeView({
           el: $('#home'),
-          model: this.model
+          model: this.model,
+          session: this.session,
+          organizations: this.organizations
         }),
         program: new Backbone.ProgramView({
           el: $('#program'),
@@ -129,6 +141,42 @@ $(document).ready(function() {
       this.listenTo(this.programs, 'change', this.renderSideMenu);
 
       $(window).on('popstate', this.onPopState.bind(this));
+
+      this.session.set({id: this.model.get('session_id') || 0});
+      this.renewSession();
+    },
+    renewSession: function() {
+      // Fetch the current session and restore the admin_id.
+      // Then fetch organizations the admin has access to.
+      this.session.fetch()
+        .done(function() {
+          this.model.set({admin_id: this.session.get('admin_id')}, {silent: true});
+          this.renewOrganizations();
+        }.bind(this))
+        .fail(function() {
+          console.log('renewSession fail for session_id', this.session.get('id'));
+          this.model.set({admin_id: undefined}, {silent: true});
+          this.renewOrganizations();
+        }.bind(this));
+    },
+    renewOrganizations: function() {
+      // Fetch the organizations the current admin is allowed to access.
+      // Then load everything else.
+      this.organizations.fetch({
+        reset: true,
+        shard: {admin_id: this.model.get('admin_id')}
+      })
+        .done(function() {
+          var organization_id = this.model.get('organization_id');
+          if (organization_id && !this.organizations.get(organization_id)) organization_id = undefined;
+          this.model.set({organization_id: organization_id}, {silent: true});
+          this.load();
+        }.bind(this))
+        .fail(function() {
+          console.log('renewOrganizations fail for admin_id', this.model.get('admin_id'));
+          this.model.set({organization_id: undefined}, {silent: true});
+          this.load();
+        }.bind(this));
     },
     load: function() {
       var options = {
@@ -139,13 +187,9 @@ $(document).ready(function() {
           p2 = this.matches.fetch(options),
           p3 = this.programs.fetch(options),
           p4 = this.categories.fetch(options),
-          p5 = this.rounds.fetch(options),
-          p6 = this.organizations.fetch({
-            reset: true,
-            shard: {admin_id: this.model.get('admin_id')}
-          });
+          p5 = this.rounds.fetch(options);
 
-      $.when(p1, p2, p3, p4, p5, p6).done(function() {
+      $.when(p1, p2, p3, p4, p5).done(function() {
         this.matches.bindPlayers(this.players);
         this.players.bindMatches(this.matches);
         this.categories.bindMatches(this.matches);
@@ -228,7 +272,7 @@ $(document).ready(function() {
           name = state.view,
           method = options && options.replaceState ? 'replaceState' : 'pushState';
       delete state.view;
-      var omitKeys = ['id', 'organization', 'organization_id', 'admin', 'admin_id'];
+      var omitKeys = ['id', 'organization', 'organization_id', 'admin_id', 'session_id'];
       _.each(state, function(v, k) {
         if (v === null || v === '' || v === undefined) omitKeys.push(k);
       });
@@ -303,7 +347,7 @@ $(document).ready(function() {
     window.app = new Backbone.TennisApp({
       model: model,
       el: $('body')
-    }).load();
+    });
   });
   
 });

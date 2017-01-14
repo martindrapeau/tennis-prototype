@@ -6,7 +6,7 @@
         <div class="center">
           <h1><%=_lang('appName')%></h1>
           <br/>
-          <% if (admin) { %>
+          <% if (admin_id) { %>
             <p class="lead">
               <span class="account"><%=_lang('account')%>: John Doe</span>
             </p>
@@ -57,6 +57,10 @@
       'click a.show-login': 'onShowLogin',
       'click a.change-account': 'onChangeAccount',
       'click .clear': 'onClickClear'
+    },
+    initialize: function(options) {
+      this.session = options.session;
+      this.organizations = options.organizations;
     },
     onShowSignup: function(e) {
       e.preventDefault();

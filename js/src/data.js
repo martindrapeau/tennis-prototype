@@ -1,5 +1,19 @@
 (function() {
 
+  window._sessions = [{
+    id: 10,
+    admin_id: 2414,
+    name: 'Martin Drapeau',
+    email: 'martindrapeau@gmail.com',
+    password: '1234'
+  }, {
+    id: 11,
+    admin_id: 2417,
+    name: "Alain Mussely",
+    email: "alain@must.com",
+    password: '1234'
+  }];
+
   window._organizations = [{
     id: 100,
     name: 'Ligue de Tennis Montréal Nord',
