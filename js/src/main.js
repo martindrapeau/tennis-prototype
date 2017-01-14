@@ -8,9 +8,9 @@ $(document).ready(function() {
       id: 101,
       // Credentials and access state - store in local storage to avoid user login everytime.
       // Never saved in the URL.
-      session_id: 10,
-      admin_id: 2414,
-      organization_id: 100,
+      session_id: undefined,
+      admin_id: undefined,
+      organization_id: undefined,
       // View state - always cleared upon startup and overwritten by what's in the URL
       view: undefined,
       program_id: undefined,

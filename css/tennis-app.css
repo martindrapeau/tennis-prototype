@@ -184,14 +184,20 @@ body.standalone .contents {
   color: #000;
 }
 
-#home form {
+#home form.login,
+#home form.signup {
   width: 260px;
   margin: 0 auto;
   text-align: left;
 }
 
-#home form button {
+#home form.login button,
+#home form.signup button {
   width: 100%;
+}
+
+#home form.organization {
+  padding: 0 20px;
 }
 
 
