@@ -6,7 +6,9 @@
         <div class="center">
           <h1><%=_lang('appName')%></h1>
           <br/>
+
           <% if (admin_id) { %>
+
             <p class="lead"><%=_lang('welcome')%> <%=admin.name%>!</p>
             <p class="lead anim fade-in">
               <% if (organizations.length == 0) { %>
@@ -15,6 +17,7 @@
                 <%=_lang('pleaseChooseAnOrganization')%>
               <% } %>
             </p>
+
             <% if (organizations.length) { %>
               <form class="organization anim fade-in">
                 <div class="form-group btn-group">
@@ -39,7 +42,9 @@
             <% } else {%>
               <p><button class="btn btn-danger add-organization anim fade-in"><i class="fa fa-fw fa-plus"></i> <%=_lang('addOrganization')%></button></p>
             <% } %>
+
           <% } else { %>
+
             <form class="login anim fade-in">
               <h3><%=_lang('login')%></h3>
               <div class="form-group">
@@ -53,6 +58,7 @@
               </div>
               <p><a href="#" class="show-signup"><%=_lang('createAnAccount')%> <i class="fa fa-fw fa-arrow-right"></i></a></p>
             </form>
+
             <form class="signup anim fade-in" style="display: none;">
               <h3><%=_lang('signup')%></h3>
               <div class="form-group">
@@ -69,7 +75,9 @@
               </div>
               <p><a href="#" class="show-login"><%=_lang('loginToAccount')%> <i class="fa fa-fw fa-arrow-right"></i></a></p>
             </form>
+
           <% } %>
+
           <p class="footer">
             <br/><br/><br/><br/>
             <a href="#" class="change-account"><i class="fa fa-fw fa-user-circle"></i> <%=_lang('changeAccount')%></a>
@@ -80,7 +88,6 @@
         </div>
       </div>
     `),
-    className: 'home',
     events: {
       'click a.show-signup': 'onShowSignup',
       'click a.show-login': 'onShowLogin',
@@ -96,6 +103,7 @@
     initialize: function(options) {
       this.session = options.session;
       this.organizations = options.organizations;
+      this.organizationView = options.organizationView;
       this.listenTo(this.model, 'change', this.render);
 
       // TEMP LOGIN STUFF
@@ -124,6 +132,7 @@
     onAddOrganization: function(e) {
       e.preventDefault();
       console.log('onAddOrganization');
+      return this.organizationView.onAddOrganization();
     },
     onLogin: function(e) {
       e.preventDefault();
@@ -150,12 +159,14 @@
       this.$login.hide();
       this.$signup.show();
       this.$signup.find('.form-group.submit').before('<p class="lead text-center">Not yet implemented</p>');
+      // TODO
     },
     onClickLink: function(e) {
       e.preventDefault();
       // TODO
     },
     onClickClear: function(e) {
+      // TO REMOVE
       e.preventDefault();
       localStorage.clear();
       window.location.reload();

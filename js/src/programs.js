@@ -119,7 +119,7 @@
       this.$el.animate({backgroundColor: '#ffdddd'}, 100);
 
       setTimeout(function() {
-        if (this.matchCollection.findWhere({program_id: this.model.id})) {
+        if (this.matchCollection.size()) {
           bootbox.alert(_lang('cannotDeleteWhenMatchesExist'), function() {
             this.$el.animate({backgroundColor: 'transparent'}, 100, function() {$(this).css({backgroundColor:''});});
           }.bind(this));
@@ -138,8 +138,12 @@
               var program_id = this.model.id;
               this.model.collection.remove(this.model);
               this.model.destroy({wait: true}).done(function() {
-                this.stateModel.set(
-                  _.extend(Backbone.TennisAppState.prototype.defaults, {view: 'home', program_id: null}), {
+                this.stateModel.set({
+                  view: 'organization',
+                  program_id: undefined,
+                  category_id: undefined,
+                  round_id: undefined
+                }, {
                   renderMenu: true,
                   replaceState: true,
                   hideMenu: true

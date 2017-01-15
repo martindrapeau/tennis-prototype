@@ -37,7 +37,8 @@ $(document).ready(function() {
       <a class="navmenu-brand" href="#" data-state='<%=JSON.stringify(state)%>'><%=_lang('appName')%></a>
       <ul class="nav navmenu-nav">
         <li><a href="#" data-state='<%=JSON.stringify(state)%>'><i class="fa fa-fw fa-home"></i> <%=_lang('home')%></a></li>
-        <li><a href="#players" data-state='<%=JSON.stringify(state)%>'><i class="fa fa-fw fa-users"></i> <%=_lang('allPlayers')%></a></li>
+        <li class="<%=organization_id ? '' : 'disabled'%>"><a href="#organization" data-state='<%=JSON.stringify(state)%>'><i class="fa fa-fw fa-bank"></i> <%=_lang('organization')%></a></li>
+        <li class="<%=organization_id ? '' : 'disabled'%>"><a href="#players" data-state='<%=JSON.stringify(state)%>'><i class="fa fa-fw fa-users"></i> <%=_lang('allPlayers')%></a></li>
         <% for (var i = 0; i < programs.length; i++) { %>
           <% var program = programs[i]; %>
           <% state = {program_id: program.id}; %>
@@ -86,11 +87,12 @@ $(document).ready(function() {
       });
 
       this.views = {
-        home: new Backbone.HomeView({
-          el: $('#home'),
-          model: this.model,
-          session: this.session,
-          organizations: this.organizations
+        organization: new Backbone.OrganizationView({
+          el: $('#organization'),
+          model: undefined,
+          collection: this.organizations,
+          programCollection: this.programs,
+          stateModel: this.model
         }),
         program: new Backbone.ProgramView({
           el: $('#program'),
@@ -125,6 +127,14 @@ $(document).ready(function() {
           roundCollection: this.rounds
         })
       };
+
+      this.views.home = new Backbone.HomeView({
+        el: $('#home'),
+        model: this.model,
+        session: this.session,
+        organizations: this.organizations,
+        organizationView: this.views.organization
+      });
 
       this.listenTo(this.model, 'change:organization_id', this.load);
       this.listenTo(this.model, 'change', this.show);
@@ -211,6 +221,7 @@ $(document).ready(function() {
       var $a = $(e.currentTarget),
           name = $a.attr('href').replace('#', '') || 'home',
           state = $a.data('state');
+      if ($a.closest('li').hasClass('disabled')) return false;
       if (name == 'program-toggle') return this.programToggle(state.program_id);
       this.model.set(_.extend(_.pick(Backbone.TennisAppState.prototype.defaults, 'view', 'program_id', 'category_id', 'round_id'), {view: name}, state), {pushState: true, hideMenu: true});
       return false;
