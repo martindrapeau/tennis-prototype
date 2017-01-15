@@ -8,19 +8,15 @@
           <br/>
           <% if (admin_id) { %>
             <p class="lead"><%=_lang('welcome')%> <%=admin.name%>!</p>
-            <p><a href="#" class="change-account"><i class="fa fa-fw fa-user-circle"></i> <%=_lang('changeAccount')%></a></p>
-            <br/>
-            <p class="lead">
-              <% if (organization_id) { %>
-                <%=_lang('managingThisOrganization')%>
-              <% } else if (organizations.length == 0) { %>
+            <p class="lead anim fade-in">
+              <% if (organizations.length == 0) { %>
                 <%=_lang('createAnOrganization')%>
-              <% } else {%>
+              <% } else if (!organization_id) { %>
                 <%=_lang('pleaseChooseAnOrganization')%>
               <% } %>
             </p>
             <% if (organizations.length) { %>
-              <form class="organization">
+              <form class="organization anim fade-in">
                 <div class="form-group btn-group">
                   <button class="btn btn-default dropdown-toggle" type="button" id="choose-organization" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                     <%=organization_id == null ? _lang('pleaseChoose') : organization.name%>
@@ -35,15 +31,16 @@
                   </ul>
                 </div>
                 <% if (organization_id) { %>
-                  <br/><br/>
-                  <p class="lead"><%=_lang('clickOnMenuToNavigate')%></p>
+                  <br/>
+                  <p class="anim fade-in"><%=organization.statsText%></p>
+                  <p class="anim fade-in delay-2"><%=_lang('clickOnMenuToNavigate')%></p>
                 <% } %>
               </form>
             <% } else {%>
-              <p><button class="btn btn-danger add-organization"><i class="fa fa-fw fa-plus"></i> <%=_lang('addOrganization')%></button></p>
+              <p><button class="btn btn-danger add-organization anim fade-in"><i class="fa fa-fw fa-plus"></i> <%=_lang('addOrganization')%></button></p>
             <% } %>
           <% } else { %>
-            <form class="login">
+            <form class="login anim fade-in">
               <h3><%=_lang('login')%></h3>
               <div class="form-group">
                 <input class="form-control" type="email" name="email" placeholder="<%=_lang('email')%>" />
@@ -56,7 +53,7 @@
               </div>
               <p><a href="#" class="show-signup"><%=_lang('createAnAccount')%> <i class="fa fa-fw fa-arrow-right"></i></a></p>
             </form>
-            <form class="signup" style="display: none;">
+            <form class="signup anim fade-in" style="display: none;">
               <h3><%=_lang('signup')%></h3>
               <div class="form-group">
                 <input class="form-control" type="email" name="email" placeholder="<%=_lang('email')%>" />
@@ -73,9 +70,12 @@
               <p><a href="#" class="show-login"><%=_lang('loginToAccount')%> <i class="fa fa-fw fa-arrow-right"></i></a></p>
             </form>
           <% } %>
-          <p>
+          <p class="footer">
             <br/><br/><br/><br/>
-            <button class="btn btn-danger clear">Clear</button>
+            <a href="#" class="change-account"><i class="fa fa-fw fa-user-circle"></i> <%=_lang('changeAccount')%></a>
+            <a href="#" class="terms"><%=_lang('terms')%></a>
+            <a href="#" class="privacy"><%=_lang('privacy')%></a>
+            <a href="#" class="clear">Clear</a>
           </p>
         </div>
       </div>
@@ -89,7 +89,9 @@
       'click .add-organization': 'onAddOrganization',
       'submit form.login': 'onLogin',
       'submit form.signup': 'onSignup',
-      'click .clear': 'onClickClear'
+      'click .clear': 'onClickClear',
+      'click .terms': 'onClickLink',
+      'click .privacy': 'onClickLink'
     },
     initialize: function(options) {
       this.session = options.session;
@@ -133,7 +135,10 @@
         this.render();
         this.$signup.hide();
         this.$login.show();
-        this.$login.find('.form-group.submit').before('<p class="lead text-center">' + _lang('invalidEmailOrPasswrd') + '</p>');
+        this.$login.find('.form-group.submit').before('<p class="lead text-center error">' + _lang('invalidEmailOrPasswrd') + '</p>');
+        this.$login.removeClass('anim fade-in');
+        this.$login.find('p.error').addClass('anim fade-in');
+        this.$login.find('input[name=email]').val(credentials.email);
         return;
       }
 
@@ -146,7 +151,12 @@
       this.$signup.show();
       this.$signup.find('.form-group.submit').before('<p class="lead text-center">Not yet implemented</p>');
     },
+    onClickLink: function(e) {
+      e.preventDefault();
+      // TODO
+    },
     onClickClear: function(e) {
+      e.preventDefault();
       localStorage.clear();
       window.location.reload();
     },
@@ -155,7 +165,7 @@
       return _.extend(this.model.toJSON(), {
         admin: this.model.get('admin_id') ? this.session.pick('name', 'email') : null,
         organizations: this.organizations.toJSON(),
-        organization: organization ? organization.toJSON() : null
+        organization: organization ? organization.toRender() : null
       });
     },
     render: function(options) {

@@ -201,6 +201,10 @@ body.standalone .contents {
   padding: 0 20px;
 }
 
+#home .footer a {
+  padding: 0 5px;
+}
+
 
 #program {
   padding: 15px;
@@ -546,4 +550,23 @@ body.standalone .contents {
   width: 250px;
   margin: 0;
   vertical-align: middle;
+}
+
+.anim.fade-in {
+  animation: fadein 1s;
+}
+
+.anim.fade-in.delay-2 {
+  animation: fadeindelay 2s;
+}
+
+@keyframes fadein {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeindelay {
+  0% { opacity: 0; }
+  50% { opacity: 0; }
+  100% { opacity: 1; }
 }

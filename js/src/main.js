@@ -185,6 +185,11 @@ $(document).ready(function() {
         this.players.bindMatches(this.matches);
         this.categories.bindMatches(this.matches);
         this.rounds.bindMatches(this.matches);
+        this.organizations.bindCollections({
+          programs: this.programs,
+          matches: this.matches,
+          players: this.players
+        })
 
         var program_id = this.model.get('program_id');
         this.programs.each(function(model) {
