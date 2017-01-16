@@ -107,7 +107,13 @@
     },
     onEditOrganization: function(e) {
       e.preventDefault();
-      // TODO
+      new Backbone.EditOrganizationView({
+        model: this.model,
+        onSave: this.onSave.bind(this)
+      }).render();
+    },
+    onSave: function() {
+      this.model.save(null, {wait: true});
     },
     onClickDeleteOrganization: function(e) {
       e.preventDefault();
@@ -166,8 +172,10 @@
       var organization_id = this.stateModel.get('organization_id');
       if (!organization_id) throw 'organization_id is not set';
 
+      if (this.model) this.stopListening(this.model);
       this.model = this.collection.get(organization_id);
       if (!this.model) return this;
+      this.listenTo(this.model, 'change', this.render);
 
       var data = this.toRender();
       this.$el.html(this.template(data));

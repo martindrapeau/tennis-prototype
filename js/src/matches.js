@@ -57,7 +57,6 @@
     },
     onClick: function(e) {
       e.preventDefault();
-      e.stopPropagation();
       new Backbone.EditMatchView({
         model: this.model,
         onSave: this.onSave.bind(this),

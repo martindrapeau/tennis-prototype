@@ -8,6 +8,7 @@
     <% if (view == 'organization') { %>
       <button id="#organization-menu" type="button" class="btn pull-right dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"><i class="fa fa-fw fa-ellipsis-h"></i></button>
       <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="program-menu">
+        <li><a href="#" class="edit-organization"><i class="fa fa-fw fa-pencil"></i> <%=_lang('modify')%></a></li>
         <li><a href="#" class="delete-organization"><i class="fa fa-fw fa-trash"></i> <%=_lang('delete')%></a></li>
       </ul>
     <% } else if (view == 'program') { %>
