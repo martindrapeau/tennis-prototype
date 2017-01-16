@@ -206,6 +206,11 @@ body.standalone .contents {
 }
 
 
+#organization {
+  padding: 15px;
+}
+
+
 #program {
   padding: 15px;
 }

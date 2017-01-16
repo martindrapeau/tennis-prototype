@@ -41,7 +41,7 @@
 
   Backbone.OrganizationView = Backbone.View.extend({
     template: _.template(`
-      <h2><%=name%></h2>
+      <h4><%=name%></h4>
     `),
     addFormTemplate: _.template(`
       <form class="bootbox-form">

@@ -119,7 +119,7 @@
       this.$el.animate({backgroundColor: '#ffdddd'}, 100);
 
       setTimeout(function() {
-        if (this.matchCollection.size()) {
+        if (this.matchCollection.findWhere({program_id: this.model.id})) {
           bootbox.alert(_lang('cannotDeleteWhenMatchesExist'), function() {
             this.$el.animate({backgroundColor: 'transparent'}, 100, function() {$(this).css({backgroundColor:''});});
           }.bind(this));
