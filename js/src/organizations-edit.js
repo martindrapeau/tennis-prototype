@@ -70,7 +70,8 @@
     },
     onClearImage: function(e) {
       this.imageSrc = undefined;
-      this.$logo.find('img').removeAttr('src');
+      this.$logo.find('img').remove();
+      this.$logo.find('.wrapper').append('<img>');
       this.$logo.show();
       this.$croppie.hide();
     },
