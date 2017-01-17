@@ -443,6 +443,15 @@ body.standalone .contents {
   width: 50%;
 }
 
+.bootbox-form.organization .logo-container {
+  display: table-cell;
+  width: 260px;
+  height: 260px;
+  border: 4px solid #ddd;
+  text-align: center;
+  vertical-align: middle;
+}
+
 
 .popover {
   max-width: 300px;

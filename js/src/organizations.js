@@ -7,6 +7,7 @@
     defaults: {
       id: undefined,
       name: undefined,
+      image: undefined,
       admin_ids: []
     },
     getStats: function() {

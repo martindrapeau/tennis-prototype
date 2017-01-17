@@ -86,7 +86,7 @@
         </div>
       </form>
     `),
-    title: _lang('categoryInformation'),
+    title: _lang('category'),
     deleteConfirmMessage: _lang('deleteThisCategory'),
     onValidateBeforeDelete: function() {
       if (this.model.matches.length) return _lang('cannotDeleteWhenMatchesExist');
@@ -167,7 +167,7 @@
   });
 
   Backbone.EditRoundView = Backbone.EditCategoryView.extend({
-    title: _lang('roundInformation'),
+    title: _lang('round'),
     deleteConfirmMessage: _lang('deleteThisRound')
   });
 

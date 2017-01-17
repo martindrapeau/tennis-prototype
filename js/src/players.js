@@ -113,7 +113,7 @@
         </div>
       </form>
     `),
-    title: _lang('playerInformation'),
+    title: _lang('player'),
     deleteConfirmMessage: _lang('deleteThisPlayer')
   });
 

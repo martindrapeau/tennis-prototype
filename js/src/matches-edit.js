@@ -85,7 +85,7 @@
         <li><a href="#" class="exception other-forfeited" data-exception="user_won_because_forfeit"><i class="fa fa-fw"></i> <%=other_short_inline%> <%=_lang('forfeited')%></a></li>
       </ul>
     `),
-    title: _lang('matchInformation'),
+    title: _lang('match'),
     deleteConfirmMessage: _lang('deleteThisMatch'),
     events: {
       'change input,select': 'renderDynamicElements',
