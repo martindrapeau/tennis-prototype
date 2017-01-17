@@ -210,6 +210,33 @@ body.standalone .contents {
   padding: 15px;
 }
 
+#organization .brand {
+  padding: 10px;
+}
+
+#organization .brand>.wrapper {
+  display: table-cell;
+  width: 50px;
+  min-width: 50px;
+  height: 50px;
+  vertical-align: middle;
+  text-align: center;
+  background-color: #ddd;
+}
+
+#organization .brand>.wrapper>img {
+  width: 50px;
+}
+
+#organization .brand>.name {
+  display: table-cell;
+  width: calc(100% - 60px);
+  height: 50px;
+  padding-left: 10px;
+  font-size: 20px;
+  line-height: 25px;
+  vertical-align: middle;
+}
 
 #program {
   padding: 15px;
@@ -443,7 +470,17 @@ body.standalone .contents {
   width: 50%;
 }
 
-.bootbox-form.organization .logo-container {
+.bootbox-form.organization .upload-buttons {
+  width: 260px;
+  margin: 10px auto;
+}
+
+.bootbox-form.organization .brand {
+  width: 260px;
+  margin: 0 auto;
+}
+
+.bootbox-form.organization .brand>.wrapper {
   display: table-cell;
   width: 260px;
   height: 260px;

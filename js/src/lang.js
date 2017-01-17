@@ -28,6 +28,7 @@
       submit: ['Submit', 'Soumettre'],
       invalidEmailOrPasswrd: ['Invalid email or password', 'Courriel ou mot de passe invalide.'],
       all: ['All', 'Tous'],
+      clear: ['Clear', 'Effacer'],
       organization: ['Organization', 'Organisation'],
       addOrganization: ['New organization', "Nouvelle organisation"],
       organizationName: ['Organization name', "Nom de l'organisation"],

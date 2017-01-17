@@ -18,8 +18,10 @@
       };
     },
     toRender: function() {
-      var stats = this.getStats();
-      return _.extend(this.toJSON(), {
+      var data = this.toJSON(),
+          stats = this.getStats();
+      return _.extend(data, {
+        initials: _.initials(data.name),
         stats: stats,
         statsText: _lang('orgStatsText')
           .replace('{1}', stats.programCount)
@@ -42,7 +44,16 @@
 
   Backbone.OrganizationView = Backbone.View.extend({
     template: _.template(`
-      <h4><%=name%></h4>
+      <div class="brand">
+        <div class="wrapper">
+          <% if (image) { %>
+            <img src="<%=image%>" alt="<%=initials%>" />
+          <% } else { %>
+            <div class="initials"><%=initials%></div>
+          <% } %>
+        </div>
+        <div class="name"><%=name%></div>
+      </div>
     `),
     addFormTemplate: _.template(`
       <form class="bootbox-form">
@@ -167,7 +178,7 @@
 
     },
     toRender: function() {
-      return this.model ? this.model.toJSON() : {};
+      return this.model ? this.model.toRender() : {};
     },
     render: function() {
       var organization_id = this.stateModel.get('organization_id');

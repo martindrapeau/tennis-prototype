@@ -11,16 +11,18 @@
         <div class="form-group tab-info">
           <input name="name" type="text" placeholder="<%=_lang('name')%>" value="<%=name%>" class="form-control" autocomplete="off" />
         </div>
-        <div class="form-group tab-logo upload-buttons">
+        <div class="form-group tab-logo upload-buttons clearfix">
           <a class="btn btn-primary btn-file">
-            <span><%=_lang('upload')%></span>
+            <span><i class="fa fa-fw fa-camera"></i></span>
             <input type="file" value="<%=_lang('chooseAnImage')%>" accept="image/*" />
           </a>
-          <span class="file-name"></span>
+          <button class="btn btn-danger pull-right clear-image"><i class="fa fa-fw fa-trash"></i></button>
         </div>
         <div class="form-group tab-logo">
-          <div class="logo-container">
-            <img src="<%=image%>" />
+          <div class="brand">
+            <div class="wrapper">
+              <img src="<%=image%>" />
+            </div>
           </div>
           <div class="croppie-container" style="display: none;"></div>
           <p class="message" style="display: none;"></p>
@@ -31,11 +33,12 @@
     events: {
       'click .nav-tabs a': 'onClickNavTab',
       'change input[type=file]': 'onFileUpload',
+      'click .clear-image': 'onClearImage'
     },
     initialize: function(options) {
       Backbone.EditEntityView.prototype.initialize.apply(this, arguments);
       this.tab = options.tab || 'info';
-      this.croppedImageBase64 = undefined;
+      this.imageSrc = this.model.get('image');
     },
     onClickNavTab: function(e) {
       e.preventDefault();
@@ -51,7 +54,6 @@
         this.$message.html(_lang('fileMustBeAnImage')).removeClass('text-info text-success').addClass('text-danger').fadeIn();
         return;
       }
-      this.croppedImageBase64 = undefined;
 
       this.$message.html(_lang('pleaseWait')).removeClass('text-success text-danger').addClass('text-info').fadeIn();
 
@@ -65,31 +67,37 @@
         });
       }.bind(this);
       reader.readAsDataURL(image);
-      this.$('.file-name').text(image.name);
     },
-    buildFormHtml: function() {
-      return this.formTemplate(_.extend({tab: this.tab}, this.model.toRender()));
-    },
-    domToData: function() {
-      var data = this.$form.serializeObject();
-      if (this.croppedImageBase64) data.image = this.croppedImageBase64;
-      return data;
+    onClearImage: function(e) {
+      e.preventDefault();
+      this.imageSrc = undefined;
+      this.$logo.find('img').attr('src', '');
+      this.$logo.show();
+      this.$croppie.hide();
     },
     onClickSave: function() {
       if (this.$croppie.is(':visible') && this.$input[0].files[0]) {
-        this.$croppie.croppie('result').then(function(dataURI) {
-          this.croppedImageBase64 = dataURI;
+        this.$croppie.croppie('result', {type:'canvas', size: 'viewport'}).then(function(dataURI) {
+          this.imageSrc = dataURI;
           return Backbone.EditEntityView.prototype.onClickSave.apply(this, arguments);
         }.bind(this));
       } else {
         return Backbone.EditEntityView.prototype.onClickSave.apply(this, arguments);
       }
     },
+    buildFormHtml: function() {
+      return this.formTemplate(_.extend({tab: this.tab}, this.model.toRender()));
+    },
+    domToData: function() {
+      var data = this.$form.serializeObject();
+      data.image = this.imageSrc;
+      return data;
+    },
     onRender: function() {
 
       this.$croppie = this.$('.croppie-container');
       this.$input = $('input[type=file]');
-      this.$logo = this.$('.logo-container');
+      this.$logo = this.$('.brand');
       this.$message = this.$('.message');
 
       this.$croppie.croppie({
@@ -97,7 +105,7 @@
         viewport: {
           width: 180,
           height: 180,
-          type: 'circle'
+          type: 'square'
         },
         boundary: {
           width: 260,
