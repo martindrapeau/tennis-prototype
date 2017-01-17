@@ -94,7 +94,6 @@
       return data;
     },
     onRender: function() {
-
       this.$croppie = this.$('.croppie-container');
       this.$input = $('input[type=file]');
       this.$logo = this.$('.brand');
