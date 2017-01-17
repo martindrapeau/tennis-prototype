@@ -16,7 +16,7 @@
             <span><i class="fa fa-fw fa-camera"></i></span>
             <input type="file" value="<%=_lang('chooseAnImage')%>" accept="image/*" />
           </a>
-          <button class="btn btn-danger pull-right clear-image"><i class="fa fa-fw fa-trash"></i></button>
+          <button type="button" class="btn btn-danger pull-right clear-image"><i class="fa fa-fw fa-trash"></i></button>
         </div>
         <div class="form-group tab-logo">
           <div class="brand">
@@ -69,9 +69,8 @@
       reader.readAsDataURL(image);
     },
     onClearImage: function(e) {
-      e.preventDefault();
       this.imageSrc = undefined;
-      this.$logo.find('img').attr('src', '');
+      this.$logo.find('img').removeAttr('src');
       this.$logo.show();
       this.$croppie.hide();
     },
