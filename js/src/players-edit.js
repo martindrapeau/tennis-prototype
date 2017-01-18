@@ -1,25 +1,31 @@
 (function() {
 
-  Backbone.EditOrganizationView = Backbone.EditEntityView.extend({
+  Backbone.EditPlayerView = Backbone.EditEntityView.extend({
     formTemplate: _.template(`
-      <form class="bootbox-form organization">
+      <form class="bootbox-form player">
         <ul class="nav nav-tabs">
           <li <% if (tab == 'info') { %>class="active"<% } %> ><a href="#" class="info"><%=_lang('information')%></a></li>
-          <li <% if (tab == 'logo') { %>class="active"<% } %> ><a href="#" class="logo"><%=_lang('logo')%></a></li>
+          <li <% if (tab == 'picture') { %>class="active"<% } %> ><a href="#" class="picture"><%=_lang('picture')%></a></li>
         </ul>
         <br/>
         <div class="form-group tab-info">
           <input name="name" type="text" placeholder="<%=_lang('name')%>" value="<%=name%>" class="form-control" autocomplete="off" />
         </div>
-        <div class="form-group tab-logo upload-buttons clearfix">
+        <div class="form-group tab-info">
+          <input name="email" type="email" placeholder="<%=_lang('email')%>" value="<%=email%>" class="form-control" autocomplete="off" />
+        </div>
+        <div class="form-group tab-info">
+          <input name="phone" type="text" placeholder="<%=_lang('telephone')%>" value="<%=phone%>" class="form-control" autocomplete="off" />
+        </div>
+        <div class="form-group tab-picture upload-buttons clearfix">
           <a class="btn btn-primary btn-file">
             <span><i class="fa fa-fw fa-camera"></i></span>
             <input type="file" value="<%=_lang('chooseAnImage')%>" accept="image/*" />
           </a>
           <button type="button" class="btn btn-danger pull-right clear-image"><i class="fa fa-fw fa-trash"></i></button>
         </div>
-        <div class="form-group tab-logo">
-          <div class="brand">
+        <div class="form-group tab-picture">
+          <div class="picture">
             <div class="wrapper">
               <img src="<%=image%>" />
             </div>
@@ -29,7 +35,8 @@
         </div>
       </form>
     `),
-    title: _lang('organization'),
+    title: _lang('player'),
+    deleteConfirmMessage: _lang('deleteThisPlayer'),
     events: {
       'click .nav-tabs a': 'onClickNavTab',
       'change input[type=file]': 'onFileUpload',
@@ -60,7 +67,7 @@
       var reader = new FileReader();
       reader.onload = function(e) {
         this.$message.empty().hide();
-        this.$logo.hide();
+        this.$picture.hide();
         this.$croppie.show();
         this.$croppie.croppie('bind', {
           url: e.target.result
@@ -70,9 +77,9 @@
     },
     onClearImage: function(e) {
       this.imageSrc = undefined;
-      this.$logo.find('img').remove();
-      this.$logo.find('.wrapper').append('<img>');
-      this.$logo.show();
+      this.$picture.find('img').remove();
+      this.$picture.find('.wrapper').append('<img>');
+      this.$picture.show();
       this.$croppie.hide();
     },
     onClickSave: function() {
@@ -96,7 +103,7 @@
     onRender: function() {
       this.$croppie = this.$('.croppie-container');
       this.$input = $('input[type=file]');
-      this.$logo = this.$('.brand');
+      this.$picture = this.$('.picture');
       this.$message = this.$('.message');
 
       this.$croppie.croppie({
@@ -104,7 +111,7 @@
         viewport: {
           width: 180,
           height: 180,
-          type: 'square'
+          type: 'circle'
         },
         boundary: {
           width: 260,
@@ -119,11 +126,11 @@
     },
     renderTabs: function() {
       if (this.$('.nav-tabs>li.active>a').hasClass('info')) {
-        this.$('.tab-logo').hide();
+        this.$('.tab-picture').hide();
         this.$('.tab-info').show();
       } else {
         this.$('.tab-info').hide();
-        this.$('.tab-logo').show();
+        this.$('.tab-picture').show();
       }
     }
   });

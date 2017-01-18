@@ -275,6 +275,10 @@ body.standalone .modal-dialog {
   border-radius: 50%;
 }
 
+#players .player tbody .picture img {
+  width: 50px;
+}
+
 #players .player tbody .info {
   width: 250px;
 }
@@ -480,19 +484,34 @@ body.standalone .modal-dialog {
 }
 
 .bootbox-form.organization .brand {
-  width: 260px;
+  width: 180px;
   margin: 0 auto;
 }
 
 .bootbox-form.organization .brand>.wrapper {
   display: table-cell;
-  width: 260px;
-  height: 260px;
+  width: 180px;
+  height: 180px;
   border: 4px solid #ddd;
   text-align: center;
   vertical-align: middle;
 }
 
+
+.bootbox-form.player .picture {
+  width: 180px;
+  margin: 0 auto;
+}
+
+.bootbox-form.player .picture>.wrapper {
+  display: table-cell;
+  width: 180px;
+  height: 180px;
+  border: 4px solid #ddd;
+  text-align: center;
+  vertical-align: middle;
+  border-radius: 50%;
+}
 
 .popover {
   max-width: 300px;

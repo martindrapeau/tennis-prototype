@@ -99,31 +99,17 @@
     }
   });
 
-  Backbone.EditPlayerView = Backbone.EditEntityView.extend({
-    formTemplate: _.template(`
-      <form class="bootbox-form">
-        <div class="form-group">
-          <input name="name" type="text" placeholder="<%=_lang('name')%>" value="<%=name%>" class="form-control" autocomplete="off" />
-        </div>
-        <div class="form-group">
-          <input name="email" type="email" placeholder="<%=_lang('email')%>" value="<%=email%>" class="form-control" autocomplete="off" />
-        </div>
-        <div class="form-group">
-          <input name="phone" type="text" placeholder="<%=_lang('telephone')%>" value="<%=phone%>" class="form-control" autocomplete="off" />
-        </div>
-      </form>
-    `),
-    title: _lang('player'),
-    deleteConfirmMessage: _lang('deleteThisPlayer')
-  });
-
   Backbone.PlayerView = Backbone.View.extend({
     template: _.template(`
       <tbody>
         <tr>
           <td class="picture">
             <div class="wrapper">
-              <div class="initials"><%=initials%></div>
+              <% if (image) { %>
+                <img src="<%=image%>" alt="<%=initials%>" />
+              <% } else { %>
+                <div class="initials"><%=initials%></div>
+              <% } %>
             </div>
           </td>
           <td class="info">

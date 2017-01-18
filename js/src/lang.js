@@ -55,6 +55,7 @@
       score: ['Score', 'Pointage'],
       playersAndScore: ['Players and score', 'Joueurs et pointage'],
       allPlayers: ['All players', 'Tous les joueurs'],
+      picture: ['Picture', 'Photo'],
       dateAndTime: ['Date and time', 'Date et heure'],
       match: ['Match', 'Match'],
       matches: ['Matches', 'Matches'],
