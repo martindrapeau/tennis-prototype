@@ -2,7 +2,7 @@ $(document).ready(function() {
 
   _.extend(Backbone, {
     WEBAPP: window.navigator.standalone,
-    COCOON: window.navigator.isCocoonJS || window.cordova || false,
+    COCOON: window.navigator.isCocoonJS || window.cordova || window.NativeStorage || false,
     MOBILE: "onorientationchange" in window || window.navigator.msMaxTouchPoints || window.navigator.isCocoonJS || window.cordova
   });
 	

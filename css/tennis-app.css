@@ -152,6 +152,10 @@ body.standalone .contents {
   padding-top: 65px;
 }
 
+body.standalone .modal-dialog {
+  margin-top: 25px;
+}
+
 #home {
   text-align: center;
   color: white;
