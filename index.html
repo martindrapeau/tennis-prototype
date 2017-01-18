@@ -13,6 +13,8 @@
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 
+    <script src="cordova.js"></script>
+
     <script src="js/3rd/jquery.min.js" type="text/javascript"></script>
     <script src="js/3rd/deparam.js" type="text/javascript"></script>
     <script src="js/3rd/jquery-color.js" type="text/javascript"></script>
@@ -31,9 +33,7 @@
     <script src="js/3rd/croppie.min.js" type="text/javascript"></script>
 
     <script src="js/src/device.js" type="text/javascript"></script>
-    
     <script src="js/src/data.js" type="text/javascript"></script>
-
     <script src="js/src/lang.js" type="text/javascript"></script>
     <script src="js/src/helpers.js" type="text/javascript"></script>
     <script src="js/src/sessions.js" type="text/javascript"></script>
@@ -66,8 +66,8 @@
       <div id="top-menu" class="navbar navbar-default navbar-fixed-top"></div>
       <div class="contents">
         <div id="side-menu-backdrop" style="display: none;"></div>
-        <div id="settings" style="display: none;"></div>
-        <div id="home" class="content" style="display: none;"></div>
+        <div id="settings" class="content settings" style="display: none;"></div>
+        <div id="home" class="content home" style="display: none;"></div>
         <div id="organization" class="content organization" style="display: none;"></div>
         <div id="program" class="content program" style="display: none;"></div>
         <div id="players" class="content players" style="display: none;"></div>
