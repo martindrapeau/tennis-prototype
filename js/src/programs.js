@@ -15,7 +15,10 @@
 
   Backbone.ProgramCollection = Backbone.Collection.extend({
     sync: dataStore.sync,
-    model: Backbone.ProgramModel
+    model: Backbone.ProgramModel,
+    comparator: function(model) {
+      return -model.id;
+    }
   });
 
 

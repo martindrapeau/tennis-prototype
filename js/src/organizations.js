@@ -45,14 +45,32 @@
   Backbone.OrganizationView = Backbone.View.extend({
     template: _.template(`
       <div class="brand">
-        <div class="wrapper">
+        <div class="wrapper <%=image ? '' : 'bg'%>">
           <% if (image) { %>
             <img src="<%=image%>" alt="<%=initials%>" />
           <% } else { %>
             <div class="initials"><%=initials%></div>
           <% } %>
         </div>
-        <div class="name"><%=name%></div>
+        <address>
+          <strong><%=name%></strong>
+          <% if (address) { %>
+            <br/><%=address%>
+            <br/><%=city%>, <%=state%> <%=zip%>
+          <% } %>
+          <%
+            var parts = _.compact([
+              phone ? {href: 'tel:'+phone, text: phone} : null,
+              url && facebook_url != url ? {href: url, text: _.lowerCaseFirst(_lang('website'))} : null,
+              facebook_url ? {href: facebook_url, text: _.lowerCaseFirst(_lang('facebook'))} : null,
+              email ? {href: 'mailto:'+email, text: _.lowerCaseFirst(_lang('email'))} : null
+            ]);
+          %>
+          <% if (parts.length) { %><br/><% } %>
+          <% for (var i = 0; i < parts.length; i++) { %>
+            <a href="<%=parts[i].href%>" target="_blank"><%=parts[i].text%></a><% if (i < parts.length-1) { %>, <% } %>
+          <% } %>
+        </address>
       </div>
     `),
     addFormTemplate: _.template(`

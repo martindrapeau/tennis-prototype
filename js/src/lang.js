@@ -44,6 +44,8 @@
       information: ['Information', 'Information'],
       account: ['Account', 'Compte'],
       email: ['Email', 'Courriel'],
+      website: ['Website', 'Site Web'],
+      facebook: ['facebook', 'facebook'],
       name: ['Name', 'Nom'],
       description: ['Description', 'Description'],
       telephone: ['Telephone', 'Telephone'],

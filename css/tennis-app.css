@@ -218,10 +218,13 @@ body.standalone .modal-dialog {
   display: table-cell;
   width: 60px;
   height: 60px;
-  background-color: #ddd;
   color: #333;
   vertical-align: middle;
   text-align: center;
+}
+
+#home .brand>.wrapper.bg {
+  background-color: #ddd;
 }
 
 #home .brand>.wrapper>img {
@@ -243,26 +246,33 @@ body.standalone .modal-dialog {
 
 #organization .brand>.wrapper {
   display: table-cell;
-  width: 50px;
-  min-width: 50px;
-  height: 50px;
+  width: 80px;
+  min-width: 80px;
+  height: 80px;
   vertical-align: middle;
   text-align: center;
+}
+
+#organization .brand>.wrapper.bg {
   background-color: #ddd;
 }
 
 #organization .brand>.wrapper>img {
-  width: 50px;
+  width: 80px;
 }
 
-#organization .brand>.name {
+#organization .brand>address {
   display: table-cell;
-  width: calc(100% - 60px);
-  height: 50px;
+  width: calc(100% - 90px);
+  height: 80px;
   padding-left: 10px;
-  font-size: 20px;
-  line-height: 25px;
+  font-size: 14px;
+  line-height: 16px;
   vertical-align: middle;
+}
+
+#organization .brand>address>strong {
+  font-size: 16px;
 }
 
 #program {

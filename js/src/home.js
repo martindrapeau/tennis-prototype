@@ -36,7 +36,7 @@
                 <% if (organization_id) { %>
                   <br/>
                   <div class="brand anim fade-in">
-                    <div class="wrapper">
+                    <div class="wrapper <%=organization.image ? '' : 'bg'%>">
                       <% if (organization.image) { %>
                         <img src="<%=organization.image%>" alt="<%=organization.initials%>" />
                       <% } else { %>

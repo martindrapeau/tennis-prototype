@@ -28,6 +28,10 @@
       return v[0].toUpperCase();
     }).join('');
   };
+  _.lowerCaseFirst = function(name) {
+    if (typeof name != 'string' || !name.length) return name;
+    return name.substr(0, 1).toLowerCase() + name.substr(1);
+  };
 
   _.extend(Backbone.View.prototype, {
     show: function(options) {
