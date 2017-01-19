@@ -35,6 +35,15 @@
                 </div>
                 <% if (organization_id) { %>
                   <br/>
+                  <div class="brand anim fade-in">
+                    <div class="wrapper">
+                      <% if (organization.image) { %>
+                        <img src="<%=organization.image%>" alt="<%=organization.initials%>" />
+                      <% } else { %>
+                        <div class="initials"><%=organization.initials%></div>
+                      <% } %>
+                    </div>
+                  </div>
                   <p class="anim fade-in"><%=organization.statsText%></p>
                   <p class="anim fade-in delay-2"><%=_lang('clickOnMenuToNavigate')%></p>
                 <% } %>

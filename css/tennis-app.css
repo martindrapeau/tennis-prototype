@@ -209,6 +209,29 @@ body.standalone .modal-dialog {
   padding: 0 5px;
 }
 
+#home .brand {
+  width: 60px;
+  margin: 0 auto 10px auto;
+}
+
+#home .brand>.wrapper {
+  display: table-cell;
+  width: 60px;
+  height: 60px;
+  background-color: #ddd;
+  color: #333;
+  vertical-align: middle;
+  text-align: center;
+}
+
+#home .brand>.wrapper>img {
+  width: 60px;
+}
+
+#home .brand>.wrapper>.initials {
+  font-size: 18px;
+}
+
 
 #organization {
   padding: 15px;

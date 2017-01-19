@@ -199,7 +199,7 @@ $(document).ready(function() {
           programs: this.programs,
           matches: this.matches,
           players: this.players
-        })
+        });
 
         var program_id = this.model.get('program_id');
         this.programs.each(function(model) {
