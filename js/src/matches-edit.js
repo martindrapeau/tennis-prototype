@@ -7,17 +7,7 @@
           <li <% if (tab == 'info') { %>class="active"<% } %> ><a href="#" class="info"><%=_lang('information')%></a></li>
           <li <% if (tab == 'config') { %>class="active"<% } %> ><a href="#" class="config"><%=_lang('settings')%></a></li>
         </ul>
-        <br/>
-        <div class="form-group type tab-config">
-          <div class="btn-group" data-toggle="buttons">
-            <label class="btn btn-default <% if (type == Backbone.SINGLES) { %>active<% } %> />">
-              <input type="radio" name="type" value="<%=Backbone.SINGLES%>" <% if (type == Backbone.SINGLES) { %>checked="checked"<% } %> autocomplete="off" /> <%=_lang('singles')%>
-            </label>
-            <label class="btn btn-default <% if (type == Backbone.DOUBLES) { %>active<% } %> />">
-              <input type="radio" name="type" value="<%=Backbone.DOUBLES%>" <% if (type == Backbone.DOUBLES) { %>checked="checked"<% } %> autocomplete="off" /> <%=_lang('doubles')%>
-            </label> 
-          </div>
-        </div>
+        <div class="form-group type tab-config"></div>
         <div class="form-group players clearfix tab-info">
           <div class="vs">vs</div>
           <div class="user pull-left"></div>
@@ -59,11 +49,24 @@
             </span>
           </div>
         </div>
-        <label class="tab-info"><%=_lang('comment')%></label>
         <div class="form-group tab-info">
           <input name="comment" type="text" placeholder="<%=_lang('comment')%>" value="<%=comment%>" class="form-control" autocomplete="off" />
         </div>
       </form>
+    `),
+    typeRadioTemplate: _.template(`
+      <div class="btn-group" data-toggle="buttons">
+        <label class="btn btn-default <% if (type == Backbone.SINGLES) { %>active<% } %> />">
+          <input type="radio" name="type" value="<%=Backbone.SINGLES%>" <% if (type == Backbone.SINGLES) { %>checked="checked"<% } %> autocomplete="off" />
+          <% if (type == Backbone.SINGLES) { %><i class="fa fa-fw fa-check"></i><% } %>
+          <%=_lang('singles')%>
+        </label>
+        <label class="btn btn-default <% if (type == Backbone.DOUBLES) { %>active<% } %> />">
+          <input type="radio" name="type" value="<%=Backbone.DOUBLES%>" <% if (type == Backbone.DOUBLES) { %>checked="checked"<% } %> autocomplete="off" />
+          <% if (type == Backbone.DOUBLES) { %><i class="fa fa-fw fa-check"></i><% } %>
+          <%=_lang('doubles')%>
+        </label> 
+      </div>
     `),
     playerSelectTemplate: _.template(`
       <select name="<%=key%>_id" class="selectpicker" data-width="100%">
@@ -188,6 +191,10 @@
         tickIcon: "fa-user",
         dropdownAlignRight: true
       });
+
+
+      // Type
+      this.$('.form-group.type').html(this.typeRadioTemplate(data));
 
 
       // Marker, outcome and exceptions

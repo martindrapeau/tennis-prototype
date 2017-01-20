@@ -80,6 +80,7 @@
       </form>
     `),
     events: {
+      'click .brand': 'onClickBrand'
     },
     initialize: function(options) {
       this.stateModel = options.stateModel;
@@ -134,6 +135,9 @@
       });
 
       return this;
+    },
+    onClickBrand: function(e) {
+      if (!$(e.target).is('a')) return this.onEditOrganization.apply(this, arguments);
     },
     onEditOrganization: function(e) {
       e.preventDefault();

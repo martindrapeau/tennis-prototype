@@ -7,7 +7,6 @@
           <li <% if (tab == 'info') { %>class="active"<% } %> ><a href="#" class="info"><%=_lang('information')%></a></li>
           <li <% if (tab == 'picture') { %>class="active"<% } %> ><a href="#" class="picture"><%=_lang('picture')%></a></li>
         </ul>
-        <br/>
         <div class="form-group tab-info">
           <input name="name" type="text" placeholder="<%=_lang('name')%>" value="<%=name%>" class="form-control" autocomplete="off" />
         </div>

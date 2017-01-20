@@ -8,9 +8,32 @@
           <li <% if (tab == 'logo') { %>class="active"<% } %> ><a href="#" class="logo"><%=_lang('logo')%></a></li>
           <li <% if (tab == 'address') { %>class="active"<% } %> ><a href="#" class="address"><%=_lang('address')%></a></li>
         </ul>
-        <br/>
         <div class="form-group tab-info">
           <input name="name" type="text" placeholder="<%=_lang('name')%>" value="<%=name%>" class="form-control" autocomplete="off" />
+        </div>
+        <div class="form-group tab-info">
+          <div class="input-group">
+            <input name="phone" type="text" placeholder="<%=_lang('phone')%>" value="<%=phone%>" class="form-control" autocomplete="off" />
+            <span class="input-group-addon"><i class="fa fa-fw fa-phone"></i></span>
+          </div>
+        </div>
+        <div class="form-group tab-info">
+          <div class="input-group">
+            <input name="email" type="text" placeholder="<%=_lang('email')%>" value="<%=email%>" class="form-control" autocomplete="off" />
+            <span class="input-group-addon"><i class="fa fa-fw fa-envelope"></i></span>
+          </div>
+        </div>
+        <div class="form-group tab-info">
+          <div class="input-group">
+            <input name="url" type="text" placeholder="<%=_lang('website')%>" value="<%=url%>" class="form-control" autocomplete="off" />
+            <span class="input-group-addon"><i class="fa fa-fw fa-link"></i></span>
+          </div>
+        </div>
+        <div class="form-group tab-info">
+          <div class="input-group">
+            <input name="facebook_url" type="text" placeholder="<%=_lang('facebook')%>" value="<%=facebook_url%>" class="form-control" autocomplete="off" />
+            <span class="input-group-addon"><i class="fa fa-fw fa-facebook"></i></span>
+          </div>
         </div>
         <div class="form-group tab-address">
           <input name="address" type="text" placeholder="<%=_lang('address')%>" value="<%=address%>" class="form-control" autocomplete="off" />

@@ -17,6 +17,10 @@ body {
   background-color: #f5f5f5;
 }
 
+.bootbox-form .nav-tabs {
+  margin-bottom: 15px;
+}
+
 .bootbox-form input {
   font-size: 16px!important;
   text-shadow: none;
@@ -137,6 +141,10 @@ body.canvas-slid {
 .content .spacer {
   min-height: 200px;
   height: 200px;
+}
+
+#top-menu .dropdown-menu>li>a {
+  padding: 5px 20px;
 }
 
 body.standalone #side-menu {
@@ -535,12 +543,12 @@ body.standalone .modal-dialog {
 }
 
 
-.bootbox-form.player .picture {
+.bootbox-form.player .form-group>.picture {
   width: 180px;
   margin: 0 auto;
 }
 
-.bootbox-form.player .picture>.wrapper {
+.bootbox-form.player .form-group>.picture>.wrapper {
   display: table-cell;
   width: 180px;
   height: 180px;
