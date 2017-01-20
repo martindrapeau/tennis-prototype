@@ -530,6 +530,10 @@ body.standalone .modal-dialog {
   vertical-align: middle;
 }
 
+.bootbox-form.organization .brand>.wrapper>img {
+  width: 180px;
+}
+
 
 .bootbox-form.player .picture {
   width: 180px;

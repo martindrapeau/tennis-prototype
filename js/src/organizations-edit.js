@@ -6,10 +6,26 @@
         <ul class="nav nav-tabs">
           <li <% if (tab == 'info') { %>class="active"<% } %> ><a href="#" class="info"><%=_lang('information')%></a></li>
           <li <% if (tab == 'logo') { %>class="active"<% } %> ><a href="#" class="logo"><%=_lang('logo')%></a></li>
+          <li <% if (tab == 'address') { %>class="active"<% } %> ><a href="#" class="address"><%=_lang('address')%></a></li>
         </ul>
         <br/>
         <div class="form-group tab-info">
           <input name="name" type="text" placeholder="<%=_lang('name')%>" value="<%=name%>" class="form-control" autocomplete="off" />
+        </div>
+        <div class="form-group tab-address">
+          <input name="address" type="text" placeholder="<%=_lang('address')%>" value="<%=address%>" class="form-control" autocomplete="off" />
+        </div>
+        <div class="form-group tab-address">
+          <input name="city" type="text" placeholder="<%=_lang('city')%>" value="<%=city%>" class="form-control" autocomplete="off" />
+        </div>
+        <div class="form-group tab-address">
+          <%=Backbone.stateSelectTemplate({name: 'state', value: state})%>
+        </div>
+        <div class="form-group tab-address">
+          <input name="zip" type="text" placeholder="<%=_lang('zip')%>" value="<%=zip%>" class="form-control" autocomplete="off" />
+        </div>
+        <div class="form-group tab-address">
+          <%=Backbone.countrySelectTemplate({name: 'country', value: country})%>
         </div>
         <div class="form-group tab-logo upload-buttons clearfix">
           <a class="btn btn-primary btn-file">
@@ -112,18 +128,25 @@
         }
       });
 
+      this.$('select.selectpicker').selectpicker({
+        iconBase: 'fa',
+        showTick: true,
+        tickIcon: "fa-check"
+      });
+
       this.renderTabs();
       this.delegateEvents();
 
       return this;
     },
     renderTabs: function() {
+      this.$('.tab-info,.tab-logo,.tab-address').hide();
       if (this.$('.nav-tabs>li.active>a').hasClass('info')) {
-        this.$('.tab-logo').hide();
         this.$('.tab-info').show();
-      } else {
-        this.$('.tab-info').hide();
+      } else if (this.$('.nav-tabs>li.active>a').hasClass('logo')) {
         this.$('.tab-logo').show();
+      } else {
+        this.$('.tab-address').show();
       }
     }
   });

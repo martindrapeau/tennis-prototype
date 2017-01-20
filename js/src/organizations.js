@@ -60,15 +60,15 @@
           <% } %>
           <%
             var parts = _.compact([
-              phone ? {href: 'tel:'+phone, text: phone} : null,
-              url && facebook_url != url ? {href: url, text: _.lowerCaseFirst(_lang('website'))} : null,
-              facebook_url ? {href: facebook_url, text: _.lowerCaseFirst(_lang('facebook'))} : null,
-              email ? {href: 'mailto:'+email, text: _.lowerCaseFirst(_lang('email'))} : null
+              phone ? {href: 'tel:'+phone, html: phone} : null,
+              url && facebook_url != url ? {href: url, html: _.lowerCaseFirst(_lang('website'))} : null,
+              facebook_url ? {href: facebook_url, html: _.lowerCaseFirst(_lang('facebook'))} : null,
+              email ? {href: 'mailto:'+email, html: _.lowerCaseFirst(_lang('email'))} : null
             ]);
           %>
           <% if (parts.length) { %><br/><% } %>
           <% for (var i = 0; i < parts.length; i++) { %>
-            <a href="<%=parts[i].href%>" target="_blank"><%=parts[i].text%></a><% if (i < parts.length-1) { %>, <% } %>
+            <a href="<%=parts[i].href%>" target="_blank"><%=parts[i].html%></a><% if (i < parts.length-1) { %>, <% } %>
           <% } %>
         </address>
       </div>

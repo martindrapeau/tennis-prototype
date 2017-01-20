@@ -208,4 +208,111 @@
     }
   });
 
+  // Helper templates to generate select controls in forms. Uses Bootstrap's selectpicker plugin.
+  // Don't forget to call the jQuery plugin method after in onRender to activate.
+  // $('.selectpicker').selectpicker()
+
+  // Generates a select to choose state and province
+  // Call with {name: <attribute name>, value: <selected value>} where value is the selected state or null.
+  Backbone.stateSelectTemplate = _.template(`
+    <select class="form-control selectpicker" name="<%=name%>" title="<%=_lang('state')%>">
+      <option value=""></option>
+      <optgroup label="Canada">
+        <% if (Backbone.default == 'en') { %>
+        <option <%if(value=="AB"){%>selected<%}%> value="AB">Alberta</option>
+        <option <%if(value=="BC"){%>selected<%}%> value="BC">British Columbia</option>
+        <option <%if(value=="LB"){%>selected<%}%> value="LB">Labrador</option>
+        <option <%if(value=="MB"){%>selected<%}%> value="MB">Manitoba</option>
+        <option <%if(value=="NB"){%>selected<%}%> value="NB">New Brunswick</option>
+        <option <%if(value=="NF"){%>selected<%}%> value="NF">Newfoundland</option>
+        <option <%if(value=="NS"){%>selected<%}%> value="NS">Nova Scotia</option>
+        <option <%if(value=="NU"){%>selected<%}%> value="NU">Nunavut</option>
+        <option <%if(value=="NW"){%>selected<%}%> value="NW">North West Terr.</option>
+        <option <%if(value=="ON"){%>selected<%}%> value="ON">Ontario</option>
+        <option <%if(value=="PE"){%>selected<%}%> value="PE">Prince Edward Is.</option>
+        <option <%if(value=="QC"){%>selected<%}%> value="QC">Quebec</option>
+        <option <%if(value=="SK"){%>selected<%}%> value="SK">Saskatchewen</option>
+        <option <%if(value=="YU"){%>selected<%}%> value="YU">Yukon</option>
+      <% } else { %>
+        <option <%if(value=="AB"){%>selected<%}%> value="AB">Alberta</option>
+        <option <%if(value=="BC"){%>selected<%}%> value="BC">Colombie Britanique</option>
+        <option <%if(value=="LB"){%>selected<%}%> value="LB">Labrador</option>
+        <option <%if(value=="MB"){%>selected<%}%> value="MB">Manitoba</option>
+        <option <%if(value=="NB"){%>selected<%}%> value="NB">Nouveau Brunswick</option>
+        <option <%if(value=="NF"){%>selected<%}%> value="NF">Terr Neuve</option>
+        <option <%if(value=="NS"){%>selected<%}%> value="NS">Nouvelle Écosse</option>
+        <option <%if(value=="NU"){%>selected<%}%> value="NU">Nunavut</option>
+        <option <%if(value=="NW"){%>selected<%}%> value="NW">Territoire du Nord Ouest</option>
+        <option <%if(value=="ON"){%>selected<%}%> value="ON">Ontario</option>
+        <option <%if(value=="PE"){%>selected<%}%> value="PE">Îles du Prince Edward</option>
+        <option <%if(value=="QC"){%>selected<%}%> value="QC">Québec</option>
+        <option <%if(value=="SK"){%>selected<%}%> value="SK">Saskatchewen</option>
+        <option <%if(value=="YU"){%>selected<%}%> value="YU">Yukon</option>
+      <% } %>
+      </optgroup>
+      <optgroup label="United States">
+        <option <%if(value=="AL"){%>selected<%}%> value="AL">Alabama</option>
+        <option <%if(value=="AK"){%>selected<%}%> value="AK">Alaska</option>
+        <option <%if(value=="AZ"){%>selected<%}%> value="AZ">Arizona</option>
+        <option <%if(value=="AR"){%>selected<%}%> value="AR">Arkansas</option>
+        <option <%if(value=="CA"){%>selected<%}%> value="CA">California</option>
+        <option <%if(value=="CO"){%>selected<%}%> value="CO">Colorado</option>
+        <option <%if(value=="CT"){%>selected<%}%> value="CT">Connecticut</option>
+        <option <%if(value=="DC"){%>selected<%}%> value="DC">Dist. Columbia</option>
+        <option <%if(value=="DE"){%>selected<%}%> value="DE">Delaware</option>
+        <option <%if(value=="FL"){%>selected<%}%> value="FL">Florida</option>
+        <option <%if(value=="GA"){%>selected<%}%> value="GA">Georgia</option>
+        <option <%if(value=="HI"){%>selected<%}%> value="HI">Hawaii</option>
+        <option <%if(value=="ID"){%>selected<%}%> value="ID">Idaho</option>
+        <option <%if(value=="IL"){%>selected<%}%> value="IL">Illinois</option>
+        <option <%if(value=="IN"){%>selected<%}%> value="IN">Indiana</option>
+        <option <%if(value=="IA"){%>selected<%}%> value="IA">Iowa</option>
+        <option <%if(value=="KS"){%>selected<%}%> value="KS">Kansas</option>
+        <option <%if(value=="KY"){%>selected<%}%> value="KY">Kentucky</option>
+        <option <%if(value=="LA"){%>selected<%}%> value="LA">Louisiana</option>
+        <option <%if(value=="ME"){%>selected<%}%> value="ME">Maine</option>
+        <option <%if(value=="MD"){%>selected<%}%> value="MD">Maryland</option>
+        <option <%if(value=="MA"){%>selected<%}%> value="MA">Massachusetts</option>
+        <option <%if(value=="MI"){%>selected<%}%> value="MI">Michigan</option>
+        <option <%if(value=="MN"){%>selected<%}%> value="MN">Minnesota</option>
+        <option <%if(value=="MS"){%>selected<%}%> value="MS">Mississippi</option>
+        <option <%if(value=="MO"){%>selected<%}%> value="MO">Missouri</option>
+        <option <%if(value=="MT"){%>selected<%}%> value="MT">Montana</option>
+        <option <%if(value=="NE"){%>selected<%}%> value="NE">Nebraska</option>
+        <option <%if(value=="NV"){%>selected<%}%> value="NV">Nevada</option>
+        <option <%if(value=="NH"){%>selected<%}%> value="NH">New Hampshire</option>
+        <option <%if(value=="NJ"){%>selected<%}%> value="NJ">New Jersey</option>
+        <option <%if(value=="NM"){%>selected<%}%> value="NM">New Mexico</option>
+        <option <%if(value=="NY"){%>selected<%}%> value="NY">New York</option>
+        <option <%if(value=="NC"){%>selected<%}%> value="NC">North Carolina</option>
+        <option <%if(value=="ND"){%>selected<%}%> value="ND">North Dakota</option>
+        <option <%if(value=="OH"){%>selected<%}%> value="OH">Ohio</option>
+        <option <%if(value=="OK"){%>selected<%}%> value="OK">Oklahoma</option>
+        <option <%if(value=="OR"){%>selected<%}%> value="OR">Oregon</option>
+        <option <%if(value=="PA"){%>selected<%}%> value="PA">Pennsylvania</option>
+        <option <%if(value=="RI"){%>selected<%}%> value="RI">Rhode Island</option>
+        <option <%if(value=="SC"){%>selected<%}%> value="SC">South Carolina</option>
+        <option <%if(value=="SD"){%>selected<%}%> value="SD">South Dakota</option>
+        <option <%if(value=="TN"){%>selected<%}%> value="TN">Tennessee</option>
+        <option <%if(value=="TX"){%>selected<%}%> value="TX">Texas</option>
+        <option <%if(value=="UT"){%>selected<%}%> value="UT">Utah</option>
+        <option <%if(value=="VT"){%>selected<%}%> value="VT">Vermont</option>
+        <option <%if(value=="VA"){%>selected<%}%> value="VA">Virginia</option>
+        <option <%if(value=="WA"){%>selected<%}%> value="WA">Washington</option>
+        <option <%if(value=="WV"){%>selected<%}%> value="WV">West Virginia</option>
+        <option <%if(value=="WI"){%>selected<%}%> value="WI">Wisconsin</option>
+        <option <%if(value=="WY"){%>selected<%}%> value="WY">Wyoming</option>
+      </optgroup>
+    </select>
+  `);
+
+  // Generates a select to choose a country
+  // Call with {name: <attribute name>, value: <selected value>} where value is the selected state or null.
+  Backbone.countrySelectTemplate = _.template(`
+    <select class="form-control selectpicker" name="<%=name%>" title="<%=_lang('country')%>">
+      <option value=""></option>
+      <option value="CA" <%if(value=='CA'){%>selected<%}%> >Canada</option>
+      <option value="US" <%if(value=='US'){%>selected<%}%> >United States</option>
+    </select>
+  `);
 }.call(this));
