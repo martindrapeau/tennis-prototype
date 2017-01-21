@@ -32,7 +32,7 @@ var BackboneLocalStorage = function(name, options) {
         this.data[options.data[i].id] = options.data[i];
       }
       if (window.NativeStorage)
-        window.NativeStorage.putObject(this.name, this.data, function() {}, function() {});
+        window.NativeStorage.setItem(this.name, this.data, function() {}, function() {});
       else
         window.localStorage[this.name] = JSON.stringify(this.data);
     } else {
@@ -40,7 +40,7 @@ var BackboneLocalStorage = function(name, options) {
     }
   }
   if (window.NativeStorage)
-    window.NativeStorage.getObject(this.name,
+    window.NativeStorage.getItem(this.name,
       onGetData.bind(this),
       function(error) {
         onGetData.call(this, undefined);
@@ -87,7 +87,7 @@ BackboneLocalStorage.prototype = {
 
   saveData: function() {
     if (window.NativeStorage)
-      window.NativeStorage.putObject(this.name, this.data, function() {}, function() {});
+      window.NativeStorage.setItem(this.name, this.data, function() {}, function() {});
     else
       window.localStorage[this.name] = JSON.stringify(this.data);
   },
