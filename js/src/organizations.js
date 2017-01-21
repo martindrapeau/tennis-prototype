@@ -1,9 +1,6 @@
 (function() {
 
-  var dataStore = new BackboneLocalStorage('organizations', {data: window._organizations});
-
   Backbone.OrganizationModel = Backbone.Model.extend({
-    sync: dataStore.sync,
     defaults: {
       id: undefined,
       name: undefined,
@@ -32,7 +29,6 @@
   });
 
   Backbone.OrganizationCollection = Backbone.Collection.extend({
-    sync: dataStore.sync,
     model: Backbone.OrganizationModel,
     bindCollections: function(collections) {
       this.programs = collections.programs;
@@ -61,9 +57,9 @@
           <%
             var parts = _.compact([
               phone ? {href: 'tel:'+phone, html: phone} : null,
-              url && facebook_url != url ? {href: url, html: _.lowerCaseFirst(_lang('website'))} : null,
-              facebook_url ? {href: facebook_url, html: _.lowerCaseFirst(_lang('facebook'))} : null,
-              email ? {href: 'mailto:'+email, html: _.lowerCaseFirst(_lang('email'))} : null
+              url && facebook_url != url ? {href: url, html: '<i class="fa fa-fw fa-external-link"></i>'} : null,
+              facebook_url ? {href: facebook_url, html: '<i class="fa fa-fw fa-facebook-square"></i>'} : null,
+              email ? {href: 'mailto:'+email, html: '<i class="fa fa-fw fa-envelope"></i>'} : null
             ]);
           %>
           <% if (parts.length) { %><br/><% } %>
@@ -137,7 +133,7 @@
       return this;
     },
     onClickBrand: function(e) {
-      if (!$(e.target).is('a')) return this.onEditOrganization.apply(this, arguments);
+      if (!$(e.target).is('a') && !$(e.target).closest('a').length) return this.onEditOrganization.apply(this, arguments);
     },
     onEditOrganization: function(e) {
       e.preventDefault();

@@ -1,10 +1,7 @@
 (function() {
 
-  var dataStoreCategories = new BackboneLocalStorage('categories', {data: window._categories});
-
   Backbone.CategoryModel = Backbone.Model.extend({
     matchIdAttribute: 'category_id',
-    sync: dataStoreCategories.sync,
     defaults: {
       id: undefined,
       name: null,
@@ -41,7 +38,6 @@
   Backbone.CategoryCollection = Backbone.Collection.extend({
     matchIdAttribute: 'category_id',
     model: Backbone.CategoryModel,
-    sync: dataStoreCategories.sync,
     bindMatches: function(matches) {
       this.stopListening();
       this.matchesCollection = matches;
@@ -152,18 +148,14 @@
   });
 
 
-  var dataStoreRounds = new BackboneLocalStorage('rounds', {data: window._rounds});
-
   Backbone.RoundModel = Backbone.CategoryModel.extend({
     matchIdAttribute: 'round_id',
-    sync: dataStoreRounds.sync,
     defaults: _.extend({date: null}, Backbone.CategoryModel.prototype.defaults)
   });
 
   Backbone.RoundCollection = Backbone.CategoryCollection.extend({
     matchIdAttribute: 'round_id',
-    model: Backbone.RoundModel,
-    sync: dataStoreRounds.sync
+    model: Backbone.RoundModel
   });
 
   Backbone.EditRoundView = Backbone.EditCategoryView.extend({

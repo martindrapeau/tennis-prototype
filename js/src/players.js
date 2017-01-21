@@ -1,9 +1,6 @@
 (function() {
 
-  var dataStore = new BackboneLocalStorage('players', {data: window._players});
-
   Backbone.PlayerModel = Backbone.Model.extend({
-    sync: dataStore.sync,
     defaults: {
       id: undefined,
       name: null,
@@ -31,7 +28,6 @@
 
   Backbone.PlayerCollection = Backbone.Collection.extend({
     model: Backbone.PlayerModel,
-    sync: dataStore.sync,
     comparator: function(model) {
       var words = (model.get('name') || '').split(/\s/),
           result = [];

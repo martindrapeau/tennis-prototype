@@ -1,7 +1,9 @@
 /*
 
 backbone-localstorage-sync
-https://github.com/srackham/backbone-localstorage-sync
+Original: https://github.com/srackham/backbone-localstorage-sync
+
+Enhanced to fetch local data and use Cordova NativeStorage plugin
 
 */
 'use strict';
@@ -9,7 +11,8 @@ https://github.com/srackham/backbone-localstorage-sync
 // Constructor function for creating Backbone sync adaptor objects.
 var BackboneLocalStorage = function(name, options) {
   options || (options = {});
-  if (!name) throw('Please specify a name for the Backbone sync adaptor.')
+  if (!name) throw('Please specify a name for the Backbone sync adaptor.');
+  if (typeof name != 'string') throw('Invalid Backbone sync adaptor name "' + name + '". It must be a string.');
   this.name = name;
 
   // Option to segregate values based on a filter of key/value attributes
@@ -21,17 +24,30 @@ var BackboneLocalStorage = function(name, options) {
   this.shardType = options.shardType;
   this.shardValue = options.shardValue;
 
-  // data is keyed by model model id and contains model attribute hashes.
-  var json = window.localStorage.getItem(this.name);
-  if (json === null && options.data) {
-    this.data = {};
-    for (var i = 0; i < options.data.length; i++) {
-      this.data[options.data[i].id] = options.data[i];
+  // this.data is keyed by model model id and contains model attribute hashes.
+  function onGetData(json) {
+    if (json == undefined && options.data) {
+      this.data = {};
+      for (var i = 0; i < options.data.length; i++) {
+        this.data[options.data[i].id] = options.data[i];
+      }
+      if (window.NativeStorage)
+        window.NativeStorage.putObject(this.name, this.data, function() {}, function() {});
+      else
+        window.localStorage[this.name] = JSON.stringify(this.data);
+    } else {
+      this.data = (typeof json == 'object' && json) || (json && JSON.parse(json)) || {};
     }
-    window.localStorage.setItem(this.name, JSON.stringify(this.data));
-  } else {
-    this.data = (json && JSON.parse(json)) || {};
   }
+  if (window.NativeStorage)
+    window.NativeStorage.getObject(this.name,
+      onGetData.bind(this),
+      function(error) {
+        onGetData.call(this, undefined);
+        console.log(error);
+      }.bind(this));
+  else
+    onGetData.call(this, window.localStorage[this.name]);
 
   this.sync = this.sync.bind(this);
 };
@@ -70,7 +86,10 @@ BackboneLocalStorage.prototype = {
   },
 
   saveData: function() {
-    window.localStorage.setItem(this.name, JSON.stringify(this.data));
+    if (window.NativeStorage)
+      window.NativeStorage.putObject(this.name, this.data, function() {}, function() {});
+    else
+      window.localStorage[this.name] = JSON.stringify(this.data);
   },
 
   create: function(model) {

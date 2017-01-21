@@ -10,10 +10,7 @@
     DOUBLES: 'doubles'
   });
 
-  var dataStore = new BackboneLocalStorage('matches', {data: window._matches});
-
   Backbone.MatchModel = Backbone.Model.extend({
-    sync: dataStore.sync,
     defaults: {
       id: undefined,
       type: "singles",
@@ -251,7 +248,6 @@
 
   Backbone.MatchCollection = Backbone.Collection.extend({
     model: Backbone.MatchModel,
-    sync: dataStore.sync,
     bindPlayers: function(players) {
       this.stopListening();
       this.playersCollection = players;

@@ -1,9 +1,6 @@
 (function() {
 
-  var dataStore = new BackboneLocalStorage('programs', {data: window._programs});
-
   Backbone.ProgramModel = Backbone.Model.extend({
-    sync: dataStore.sync,
     defaults: {
       id: undefined,
       name: null,
@@ -14,7 +11,6 @@
   });
 
   Backbone.ProgramCollection = Backbone.Collection.extend({
-    sync: dataStore.sync,
     model: Backbone.ProgramModel,
     comparator: function(model) {
       return -model.id;
