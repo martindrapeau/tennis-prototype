@@ -8,6 +8,8 @@ Enhanced to fetch local data and use Cordova NativeStorage plugin
 */
 'use strict';
 
+var CNS = false;
+
 // Constructor function for creating Backbone sync adaptor objects.
 var BackboneLocalStorage = function(name, options) {
   options || (options = {});
@@ -28,7 +30,7 @@ var BackboneLocalStorage = function(name, options) {
   function setInitialData(optionsData, storageData) {
     if (storageData == undefined && optionsData) {
       this.data = optionsData;
-      if (window.NativeStorage)
+      if (window.NativeStorage && CNS)
         window.NativeStorage.setItem(this.name, this.data, function() {}, function() {});
       else
         window.localStorage[this.name] = JSON.stringify(this.data);
@@ -36,7 +38,7 @@ var BackboneLocalStorage = function(name, options) {
       this.data = (typeof storageData == 'object' && storageData) || (storageData && JSON.parse(storageData)) || {};
     }
   }
-  if (window.NativeStorage)
+  if (window.NativeStorage && CNS)
     window.NativeStorage.getItem(this.name,
       _.partial(setInitialData, options.data).bind(this),
       function(error) {
@@ -83,7 +85,7 @@ BackboneLocalStorage.prototype = {
   },
 
   saveData: function() {
-    if (window.NativeStorage)
+    if (window.NativeStorage && CNS)
       window.NativeStorage.setItem(this.name, this.data, function() {}, function() {});
     else
       window.localStorage[this.name] = JSON.stringify(this.data);
