@@ -2,13 +2,14 @@
 
 backbone-localstorage-sync
 Original: https://github.com/srackham/backbone-localstorage-sync
-
-Enhanced to fetch local data and use Cordova NativeStorage plugin
+Adapted to support a few extra features:
+1. Use of jQuery promises
+2. Integrated with Cordova Native Storage (if exists). See device.js for details.
+3. Allows sharding of data
+4. Initialize with boilerplate data
 
 */
 'use strict';
-
-var CNS = false;
 
 // Constructor function for creating Backbone sync adaptor objects.
 var BackboneLocalStorage = function(name, options) {
@@ -30,23 +31,12 @@ var BackboneLocalStorage = function(name, options) {
   function setInitialData(optionsData, storageData) {
     if (storageData == undefined && optionsData) {
       this.data = optionsData;
-      if (window.NativeStorage && CNS)
-        window.NativeStorage.setItem(this.name, this.data, function() {}, function() {});
-      else
         window.localStorage[this.name] = JSON.stringify(this.data);
     } else {
       this.data = (typeof storageData == 'object' && storageData) || (storageData && JSON.parse(storageData)) || {};
     }
   }
-  if (window.NativeStorage && CNS)
-    window.NativeStorage.getItem(this.name,
-      _.partial(setInitialData, options.data).bind(this),
-      function(error) {
-        setInitialData.call(this, options.data);
-        console.log(error);
-      }.bind(this));
-  else
-    setInitialData.call(this, options.data, window.localStorage[this.name]);
+  setInitialData.call(this, options.data, window.localStorage[this.name]);
 
   this.sync = this.sync.bind(this);
 };
@@ -85,10 +75,8 @@ BackboneLocalStorage.prototype = {
   },
 
   saveData: function() {
-    if (window.NativeStorage && CNS)
-      window.NativeStorage.setItem(this.name, this.data, function() {}, function() {});
-    else
-      window.localStorage[this.name] = JSON.stringify(this.data);
+    window.localStorage[this.name] = JSON.stringify(this.data);
+    if (Backbone.persistLocalStorage) Backbone.persistLocalStorage.save();
   },
 
   create: function(model) {
