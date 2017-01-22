@@ -25,29 +25,26 @@ var BackboneLocalStorage = function(name, options) {
   this.shardValue = options.shardValue;
 
   // this.data is keyed by model model id and contains model attribute hashes.
-  function onGetData(json) {
-    if (json == undefined && options.data) {
-      this.data = {};
-      for (var i = 0; i < options.data.length; i++) {
-        this.data[options.data[i].id] = options.data[i];
-      }
+  function setInitialData(optionsData, storageData) {
+    if (storageData == undefined && optionsData) {
+      this.data = optionsData;
       if (window.NativeStorage)
         window.NativeStorage.setItem(this.name, this.data, function() {}, function() {});
       else
         window.localStorage[this.name] = JSON.stringify(this.data);
     } else {
-      this.data = (typeof json == 'object' && json) || (json && JSON.parse(json)) || {};
+      this.data = (typeof storageData == 'object' && storageData) || (storageData && JSON.parse(storageData)) || {};
     }
   }
   if (window.NativeStorage)
     window.NativeStorage.getItem(this.name,
-      onGetData.bind(this),
+      _.partial(setInitialData, options.data).bind(this),
       function(error) {
-        onGetData.call(this, undefined);
+        setInitialData.call(this, options.data);
         console.log(error);
       }.bind(this));
   else
-    onGetData.call(this, window.localStorage[this.name]);
+    setInitialData.call(this, options.data, window.localStorage[this.name]);
 
   this.sync = this.sync.bind(this);
 };
