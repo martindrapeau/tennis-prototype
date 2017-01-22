@@ -24,7 +24,7 @@ $(document).on(window.cordova ? 'deviceready' : 'ready', function() {
   		save: function() {
         if (Backbone.persistLocalStorage.deferred) return Backbone.persistLocalStorage.deferred.promise();
         Backbone.persistLocalStorage.deferred = new $.Deferred();
-        NativeStorage.set("tennis_app",
+        NativeStorage.setItem("tennis_app",
           window.localStorage,
           function(result) {
             console.log('Backbone.persistLocalStorage.save success');
@@ -48,8 +48,11 @@ $(document).on(window.cordova ? 'deviceready' : 'ready', function() {
       // Returns a promise. You should wait until it resolves to do any thing else.
       restore: function() {
         var deferred = new $.Deferred();
-        NativeStorage.getString("tennis_app",
-          function(result) {
+        NativeStorage.getItem("tennis_app",
+          function(data) {
+            _.each(_.keys(data || {}), function(o, k) {
+              window.localStorage[k] = o;
+            });
             console.log('Backbone.persistLocalStorage.restore success');
             deferred.resolve();
           },
