@@ -53,9 +53,9 @@ $(document).on(window.cordova ? 'deviceready' : 'ready', function() {
         return Backbone.persistLocalStorage.deferred.promise();
       },
 
-      // Call this upon start to restore local storage based on native storage
+      // Call this upon start to restore local storage from native storage.
       // Returns a promise. You should wait until it resolves to do any thing else.
-      restore: function() {
+      restore: function(keys) {
         var deferred = new $.Deferred();
         window.NativeStorage.getItem("tennis_app",
           function(data) {
