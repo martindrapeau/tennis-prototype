@@ -28,7 +28,7 @@ $(document).on(window.cordova ? 'deviceready' : 'ready', function() {
           window.localStorage,
           function(result) {
             console.log('Backbone.persistLocalStorage.save success');
-            window._log += 'Backbone.persistLocalStorage.save success' + '\n';
+            window._log += 'Backbone.persistLocalStorage.save success' + _.keys(result).join(', ') + '\n';
             Backbone.persistLocalStorage.deferred.resolve();
             _.defer(function() {
               Backbone.persistLocalStorage.deferred = undefined;
@@ -56,12 +56,12 @@ $(document).on(window.cordova ? 'deviceready' : 'ready', function() {
               window.localStorage[k] = o;
             });
             console.log('Backbone.persistLocalStorage.restore success');
-            window._log += 'Backbone.persistLocalStorage.save success' + '\n';
+            window._log += 'Backbone.persistLocalStorage.restore success' + _.keys(data).join(', ') + '\n';
             deferred.resolve();
           },
           function(e) {
             console.log('Backbone.persistLocalStorage.restore failed:', e.code);
-            window._log += ['Backbone.persistLocalStorage.save failed:', e.code.join(' ')] + '\n';
+            window._log += ['Backbone.persistLocalStorage.restore failed:', e.code.join(' ')] + '\n';
             deferred.reject(e);
           }
         );
