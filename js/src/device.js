@@ -34,8 +34,6 @@ $(document).on(window.cordova ? 'deviceready' : 'ready', function() {
           data,
           function(result) {
             console.log('Backbone.persistLocalStorage.save success');
-            window._log += 'Backbone.persistLocalStorage.save success: ' + _.keys(result).join(', ') + '\n';
-            window._log += result['app'] + '\n';
             Backbone.persistLocalStorage.deferred.resolve();
             _.defer(function() {
               Backbone.persistLocalStorage.deferred = undefined;
@@ -43,7 +41,6 @@ $(document).on(window.cordova ? 'deviceready' : 'ready', function() {
           },
           function(e) {
             console.log('Backbone.persistLocalStorage.save failed:', e.code);
-            window._log += ['Backbone.persistLocalStorage.save failed: ', e.code].join(' ') + '\n';
             Backbone.persistLocalStorage.deferred.reject(e);
             _.defer(function() {
               Backbone.persistLocalStorage.deferred = undefined;
@@ -57,21 +54,16 @@ $(document).on(window.cordova ? 'deviceready' : 'ready', function() {
       // Returns a promise. You should wait until it resolves to do any thing else.
       restore: function(keys) {
         var deferred = new $.Deferred();
-        window._log += 'restore...\n';
         window.NativeStorage.getItem("tennis_app",
           function(data) {
-            window._log += (typeof data) + ' ' + (data === undefined ? 'undefined' : '') + ' ' + (data === null ? 'null' : '') + '\n';
             _.each(_.keys(data), function(k) {
               window.localStorage[k] = data[k];
             });
             console.log('Backbone.persistLocalStorage.restore success');
-            window._log += 'Backbone.persistLocalStorage.restore success: ' + _.keys(data).join(', ') + '\n';
-            window._log += data['app'] + '\n';
             deferred.resolve();
           },
           function(e) {
             console.log('Backbone.persistLocalStorage.restore failed:', e.code);
-            window._log += ['Backbone.persistLocalStorage.restore failed: ', e.code].join(' ') + '\n';
             deferred.reject(e);
           }
         );
