@@ -12,19 +12,19 @@
           <input name="name" type="text" placeholder="<%=_lang('name')%>" value="<%=name%>" class="form-control" autocomplete="off" />
         </div>
         <div class="form-group has-feedback tab-info">
-          <input name="phone" type="text" placeholder="<%=_lang('phone')%>" value="<%=phone%>" class="form-control" autocomplete="off" />
+          <input name="phone" type="tel" placeholder="<%=_lang('phone')%>" value="<%=phone%>" class="form-control" autocomplete="off" />
           <span class="form-control-feedback"><i class="fa fa-fw fa-phone"></i></span>
         </div>
         <div class="form-group has-feedback tab-info">
-          <input name="email" type="text" placeholder="<%=_lang('email')%>" value="<%=email%>" class="form-control" autocomplete="off" />
+          <input name="email" type="email" placeholder="<%=_lang('email')%>" value="<%=email%>" class="form-control" autocomplete="off" />
           <span class="form-control-feedback"><i class="fa fa-fw fa-envelope"></i></span>
         </div>
         <div class="form-group has-feedback tab-info">
-          <input name="url" type="text" placeholder="<%=_lang('website')%>" value="<%=url%>" class="form-control" autocomplete="off" />
+          <input name="url" type="url" placeholder="<%=_lang('website')%>" value="<%=url%>" class="form-control" autocomplete="off" />
           <span class="form-control-feedback"><i class="fa fa-fw fa-link"></i></span>
         </div>
         <div class="form-group has-feedback tab-info">
-          <input name="facebook_url" type="text" placeholder="<%=_lang('facebook')%>" value="<%=facebook_url%>" class="form-control" autocomplete="off" />
+          <input name="facebook_url" type="url" placeholder="<%=_lang('facebook')%>" value="<%=facebook_url%>" class="form-control" autocomplete="off" />
           <span class="form-control-feedback"><i class="fa fa-fw fa-facebook"></i></span>
         </div>
         <div class="form-group tab-address">

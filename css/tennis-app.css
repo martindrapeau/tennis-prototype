@@ -250,6 +250,9 @@ body.standalone .modal-dialog {
 
 #organization .brand {
   padding: 10px;
+  border: 1px solid #ddd;
+  max-width: 400px;
+  background-color: #fff;
 }
 
 #organization .brand>.wrapper {
@@ -297,7 +300,7 @@ body.standalone .modal-dialog {
 }
 
 #players .player tbody {
-  border: 1px solid #adadad;
+  border: 1px solid #ddd;
   background-color: #fff;
 }
 
@@ -376,13 +379,13 @@ body.standalone .modal-dialog {
 }
 
 #matches .match>tbody {
-  border: 1px solid #adadad;
+  border: 1px solid #ddd;
   font-size: 16px;
   background-color: #fff;
 }
 
 #matches .match>tbody>tr {
-  border-bottom: 1px solid #adadad;
+  border-bottom: 1px solid #ddd;
 }
 
 #matches .match>thead>tr>th {
@@ -579,7 +582,7 @@ body.standalone .modal-dialog {
   max-width: 320px;
   text-align: left;
   margin: 0 0 10px 0;
-  border: 1px solid #adadad;
+  border: 1px solid #ddd;
   background-color: #fff;
 }
 
