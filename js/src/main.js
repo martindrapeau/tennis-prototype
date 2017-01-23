@@ -25,6 +25,7 @@ $(document).on(window.cordova ? 'deviceready' : 'ready', function() {
     var model = new Backbone.TennisAppState();
     model.fetch().always(function() {
       console.log('start app');
+      window._log += 'start app ' + JSON.stringify(model.toJSON()) + '\n';
       window.app = new Backbone.TennisApp({
         model: model,
         el: $('body')

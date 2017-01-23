@@ -61,8 +61,8 @@ $(document).on(window.cordova ? 'deviceready' : 'ready', function() {
         window.NativeStorage.getItem("tennis_app",
           function(data) {
             window._log += (typeof data) + ' ' + (data === undefined ? 'undefined' : '') + ' ' + (data === null ? 'null' : '') + '\n';
-            _.each(_.keys(data), function(o, k) {
-              window.localStorage[k] = o;
+            _.each(_.keys(data), function(k) {
+              window.localStorage[k] = data[k];
             });
             console.log('Backbone.persistLocalStorage.restore success');
             window._log += 'Backbone.persistLocalStorage.restore success: ' + _.keys(data).join(', ') + '\n';
