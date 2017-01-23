@@ -146,6 +146,7 @@ BackboneLocalStorage.prototype = {
     }
 
     console.log('sync', this.name, method, model.id);
+    window._log += ['sync', this.name, method, model.id].join(' ') + '\n';
 
     var deferred = new $.Deferred();
     if (resp) {

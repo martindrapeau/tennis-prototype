@@ -94,6 +94,7 @@
             <a href="#" class="privacy"><%=_lang('privacy')%></a>
             <a href="#" class="clear">Clear</a>
           </p>
+          <pre><%=window._log%></pre>
         </div>
       </div>
     `),

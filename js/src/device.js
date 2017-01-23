@@ -13,7 +13,7 @@ $(document).on(window.cordova ? 'deviceready' : 'ready', function() {
   // In WebView+, localStorage gets cleared when the app closes.
   // This persists all of localStorage using the cordova-nativestorage-plugin.
   // When the app starts, call restore. Call save to persist.
-  if (Backbone.COCOON) {
+  if (Backbone.COCOON && window.NativeStorage) {
   	Backbone.persistLocalStorage = {
 
       // Call this to persist all of local storage to native storage.
@@ -24,10 +24,11 @@ $(document).on(window.cordova ? 'deviceready' : 'ready', function() {
   		save: function() {
         if (Backbone.persistLocalStorage.deferred) return Backbone.persistLocalStorage.deferred.promise();
         Backbone.persistLocalStorage.deferred = new $.Deferred();
-        NativeStorage.setItem("tennis_app",
+        window.NativeStorage.setItem("tennis_app",
           window.localStorage,
           function(result) {
             console.log('Backbone.persistLocalStorage.save success');
+            window._log += 'Backbone.persistLocalStorage.save success' + '\n';
             Backbone.persistLocalStorage.deferred.resolve();
             _.defer(function() {
               Backbone.persistLocalStorage.deferred = undefined;
@@ -35,6 +36,7 @@ $(document).on(window.cordova ? 'deviceready' : 'ready', function() {
           },
           function(e) {
             console.log('Backbone.persistLocalStorage.save failed:', e.code);
+            window._log += ['Backbone.persistLocalStorage.save failed:', e.code.join(' ')] + '\n';
             Backbone.persistLocalStorage.deferred.reject(e);
             _.defer(function() {
               Backbone.persistLocalStorage.deferred = undefined;
@@ -48,22 +50,24 @@ $(document).on(window.cordova ? 'deviceready' : 'ready', function() {
       // Returns a promise. You should wait until it resolves to do any thing else.
       restore: function() {
         var deferred = new $.Deferred();
-        NativeStorage.getItem("tennis_app",
+        window.NativeStorage.getItem("tennis_app",
           function(data) {
             _.each(_.keys(data || {}), function(o, k) {
               window.localStorage[k] = o;
             });
             console.log('Backbone.persistLocalStorage.restore success');
+            window._log += 'Backbone.persistLocalStorage.save success' + '\n';
             deferred.resolve();
           },
           function(e) {
             console.log('Backbone.persistLocalStorage.restore failed:', e.code);
+            window._log += ['Backbone.persistLocalStorage.save failed:', e.code.join(' ')] + '\n';
             deferred.reject(e);
           }
         );
         return deferred.promise();
       }
-  	}
+  	};
   }
 
 });

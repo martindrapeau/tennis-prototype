@@ -1,5 +1,7 @@
 $(document).on(window.cordova ? 'deviceready' : 'ready', function() {
 
+  window._log = '';
+
   function go() {
 
     // Set up local storage adaptors (until we have a real backend)
