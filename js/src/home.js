@@ -178,8 +178,11 @@
     onClickClear: function(e) {
       // TO REMOVE
       e.preventDefault();
-      localStorage.clear();
-      window.location.reload();
+      window.localStorage.clear();
+      if (Backbone.persistLocalStorage) Backbone.persistLocalStorage.clear();
+      _.defer(function() {
+        window.location.reload();
+      });
     },
     toRender: function() {
       var organization = this.organizations.get(this.model.get('organization_id'));

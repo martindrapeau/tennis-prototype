@@ -33,6 +33,7 @@ $(document).on(window.cordova ? 'deviceready' : 'ready', function() {
   }
 
   if (Backbone.persistLocalStorage) {
+    Backbone.persistLocalStorage.keys = ['app', 'sessions', 'organizations', 'matches', 'players', 'categories', 'rounds', 'programs'];
     Backbone.persistLocalStorage.restore().always(go);
   } else {
     go();
