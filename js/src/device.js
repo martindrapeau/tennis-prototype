@@ -43,7 +43,7 @@ $(document).on(window.cordova ? 'deviceready' : 'ready', function() {
           },
           function(e) {
             console.log('Backbone.persistLocalStorage.save failed:', e.code);
-            window._log += ['Backbone.persistLocalStorage.save failed: ', e.code.join(' ')] + '\n';
+            window._log += ['Backbone.persistLocalStorage.save failed: ', e.code].join(' ') + '\n';
             Backbone.persistLocalStorage.deferred.reject(e);
             _.defer(function() {
               Backbone.persistLocalStorage.deferred = undefined;
@@ -57,9 +57,11 @@ $(document).on(window.cordova ? 'deviceready' : 'ready', function() {
       // Returns a promise. You should wait until it resolves to do any thing else.
       restore: function(keys) {
         var deferred = new $.Deferred();
+        window._log += 'restore...\n';
         window.NativeStorage.getItem("tennis_app",
           function(data) {
-            _.each(_.keys(data || {}), function(o, k) {
+            window._log += (typeof data) + ' ' + (data === undefined ? 'undefined' : '') + ' ' + (data === null ? 'null' : '') + '\n';
+            _.each(_.keys(data), function(o, k) {
               window.localStorage[k] = o;
             });
             console.log('Backbone.persistLocalStorage.restore success');
@@ -69,7 +71,7 @@ $(document).on(window.cordova ? 'deviceready' : 'ready', function() {
           },
           function(e) {
             console.log('Backbone.persistLocalStorage.restore failed:', e.code);
-            window._log += ['Backbone.persistLocalStorage.restore failed: ', e.code.join(' ')] + '\n';
+            window._log += ['Backbone.persistLocalStorage.restore failed: ', e.code].join(' ') + '\n';
             deferred.reject(e);
           }
         );
