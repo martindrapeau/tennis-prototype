@@ -110,8 +110,8 @@
           </td>
           <td class="info">
             <div class="name"><%=name%></div>
-            <div class="email"><%=email%></div>
-            <div class="phone"><%=phone%></div>
+            <div class="email"><a href="mailto:<%=email%>"><%=email%></a></div>
+            <div class="phone"><a href="tel:<%=phone%>"><%=phone%></a></div>
           </td>
         </tr>
       </tbody>
@@ -145,11 +145,13 @@
       return this;
     },
     onPlayerClick: function(e) {
-      new Backbone.EditPlayerView({
-        model: this.model,
-        onSave: this.onSave.bind(this),
-        onDelete: this.onDelete.bind(this)
-      }).render();
+      if (!$(e.target).is('a') && !$(e.target).closest('a').length) {
+        new Backbone.EditPlayerView({
+          model: this.model,
+          onSave: this.onSave.bind(this),
+          onDelete: this.onDelete.bind(this)
+        }).render();
+      }
     },
     onSave: function() {
       this.model.save(null, {wait: true});

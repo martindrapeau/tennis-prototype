@@ -148,6 +148,8 @@
         showTick: true,
         tickIcon: "fa-check"
       });
+      
+      this.$('input[type=tel]').mask('?999-999-9999');
 
       this.renderTabs();
       this.delegateEvents();

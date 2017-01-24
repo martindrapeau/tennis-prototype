@@ -57,14 +57,14 @@
           <%
             var parts = _.compact([
               phone ? {href: 'tel:'+phone, html: phone} : null,
-              url && facebook_url != url ? {href: url, html: '<i class="fa fa-fw fa-external-link"></i>'} : null,
-              facebook_url ? {href: facebook_url, html: '<i class="fa fa-fw fa-facebook-square"></i>'} : null,
+              url && facebook_url != url ? {href: url, html: '<i class="fa fa-fw fa-external-link"></i>', target: '_blank'} : null,
+              facebook_url ? {href: facebook_url, html: '<i class="fa fa-fw fa-facebook-square"></i>', target: '_blank'} : null,
               email ? {href: 'mailto:'+email, html: '<i class="fa fa-fw fa-envelope"></i>'} : null
             ]);
           %>
           <% if (parts.length) { %><br/><% } %>
           <% for (var i = 0; i < parts.length; i++) { %>
-            <a href="<%=parts[i].href%>" target="_blank"><%=parts[i].html%></a><% if (i < parts.length-1) { %>, <% } %>
+            <a href="<%=parts[i].href%>" <%if(parts[i].target){%>target="<%=parts[i].target%>"<%}%>><%=parts[i].html%></a><% if (i < parts.length-1) { %>, <% } %>
           <% } %>
         </address>
       </div>
