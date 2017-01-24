@@ -168,7 +168,6 @@ body.standalone .modal-dialog {
   text-align: center;
   color: white;
   position: relative;
-  padding-right: 15px;
   background-color: #31708f;
 }
 
@@ -218,32 +217,41 @@ body.standalone .modal-dialog {
 }
 
 #home .brand {
-  width: 62px;
+  max-width: 260px;
   height: 62px;
   margin: 0 auto 10px auto;
   background-color: #fff;
   border: 1px solid #1f4558;
+  color: #333;
+  text-align: left;
 }
-
 #home .brand>.wrapper {
   display: table-cell;
   width: 60px;
   height: 60px;
-  color: #333;
   vertical-align: middle;
   text-align: center;
 }
-
 #home .brand>.wrapper.bg {
   background-color: #ddd;
 }
-
 #home .brand>.wrapper>img {
   width: 60px;
 }
-
 #home .brand>.wrapper>.initials {
   font-size: 18px;
+}
+#home .brand>address {
+  display: table-cell;
+  width: calc(100% - 70px);
+  height: 60px;
+  padding-left: 10px;
+  font-size: 12px;
+  line-height: 14px;
+  vertical-align: middle;
+}
+#home .brand>address>strong {
+  font-size: 14px;
 }
 
 
@@ -257,7 +265,6 @@ body.standalone .modal-dialog {
   max-width: 400px;
   background-color: #fff;
 }
-
 #organization .brand>.wrapper {
   display: table-cell;
   width: 80px;
@@ -266,15 +273,12 @@ body.standalone .modal-dialog {
   vertical-align: middle;
   text-align: center;
 }
-
 #organization .brand>.wrapper.bg {
   background-color: #ddd;
 }
-
 #organization .brand>.wrapper>img {
   width: 80px;
 }
-
 #organization .brand>address {
   display: table-cell;
   width: calc(100% - 90px);
@@ -284,7 +288,6 @@ body.standalone .modal-dialog {
   line-height: 16px;
   vertical-align: middle;
 }
-
 #organization .brand>address>strong {
   font-size: 16px;
 }

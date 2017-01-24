@@ -20,9 +20,15 @@
 
             <% if (organizations.length) { %>
               <form class="organization anim fade-in">
+                <% if (organization_id) { %>
+                  <div class="brand anim fade-in">
+                    <%=organizationTemplate(organization)%>
+                  </div>
+                  <br/>
+                <% } %>
                 <div class="form-group btn-group">
                   <button class="btn btn-default dropdown-toggle" type="button" id="choose-organization" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                    <%=organization_id == null ? _lang('pleaseChoose') : organization.name%>
+                    <%=organization_id == null ? _lang('pleaseChoose') : _lang('changeOrganization')%>
                     <span class="caret"></span>
                   </button>
                   <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="choose-organization">
@@ -33,20 +39,6 @@
                     <li><a href="#" class="add-organization"><i class="fa fa-fw fa-plus"></i> <%=_lang('addOrganization')%></a></li>
                   </ul>
                 </div>
-                <% if (organization_id) { %>
-                  <br/>
-                  <div class="brand anim fade-in">
-                    <div class="wrapper <%=organization.image ? '' : 'bg'%>">
-                      <% if (organization.image) { %>
-                        <img src="<%=organization.image%>" alt="<%=organization.initials%>" />
-                      <% } else { %>
-                        <div class="initials"><%=organization.initials%></div>
-                      <% } %>
-                    </div>
-                  </div>
-                  <p class="anim fade-in"><%=organization.statsText%></p>
-                  <p class="anim fade-in delay-2"><%=_lang('clickOnMenuToNavigate')%></p>
-                <% } %>
               </form>
             <% } else {%>
               <p><button class="btn btn-danger add-organization anim fade-in"><i class="fa fa-fw fa-plus"></i> <%=_lang('addOrganization')%></button></p>
@@ -88,14 +80,31 @@
           <% } %>
 
           <p class="footer">
-            <br/><br/><br/><br/>
-            <a href="#" class="change-account"><i class="fa fa-fw fa-user-circle"></i> <%=_lang('changeAccount')%></a>
+            <br/><br/>
+            <% if (admin_id) { %>
+              <a href="#" class="change-account"><i class="fa fa-fw fa-user-circle"></i> <%=_lang('changeAccount')%></a>
+            <% } %>
             <a href="#" class="terms"><%=_lang('terms')%></a>
             <a href="#" class="privacy"><%=_lang('privacy')%></a>
             <a href="#" class="clear">Clear</a>
           </p>
         </div>
       </div>
+    `),
+    organizationTemplate: _.template(`
+      <div class="wrapper <%=image ? '' : 'bg'%>">
+        <% if (image) { %>
+          <img src="<%=image%>" alt="<%=initials%>" />
+        <% } else { %>
+          <div class="initials"><%=initials%></div>
+        <% } %>
+      </div>
+      <address>
+        <strong><%=name%></strong>
+        <% if (address) { %>
+          <br/><%=address%>, <%=city%>, <%=state%> <%=zip%>
+        <% } %>
+      </address>
     `),
     events: {
       'click a.show-signup': 'onShowSignup',
@@ -197,7 +206,8 @@
       return _.extend(this.model.toJSON(), {
         admin: this.model.get('admin_id') ? this.session.pick('name', 'email') : null,
         organizations: this.organizations.toJSON(),
-        organization: organization ? organization.toRender() : null
+        organization: organization ? organization.toRender() : null,
+        organizationTemplate: this.organizationTemplate
       });
     },
     render: function(options) {

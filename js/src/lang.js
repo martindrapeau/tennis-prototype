@@ -17,7 +17,7 @@
       privacy: ['Privacy', 'Confidentialité'],
       createAnOrganization: ['Please create an organization', 'Veuillez créer une organisation.'],
       pleaseChooseAnOrganization: ['Please choose an organization', 'Veuillez choisir une organisation.'],
-      clickOnMenuToNavigate: ['Tap on <i class="fa fa-fw fa-bars"></i> to start.', 'Appuyez sur <i class="fa fa-fw fa-bars"></i> pour débuter.'],
+      changeOrganization: ['Change organization', "Changer d'organisme"],
       orgStatsText: ['{1} program(s), {2} matche(s) and {3} player(s).', '{1} programmation(s), {2} matche(s) et {3} joueur(s).'],
       login: ['Login', 'Connexion'],
       signup: ['Signup', 'Créer un compte'],
