@@ -5,13 +5,20 @@
       id: undefined,
       name: null,
       email: null,
-      phone: null,
+      mobilephone: null,
+      voicephone: null,
       image: null,
       // The following are ignored by the back-end
       match_ids: []
     },
     initialize: function() {
       this.matches = [];
+
+      // Migrate phone to mobilephone. Eventually remove this.
+      if (this.attributes.phone && this.attributes.mobilephone === null) {
+        this.set({mobilephone: this.attributes.phone}, {silent: true});
+        this.unset('phone');
+      }
     },
     bindMatches: function(matches) {
       this.matches = matches || this.collection.matchesCollection.getMatchesForPlayer(this.id);
@@ -110,8 +117,17 @@
           </td>
           <td class="info">
             <div class="name"><%=name%></div>
-            <div class="email"><a href="mailto:<%=email%>"><%=email%></a></div>
-            <div class="phone"><a href="tel:<%=phone%>"><%=phone%></a></div>
+            <div class="coords">
+              <%
+                var parts = _.compact([
+                  mobilephone ? {href: 'tel:'+mobilephone, html: mobilephone} : null,
+                  email ? {href: 'mailto:'+email, html: '<i class="fa fa-fw fa-envelope"></i>'} : null
+                ]);
+              %>
+              <% for (var i = 0; i < parts.length; i++) { %>
+                <a href="<%=parts[i].href%>" <%if(parts[i].target){%>target="<%=parts[i].target%>"<%}%>><%=parts[i].html%></a><% if (i < parts.length-1) { %>, <% } %>
+              <% } %>
+            </div>
           </td>
         </tr>
       </tbody>

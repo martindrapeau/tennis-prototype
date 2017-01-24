@@ -273,42 +273,48 @@
     organization_id: [100, 101],
     name: "Abdelkader Merabet",
     email: "abdel@merabet.com",
-    phone: "514-123-1234",
+    mobilephone: "514-123-1234",
+    voicephone: "450-555-1234",
     image: null
   }, {
     id: 2317,
     organization_id: [100, 101],
     name: "Samuel Gendron",
     email: "sam@gendron.com",
-    phone: "514-123-1234",
+    mobilephone: "514-123-1234",
+    voicephone: "450-555-1234",
     image: null
   }, {
     id: 2414,
     organization_id: [100, 101],
     name: "Martin Gilbert Drapeau",
     email: "martindrapeau@gmail.com",
-    phone: "514-123-1234",
+    mobilephone: "514-123-1234",
+    voicephone: "450-555-1234",
     image: null
   }, {
     id: 2415,
     organization_id: [100, 101],
     name: "Ludovic Bazinet",
     email: "ludovicbazinet@gmail.com",
-    phone: "514-123-1234",
+    mobilephone: "514-123-1234",
+    voicephone: "450-555-1234",
     image: null
   }, {
     id: 2417,
     organization_id: [100, 101],
     name: "Alain Mussely",
     email: "alain@must.com",
-    phone: "514-123-1234",
+    mobilephone: "514-123-1234",
+    voicephone: "450-555-1234",
     image: null
   }, {
     id: 2418,
     organization_id: [100, 101],
     name: "Eva Mussely",
     email: "eva@must.com",
-    phone: "514-123-1234",
+    mobilephone: "514-123-1234",
+    voicephone: "450-555-1234",
     image: null
   }];
 

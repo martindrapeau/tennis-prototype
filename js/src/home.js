@@ -107,7 +107,8 @@
       'submit form.signup': 'onSignup',
       'click .clear': 'onClickClear',
       'click .terms': 'onClickLink',
-      'click .privacy': 'onClickLink'
+      'click .privacy': 'onClickLink',
+      'click .brand': 'onClickBrand'
     },
     initialize: function(options) {
       this.session = options.session;
@@ -142,6 +143,14 @@
       e.preventDefault();
       console.log('onAddOrganization');
       return this.organizationView.onAddOrganization();
+    },
+    onClickBrand: function(e) {
+      $('#side-menu').one('shown.bs.offcanvas', function(e) {
+        this.model.set({view: 'organization'}, {pushState: true, hideMenu: true});
+      }.bind(this));
+      _.defer(function() {
+        $('#top-menu .navbar-toggle').click();
+      });
     },
     onLogin: function(e) {
       e.preventDefault();

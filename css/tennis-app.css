@@ -218,8 +218,11 @@ body.standalone .modal-dialog {
 }
 
 #home .brand {
-  width: 60px;
+  width: 62px;
+  height: 62px;
   margin: 0 auto 10px auto;
+  background-color: #fff;
+  border: 1px solid #1f4558;
 }
 
 #home .brand>.wrapper {
@@ -327,8 +330,7 @@ body.standalone .modal-dialog {
   width: 250px;
 }
 
-#players .player tbody .info .email,
-#players .player tbody .info .phone {
+#players .player tbody .info .coords {
   font-size: 14px;
   color: #666;
 }

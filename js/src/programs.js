@@ -173,10 +173,16 @@
     onClickGotoMatches: function(e) {
       var $tag = $(e.currentTarget).closest('.tag'),
           matchIdAttribute = $tag.data('matchIdAttribute'),
-          id = $tag.data('id');
-      var attributes = {view: 'matches'};
+          id = $tag.data('id'),
+          attributes = {view: 'matches'};
       attributes[matchIdAttribute] = id;
-      this.stateModel.set(attributes, {pushState: true});
+
+      $('#side-menu').one('shown.bs.offcanvas', function(e) {
+        this.stateModel.set(attributes, {pushState: true, hideMenu: true});
+      }.bind(this));
+      _.defer(function() {
+        $('#top-menu .navbar-toggle').click();
+      });
       $(e.target).blur();
     },
     onAddCategoryOrRound: function(type, e) {

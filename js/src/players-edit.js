@@ -15,7 +15,11 @@
           <span class="form-control-feedback"><i class="fa fa-fw fa-envelope"></i></span>
         </div>
         <div class="form-group has-feedback tab-info">
-          <input name="phone" type="tel" placeholder="<%=_lang('telephone')%>" value="<%=phone%>" class="form-control" autocomplete="off" />
+          <input name="mobilephone" type="tel" placeholder="<%=_lang('mobilephone')%>" value="<%=mobilephone%>" class="form-control" autocomplete="off" />
+          <span class="form-control-feedback"><i class="fa fa-fw fa-mobile-phone"></i></span>
+        </div>
+        <div class="form-group has-feedback tab-info">
+          <input name="voicephone" type="tel" placeholder="<%=_lang('voicephone')%>" value="<%=voicephone%>" class="form-control" autocomplete="off" />
           <span class="form-control-feedback"><i class="fa fa-fw fa-phone"></i></span>
         </div>
         <div class="form-group tab-picture upload-buttons clearfix">
