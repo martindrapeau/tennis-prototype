@@ -187,11 +187,15 @@
   window._programs = [{
     id: 1000,
     organization_id: 100,
-    name: "Saison 2016"
+    name: "Saison 2016",
+    start: "2016-05-01",
+    end: "2016-09-01"
   }, {
     id: 1100,
     organization_id: 101,
-    name: "Saison 2015"
+    name: "Saison 2015",
+    start: "2015-05-01",
+    end: "2015-09-01"
   }];
 
   window._categories = [{

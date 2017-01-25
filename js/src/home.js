@@ -21,24 +21,50 @@
             <% if (organizations.length) { %>
               <form class="organization anim fade-in">
                 <% if (organization_id) { %>
-                  <div class="brand anim fade-in">
+                  <div class="brand active anim fade-in <%=organization.image ? '' : 'initials'%>">
                     <%=organizationTemplate(organization)%>
                   </div>
                   <br/>
-                <% } %>
-                <div class="form-group btn-group">
-                  <button class="btn btn-default dropdown-toggle" type="button" id="choose-organization" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                    <%=organization_id == null ? _lang('pleaseChoose') : _lang('changeOrganization')%>
-                    <span class="caret"></span>
-                  </button>
-                  <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="choose-organization">
-                    <% for (var i = 0; i < organizations.length; i++) { %>
-                      <li class="<%=organizations[i].id == organization_id ? 'active' : ''%>"><a href="#" class="change-organization" data-id="<%=JSON.stringify(organizations[i].id)%>"><%=organizations[i].name%></a></li>
+
+                  <% if (organizations.length > 1) { %>
+                    <p><%=_lang('changeOrganization')%></p>
+                  <% } %>
+
+                  <% for (var i = 0; i < organizations.length; i++) { %>
+                    <% if (organizations[i].id != organization_id) { %>
+                      <div class="brand inline change-organization anim fade-in <%=organizations[i].image ? '' : 'initials'%>" data-id="<%=organizations[i].id%>">
+                        <div class="wrapper">
+                          <% if (organizations[i].image) { %>
+                            <img src="<%=organizations[i].image%>" alt="<%=organizations[i].initials%>" />
+                          <% } else { %>
+                            <div class="initials"><%=organizations[i].initials%></div>
+                          <% } %>
+                        </div>
+                      </div>
                     <% } %>
-                    <li role="separator" class="divider"></li>
-                    <li><a href="#" class="add-organization"><i class="fa fa-fw fa-plus"></i> <%=_lang('addOrganization')%></a></li>
-                  </ul>
-                </div>
+                  <% } %>
+
+                  <div class="brand inline add-organization anim fade-in">
+                    <div class="wrapper">
+                      <div class="initials"><i class="fa fa-fw fa-plus"></i></div>
+                    </div>
+                  </div>
+
+                <% } else { %>
+                  <div class="form-group btn-group <%=organization_id == null ? '' : 'dropup'%>">
+                    <button class="btn btn-default dropdown-toggle" type="button" id="choose-organization" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                      <%=organization_id == null ? _lang('pleaseChoose') : _lang('changeOrganization')%>
+                      <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="choose-organization">
+                      <% for (var i = 0; i < organizations.length; i++) { %>
+                        <li class="<%=organizations[i].id == organization_id ? 'active' : ''%>"><a href="#" class="change-organization" data-id="<%=JSON.stringify(organizations[i].id)%>"><%=organizations[i].name%></a></li>
+                      <% } %>
+                      <li role="separator" class="divider"></li>
+                      <li><a href="#" class="add-organization"><i class="fa fa-fw fa-plus"></i> <%=_lang('addOrganization')%></a></li>
+                    </ul>
+                  </div>
+                <% } %>
               </form>
             <% } else {%>
               <p><button class="btn btn-danger add-organization anim fade-in"><i class="fa fa-fw fa-plus"></i> <%=_lang('addOrganization')%></button></p>
@@ -92,7 +118,7 @@
       </div>
     `),
     organizationTemplate: _.template(`
-      <div class="wrapper <%=image ? '' : 'bg'%>">
+      <div class="wrapper">
         <% if (image) { %>
           <img src="<%=image%>" alt="<%=initials%>" />
         <% } else { %>
@@ -110,14 +136,14 @@
       'click a.show-signup': 'onShowSignup',
       'click a.show-login': 'onShowLogin',
       'click a.change-account': 'onChangeAccount',
-      'click a.change-organization': 'onChangeOrganization',
+      'click .change-organization': 'onChangeOrganization',
       'click .add-organization': 'onAddOrganization',
       'submit form.login': 'onLogin',
       'submit form.signup': 'onSignup',
       'click .clear': 'onClickClear',
       'click .terms': 'onClickLink',
       'click .privacy': 'onClickLink',
-      'click .brand': 'onClickBrand'
+      'click .brand.active': 'onClickBrand'
     },
     initialize: function(options) {
       this.session = options.session;

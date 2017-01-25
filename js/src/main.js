@@ -31,6 +31,7 @@ $(document).on(window.cordova ? 'deviceready' : 'ready', function() {
   }
 
   if (Backbone.persistLocalStorage) {
+    // In Cordova, restore local storage from native storage
     Backbone.persistLocalStorage.keys = ['app', 'sessions', 'organizations', 'matches', 'players', 'categories', 'rounds', 'programs'];
     Backbone.persistLocalStorage.restore().always(go);
   } else {

@@ -17,24 +17,6 @@ body {
   background-color: #f5f5f5;
 }
 
-.bootbox-form .nav-tabs {
-  margin-bottom: 15px;
-}
-
-.bootbox-form input {
-  font-size: 16px!important;
-  text-shadow: none;
-  box-shadow: none;
-}
-
-.bootbox-form input[type=number]::-webkit-inner-spin-button, 
-.bootbox-form input[type=number]::-webkit-outer-spin-button { 
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  margin: 0;
-}
-
 .btn.active {
   box-shadow: none;
   -webkit-box-shadow: none;
@@ -225,6 +207,17 @@ body.standalone .modal-dialog {
   color: #333;
   text-align: left;
 }
+#home .brand.initials {
+  background-color: #ddd;
+}
+#home .brand.inline {
+  width: 62px;
+  display: inline-block;
+  border-radius: 5px;
+  overflow: hidden;
+}
+#home .brand.inline.add-organization {
+}
 #home .brand>.wrapper {
   display: table-cell;
   width: 60px;
@@ -232,14 +225,12 @@ body.standalone .modal-dialog {
   vertical-align: middle;
   text-align: center;
 }
-#home .brand>.wrapper.bg {
-  background-color: #ddd;
-}
 #home .brand>.wrapper>img {
   width: 60px;
 }
 #home .brand>.wrapper>.initials {
   font-size: 18px;
+  line-height: 18px;
 }
 #home .brand>address {
   display: table-cell;
@@ -442,6 +433,37 @@ body.standalone .modal-dialog {
 }
 
 
+/* General modal form */
+.bootbox-form .nav-tabs {
+  margin-bottom: 15px;
+}
+.bootbox-form input {
+  font-size: 16px!important;
+  text-shadow: none;
+  box-shadow: none;
+}
+.bootbox-form input[type=number]::-webkit-inner-spin-button, 
+.bootbox-form input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+.bootbox-form .form-group.date-time {
+  width: 100%;
+}
+.bootbox-form .form-group.date-time .input-group {
+  width: 48%;
+}
+.bootbox-form input[name=date][readonly],
+.bootbox-form input[name=start][readonly],
+.bootbox-form input[name=end][readonly],
+.bootbox-form input[name=time][readonly],
+.bootbox-form .input-group-addon {
+  background-color: #fff;
+}
+
+
 .bootbox-form.match label {
   color: #999;
 }
@@ -497,20 +519,6 @@ body.standalone .modal-dialog {
   margin-left: 10px;
 }
 
-.bootbox-form.match .form-group.date-time {
-  width: 100%;
-}
-
-.bootbox-form.match .form-group.date-time .input-group {
-  width: 48%;
-}
-
-.bootbox-form.match input[name=date][readonly],
-.bootbox-form.match input[name=time][readonly],
-.bootbox-form.match .input-group-addon {
-  background-color: #fff;
-}
-
 
 .bootbox-form.match .form-group.outcome {
   position: relative;
@@ -526,6 +534,7 @@ body.standalone .modal-dialog {
 .bootbox-form.match .form-group.type>.btn-group>.btn {
   width: 50%;
 }
+
 
 .bootbox-form.organization .upload-buttons {
   width: 260px;
@@ -565,6 +574,7 @@ body.standalone .modal-dialog {
   vertical-align: middle;
   border-radius: 50%;
 }
+
 
 .popover {
   max-width: 300px;

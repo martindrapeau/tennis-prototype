@@ -4,6 +4,8 @@
     defaults: {
       id: undefined,
       name: null,
+      start: null,
+      end: null,
       description: '',
       categories: [],
       rounds: []
@@ -102,16 +104,13 @@
     },
     onEditProgram: function(e) {
       if (e) e.preventDefault();
-      bootbox.prompt({
-        title: _lang('programName'),
-        value: this.model.get('name'),
-        callback: function(result) {
-          if (!result) return;
-          this.model.save({name: result}, {wait: true}).done(function() {
-            $('#top-menu .navbar-brand').text(result);
-          });
-        }.bind(this)
-      });
+      new Backbone.EditProgramView({
+        model: this.model,
+        onSave: this.onSave.bind(this)
+      }).render();
+    },
+    onSave: function() {
+      this.model.save(null, {wait: true});
     },
     onClickDeleteProgram: function(e) {
       e.preventDefault();
