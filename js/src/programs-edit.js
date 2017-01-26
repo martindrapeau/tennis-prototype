@@ -24,11 +24,18 @@
     title: _lang('organization'),
     onRender: function() {
 
-      this.$('.input-group.date').datetimepicker({
+      this.$('.input-group.date.start').datetimepicker({
         ignoreReadonly: true,
         allowInputToggle: true,
         format: 'YYYY-MM-DD',
-        widgetPositioning: {horizontal: 'left', vertical: 'top'}
+        widgetPositioning: {horizontal: 'left', vertical: 'bottom'}
+      });
+
+      this.$('.input-group.date.end').datetimepicker({
+        ignoreReadonly: true,
+        allowInputToggle: true,
+        format: 'YYYY-MM-DD',
+        widgetPositioning: {horizontal: 'right', vertical: 'bottom'}
       });
 
       this.delegateEvents();

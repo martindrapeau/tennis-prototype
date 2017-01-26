@@ -231,7 +231,7 @@
       var organization = this.organizations.get(this.model.get('organization_id'));
       return _.extend(this.model.toJSON(), {
         admin: this.model.get('admin_id') ? this.session.pick('name', 'email') : null,
-        organizations: this.organizations.toJSON(),
+        organizations: this.organizations.map(function(model) {return model.toRender();}),
         organization: organization ? organization.toRender() : null,
         organizationTemplate: this.organizationTemplate
       });

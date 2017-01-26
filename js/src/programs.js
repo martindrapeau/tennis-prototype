@@ -66,40 +66,24 @@
         organization_id: this.stateModel.get('organization_id'),
         expanded: true
       });
-      bootbox.dialog({
-        title: _lang('newProgram'),
-        message: this.addProgramFormTemplate(model.toJSON()),
-        size: 'small',
-        buttons: {
-          cancel: {
-            label: _lang('cancel')
-          },
-          confirm: {
-            label: _lang('save'),
-            callback: function() {
-              var result = $('.bootbox.modal').find('input').val();
-              if (!result) {
-                // TODO: Report error to user.
-                return false;
-              }
 
-              this.model = model;
-              this.collection.add(this.model);
-              this.model.save({name: result}, {wait: true}).done(function() {
-                var category = new Backbone.CategoryModel({name: 'A1', program_id: this.model.id}),
-                    round = new Backbone.RoundModel({name: _lang('week') + ' 1', program_id: this.model.id});
-                $.when(category.save(null, {wait: true}), round.save(null, {wait: true})).done(function() {
-                  this.categoryCollection.add(category, {silent: true});
-                  this.roundCollection.add(round, {silent: true});
-                  this.stateModel.set({view: 'program', program_id: this.model.id}, {pushState: true, renderMenu: true, hideMenu: true, programIsNew: true});
-                }.bind(this));
-              }.bind(this));
-              bootbox.hideAll();
-            }.bind(this)
-          }
-        }
-      });
-
+      new Backbone.EditProgramView({
+        model: model,
+        onSave: function() {
+          this.model = model;
+          this.model.save(null, {wait: true}).done(function() {
+            this.collection.add(this.model);
+            var category = new Backbone.CategoryModel({name: 'A1', program_id: this.model.id}),
+                round = new Backbone.RoundModel({name: _lang('week') + ' 1', program_id: this.model.id});
+            $.when(category.save(null, {wait: true}), round.save(null, {wait: true})).done(function() {
+              this.categoryCollection.add(category, {silent: true});
+              this.roundCollection.add(round, {silent: true});
+              this.stateModel.set({view: 'program', program_id: this.model.id}, {pushState: true, renderMenu: true, hideMenu: true, programIsNew: true});
+            }.bind(this));
+          }.bind(this));
+        }.bind(this)
+      }).render();
+      
       return this;
     },
     onEditProgram: function(e) {

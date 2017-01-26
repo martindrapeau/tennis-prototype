@@ -128,8 +128,8 @@
 
               $('#side-menu').one('shown.bs.offcanvas', function(e) {
                 this.model = model;
-                this.collection.add(this.model);
                 this.model.save({name: result}, {wait: true}).done(function() {
+                  this.collection.add(this.model);
                   this.stateModel.save({view: 'organization', organization_id: this.model.id}, {pushState: true, renderMenu: true, hideMenu: true, programIsNew: true});
                 }.bind(this));
                 bootbox.hideAll();
