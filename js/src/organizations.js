@@ -82,6 +82,14 @@
           <% } %>
         </address>
       </div>
+      <% if (program) { %>
+        <div class="upcoming-program">
+          <h3><%=program.name%></h3>
+          <% if (round) { %>
+            <div class="tag round"></div>
+          <% } %>
+        </div>
+      <% } %>
     `),
     addFormTemplate: _.template(`
       <form class="bootbox-form">
@@ -95,6 +103,9 @@
     initialize: function(options) {
       this.stateModel = options.stateModel;
       this.programCollection = options.programCollection;
+      this.matchCollection = options.matchCollection;
+      this.categoryCollection = options.categoryCollection;
+      this.roundCollection = options.roundCollection;
     },
     delegateEvents: function() {
       Backbone.View.prototype.delegateEvents.apply(this, arguments);
@@ -210,7 +221,13 @@
 
     },
     toRender: function() {
-      return this.model ? this.model.toRender() : {};
+      if (!this.model) return {};
+      var program = this.programCollection.getUpcoming(),
+          round = program ? this.roundCollection.getUpcoming(program.id) : null;
+      return _.extend(this.model.toRender(), {
+        program: program ? program.toRender() : null,
+        round: round ? round.toRender() : null
+      });
     },
     render: function() {
       var organization_id = this.stateModel.get('organization_id');
@@ -223,6 +240,13 @@
 
       var data = this.toRender();
       this.$el.html(this.template(data));
+
+      if (data.round) {
+        new Backbone.RoundView({
+          el: this.$('.tag.round'),
+          model: this.roundCollection.get(data.round.id)
+        }).render();
+      }
 
       return this;
     }

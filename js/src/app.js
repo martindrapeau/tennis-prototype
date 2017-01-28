@@ -90,8 +90,11 @@
           el: $('#organization'),
           model: undefined,
           collection: this.organizations,
+          stateModel: this.model,
           programCollection: this.programs,
-          stateModel: this.model
+          matchCollection: this.matches,
+          categoryCollection: this.categories,
+          roundCollection: this.rounds
         }),
         program: new Backbone.ProgramView({
           el: $('#program'),

@@ -187,9 +187,9 @@
   window._programs = [{
     id: 1000,
     organization_id: 100,
-    name: "Saison 2016",
-    start: "2016-05-01",
-    end: "2016-09-01"
+    name: "Saison 2017",
+    start: "2017-05-01",
+    end: "2017-09-01"
   }, {
     id: 1100,
     organization_id: 101,
@@ -234,42 +234,48 @@
     organization_id: 100,
     name: "Semaine 1",
     description: "1 au 4 mai",
-    date: "2016-05-01"
+    start: "2017-05-01",
+    end: "2017-05-04"
   }, {
     id: 4002,
     program_id: 1000,
     organization_id: 100,
     name: "Semaine 2",
     description: "7 au 10 mai",
-    date: "2016-05-07"
+    start: "2017-05-07",
+    end: "2017-05-10"
   }, {
     id: 4003,
     program_id: 1000,
     organization_id: 100,
     name: "Semaine 3",
     description: "14 au 17 mai",
-    date: "2016-05-14"
+    start: "2017-05-14",
+    end: "2017-05-17"
   }, {
     id: 4004,
     program_id: 1000,
     organization_id: 100,
     name: "Semaine 4",
     description: "21 au 24 mai",
-    date: "2016-05-21"
+    start: "2017-05-21",
+    end: "2017-05-24"
   }, {
     id: 4005,
     program_id: 1000,
     organization_id: 100,
     name: "Semaine 5",
     description: "28 au 31 mai",
-    date: "2016-05-28"
+    start: "2017-05-28",
+    end: "2017-05-31"
   }, {
     id: 4100,
     program_id: 1100,
     organization_id: 101,
     name: "Semaine 1",
     description: "1 au 4 mai",
-    date: "2015-05-01"
+    start: "2016-05-01",
+    end: "2016-05-04"
   }]
 
   window._players = [{
@@ -329,8 +335,8 @@
     category_id: 3001,
     round_id: 4001,
     type: "singles",
-    created_on: "2016-03-21 22:02:43",
-    played_on: "2016-05-01 08:00:00",
+    created_on: "2017-03-21 22:02:43",
+    played_on: "2017-05-01 08:00:00",
     user_id: 2314,
     user_partner_id: null,
     other_id: 2317,
@@ -377,8 +383,8 @@
     category_id: 3001,
     round_id: 4001,
     type: "singles",
-    created_on: "2016-03-21 22:02:43",
-    played_on: "2016-05-01 08:00:00",
+    created_on: "2017-03-21 22:02:43",
+    played_on: "2017-05-01 08:00:00",
     user_id: 2414,
     user_partner_id: null,
     other_id: 2415,
@@ -424,8 +430,8 @@
     category_id: 3001,
     round_id: 4002,
     type: "singles",
-    created_on: "2016-03-21 22:02:43",
-    played_on: "2016-05-01 08:00:00",
+    created_on: "2017-03-21 22:02:43",
+    played_on: "2017-05-01 08:00:00",
     user_id: 2314,
     user_partner_id: null,
     other_id: 2415,
@@ -472,8 +478,8 @@
     category_id: 3001,
     round_id: 4002,
     type: "singles",
-    created_on: "2016-03-21 22:02:43",
-    played_on: "2016-05-01 08:00:00",
+    created_on: "2017-03-21 22:02:43",
+    played_on: "2017-05-01 08:00:00",
     user_id: 2414,
     user_partner_id: null,
     other_id: 2317,

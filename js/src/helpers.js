@@ -33,6 +33,12 @@
     return name.substr(0, 1).toLowerCase() + name.substr(1);
   };
 
+  _.extend(Backbone.Model.prototype, {
+    toRender: function() {
+      return this.toJSON();
+    }
+  });
+
   _.extend(Backbone.View.prototype, {
     show: function(options) {
       this.delegateEvents();
@@ -42,6 +48,47 @@
     hide: function() {
       this.$el.hide();
       this.undelegateEvents();
+    }
+  });
+
+  _.extend(Backbone.Collection.prototype, {
+    // Source: http://stackoverflow.com/questions/11795266/find-closest-date-in-array-with-javascript#answer-11826631
+    getListsOfModelsAfterBeforeDate: function(testDate, dateAttr, models) {
+      if (typeof testDate == 'string') testDate = new Date(testDate);
+      models || (models = this.models);
+      var before = [],
+          after = [],
+          max = models.length;
+      for (var i = 0; i < max; i++) {
+        var id = models[i].id,
+            arrDate = new Date(models[i].get(dateAttr) || '3000-01-01'),
+            diff = (arrDate - testDate) / (3600 * 24 * 1000);
+        if (diff > 0) {
+            before.push({diff: diff, id: id});
+        } else {
+            after.push({diff: diff, id: id});
+        }
+      }
+      before.sort(function(a, b) {
+        if(a.diff < b.diff) {
+            return -1;
+        }
+        if(a.diff > b.diff) {
+            return 1;
+        }
+        return 0;
+      });
+
+      after.sort(function(a, b) {
+        if(a.diff > b.diff) {
+            return -1;
+        }
+        if(a.diff < b.diff) {
+            return 1;
+        }
+        return 0;
+      });
+      return {before: _.pluck(before, 'id'), after: _.pluck(after, 'id')};
     }
   });
 

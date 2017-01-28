@@ -19,6 +19,7 @@
               <span class="glyphicon glyphicon-calendar"></span>
             </span>
           </div>
+        </div>
       </form>
     `),
     title: _lang('organization'),

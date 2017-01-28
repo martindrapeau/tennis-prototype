@@ -150,17 +150,68 @@
 
   Backbone.RoundModel = Backbone.CategoryModel.extend({
     matchIdAttribute: 'round_id',
-    defaults: _.extend({date: null}, Backbone.CategoryModel.prototype.defaults)
+    defaults: _.extend({
+      start: null,
+      end: null
+    }, Backbone.CategoryModel.prototype.defaults)
   });
 
   Backbone.RoundCollection = Backbone.CategoryCollection.extend({
     matchIdAttribute: 'round_id',
-    model: Backbone.RoundModel
+    model: Backbone.RoundModel,
+    getUpcoming: function(program_id) {
+      var models = program_id ? this.filter({program_id: program_id}) : this.models;
+      if (models.length == 0) return null;
+      var ba = this.getListsOfModelsAfterBeforeDate(new Date(), 'start', models);
+      if (ba.after.length) return this.get(ba.after[0]);
+      if (ba.before.length) return this.get(ba.before[0]);
+      return _.last(models);
+    }
   });
 
   Backbone.EditRoundView = Backbone.EditCategoryView.extend({
+    formTemplate: _.template(`
+      <form class="bootbox-form">
+        <div class="form-group">
+          <input name="name" type="text" placeholder="<%=_lang('name')%>" value="<%=name%>" class="form-control" autocomplete="off" />
+        </div>
+        <div class="form-group date-time clearfix">
+          <div class="input-group date start pull-left">
+            <input class="form-control" type="text" name="start" value="<%=start%>" placeholder="<%=_lang('start')%>" readonly="readonly" />
+            <span class="input-group-addon">
+              <span class="glyphicon glyphicon-calendar"></span>
+            </span>
+          </div>
+          <div class="input-group date end pull-right">
+            <input class="form-control" type="text" name="end" value="<%=end%>" placeholder="<%=_lang('end')%>" readonly="readonly" />
+            <span class="input-group-addon">
+              <span class="glyphicon glyphicon-calendar"></span>
+            </span>
+          </div>
+        </div>
+        <div class="form-group">
+          <input name="description" type="text" placeholder="<%=_lang('description')%>" value="<%=description%>" class="form-control" autocomplete="off" />
+        </div>
+      </form>
+    `),
     title: _lang('round'),
-    deleteConfirmMessage: _lang('deleteThisRound')
+    deleteConfirmMessage: _lang('deleteThisRound'),
+    onRender: function() {
+      this.$('.input-group.date.start').datetimepicker({
+        ignoreReadonly: true,
+        allowInputToggle: true,
+        format: 'YYYY-MM-DD',
+        widgetPositioning: {horizontal: 'left', vertical: 'bottom'}
+      });
+      this.$('.input-group.date.end').datetimepicker({
+        ignoreReadonly: true,
+        allowInputToggle: true,
+        format: 'YYYY-MM-DD',
+        widgetPositioning: {horizontal: 'right', vertical: 'bottom'}
+      });
+      this.delegateEvents();
+      return this;
+    }
   });
 
   Backbone.RoundView = Backbone.CategoryView.extend({

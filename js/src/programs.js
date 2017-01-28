@@ -16,6 +16,13 @@
     model: Backbone.ProgramModel,
     comparator: function(model) {
       return -model.id;
+    },
+    getUpcoming: function() {
+      if (this.size() == 0) return null;
+      var ba = this.getListsOfModelsAfterBeforeDate(new Date(), 'start');
+      if (ba.after.length) return this.get(ba.after[0]);
+      if (ba.before.length) return this.get(ba.before[0]);
+      return this.last();
     }
   });
 
