@@ -84,9 +84,15 @@
       </div>
       <% if (program) { %>
         <div class="upcoming-program">
-          <h3><%=program.name%></h3>
           <% if (round) { %>
-            <div class="tag round"></div>
+            <h4><%=title%> - <%=round.name%>, <%=program.name%></h4>
+          <% } else { %>
+            <h4><%=title%> - <%=program.name%></h4>
+          <% } %>
+          <% if (round && match_title) { %>
+            <p>
+              <a href="#" class="btn btn-primary goto-matches" data-round_id="<%=round.id%>"><%=match_title%> <i class="fa fa-fw fa-arrow-circle-right"></i></a>
+            </p>
           <% } %>
         </div>
       <% } %>
@@ -98,7 +104,8 @@
       </form>
     `),
     events: {
-      'click .brand': 'onClickBrand'
+      'click .brand': 'onClickBrand',
+      'click .goto-matches': 'onClickGotoMatches'
     },
     initialize: function(options) {
       this.stateModel = options.stateModel;
@@ -159,6 +166,23 @@
     },
     onClickBrand: function(e) {
       if (!$(e.target).is('a') && !$(e.target).closest('a').length) return this.onEditOrganization.apply(this, arguments);
+    },
+    onClickGotoMatches: function(e) {
+      e.preventDefault();
+      var round_id = $(e.currentTarget).data('round_id'),
+          round = this.roundCollection.get(round_id),
+          program_id = round.get('program_id'),
+          program = this.programCollection.get(program_id),
+          category_id = this.categoryCollection.findWhere({program_id: program_id});
+
+      program.set({expanded: true}, {silent: true});
+
+      $('#side-menu').one('shown.bs.offcanvas', function(e) {
+        this.stateModel.save({view: 'matches', program_id: program_id, round_id: round_id, category_id: category_id}, {pushState: true, renderMenu: true, hideMenu: true});
+      }.bind(this));
+      _.defer(function() {
+        $('#top-menu .navbar-toggle').click();
+      });
     },
     onEditOrganization: function(e) {
       e.preventDefault();
@@ -223,11 +247,18 @@
     toRender: function() {
       if (!this.model) return {};
       var program = this.programCollection.getUpcoming(),
-          round = program ? this.roundCollection.getUpcoming(program.id) : null;
-      return _.extend(this.model.toRender(), {
-        program: program ? program.toRender() : null,
-        round: round ? round.toRender() : null
-      });
+          round = program ? this.roundCollection.getUpcoming(program.id) : null,
+          matches = round ? this.matchCollection.where({round_id: round.id}) : [];
+          data = _.extend(this.model.toRender(), {
+            program: program ? program.toRender() : null,
+            round: round ? round.toRender() : null
+          });
+
+      data.title = program ? _.compareDateToRangeTitle(new Date(), program.get('start'), program.get('end')) : '';
+      if (round) data.title = _.compareDateToRangeTitle(new Date(), round.get('start'), round.get('end'));
+      data.match_title = matches ? (matches.length + ' ' + _lang(matches.length == 1 ? 'match' : 'matches').toLowerCase()) : '';
+
+      return data;
     },
     render: function() {
       var organization_id = this.stateModel.get('organization_id');

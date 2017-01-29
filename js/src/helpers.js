@@ -32,6 +32,23 @@
     if (typeof name != 'string' || !name.length) return name;
     return name.substr(0, 1).toLowerCase() + name.substr(1);
   };
+  _.compareDateToRange = function(date, start, end, unit) {
+    unit || (unit = 'day');
+    if (moment(date).isBefore(start, unit))
+      return 1;
+    else if (moment(date).isAfter(end, unit))
+      return -1;
+    return 0;
+  }
+  _.compareDateToRangeTitle = function(date, start, end, unit) {
+    switch (_.compareDateToRange.apply(this, arguments)) {
+      case -1:
+        return _lang('passed');
+      case 1:
+        return _lang('upcoming');
+    }
+    return _lang('ongoing');
+  }
 
   _.extend(Backbone.Model.prototype, {
     toRender: function() {
